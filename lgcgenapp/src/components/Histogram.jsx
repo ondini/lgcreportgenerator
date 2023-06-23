@@ -5,12 +5,13 @@ import { getResiduals } from "../utils/dataProcessing";
 const Histogram = ({ data }) => {
   console.log("im in");
   const residuals = getResiduals(data.LGC_DATA);
-  console.log(residuals);
   const types = Object.keys(residuals);
-  console.log(residuals["DIST"]);
+  const types4 = Object.keys(residuals[types[0]]);
+  console.log(residuals);
+
   const plotData = [
     {
-      x: residuals["ANGL"],
+      x: residuals[types[0]][types4[0]],
       type: "histogram",
       xbins: {
         end: 20,
@@ -30,7 +31,7 @@ const Histogram = ({ data }) => {
 
   return (
     <div>
-      <Plot data={plotData} layout={{ title: types[0], bargroupgap: 0.2 }} />
+      <Plot data={plotData} layout={{ title: types4[0], bargroupgap: 0.2 }} />
     </div>
   );
 };

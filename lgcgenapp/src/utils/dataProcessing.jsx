@@ -113,14 +113,15 @@ const fECWSesidualsSelector = (measurement) => {
 
 const fOBSXYZSesidualsSelector = (measurement) => {
   let residuals = { X: [], Y: [], Z: [], TGTPOS: [], TGTID: [] };
-  residuals = measurement.fECWS.reduce((acc, curr) => {
-    acc["X"].push(curr.obsValue.fVector[0] * 100000);
-    acc["Y"].push(curr.obsValue.fVector[1] * 100000);
-    acc["Z"].push(curr.obsValue.fVector[2] * 100000);
-    acc["TGTPOS"].push(curr.targetPos);
-    acc["TGTID"].push(curr.target);
+  residuals = measurement.fOBSXYZ.reduce((acc, curr) => {
+    acc.X.push(curr.fXResidual * 100000);
+    acc.Y.push(curr.fYResidual * 100000);
+    acc.Z.push(curr.fZResidual * 100000);
+    acc.TGTPOS.push(curr.targetPos);
+    acc.TGTID.push(curr.target);
     return acc;
   }, residuals);
+  return residuals;
 };
 
 const residualsSelector = (measurement, type) => {
@@ -128,31 +129,23 @@ const residualsSelector = (measurement, type) => {
     case "fTSTN":
       return fSTNResidualsSelector(measurement);
     case "fOBSXYZ":
-      return fSTNResidualsSelector(measurement);
+      return fOBSXYZSesidualsSelector(measurement);
     case "fECWS":
-      return fSTNResidualsSelector(measurement);
+      return fECWSesidualsSelector(measurement);
     default:
       return {};
   }
 };
 
-const mergeResiduals = (residuals1, residuals2) => {
-  let merged = {};
-
-  Object.keys(residuals1).forEach((key) => {
-    if (key in residuals2) {
-      merged[key] = residuals1[key].concat(residuals2[key]);
-    } else {
-      merged[key] = residuals1[key];
-    }
-  });
-
-  Object.keys(residuals2).forEach((key) => {
-    if (!(key in merged)) {
-      merged[key] = residuals1[key];
-    }
-  });
-  return merged;
+const mergeResiduals = (resType, acc, residuals) => {
+  if (!(resType in acc)) {
+    acc[resType] = residuals;
+  } else {
+    Object.keys(residuals).forEach((key) => {
+      acc[resType][key] = acc[resType][key].concat(residuals[key]);
+    });
+  }
+  return acc;
 };
 
 export const getResiduals = (data) => {
@@ -161,7 +154,8 @@ export const getResiduals = (data) => {
       if (key[0] === "f") {
         console.log(key);
         let residuals = residualsSelector(curr.measurements, key);
-        acc = mergeResiduals(residuals, acc);
+        console.log(residuals);
+        acc = mergeResiduals(key, acc, residuals);
       }
     });
     return acc;
