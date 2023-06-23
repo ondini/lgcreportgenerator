@@ -1,0 +1,105 @@
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { get3DPointEstDataRows } from "../utils/dataProcessing";
+
+function generateNumFormatter(decimals, factor) {
+  return (params) => {
+    const roundedValue =
+      Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) /
+      10 ** decimals;
+    return roundedValue;
+  };
+}
+
+console.log(generateNumFormatter(5, 10)(0.000656145543));
+
+const columns = [
+  { field: "id", headerName: "NAME", sortable: true, flex: 1.3 },
+  { field: "type", headerName: "TYPE", sortable: true, flex: 0.5 },
+  {
+    field: "x",
+    headerName: "X",
+    sortable: true,
+    flex: 1,
+    valueFormatter: generateNumFormatter(5, 1),
+  },
+  {
+    field: "y",
+    headerName: "Y",
+    sortable: true,
+    flex: 1,
+    valueFormatter: generateNumFormatter(5, 1),
+  },
+  {
+    field: "z",
+    headerName: "Z",
+    sortable: true,
+    flex: 1,
+    valueFormatter: generateNumFormatter(5, 1),
+  },
+  {
+    field: "h",
+    headerName: "H",
+    sortable: true,
+    flex: 1,
+    valueFormatter: generateNumFormatter(5, 1),
+  },
+  {
+    field: "sx",
+    headerName: "SX",
+    sortable: true,
+    flex: 0.4,
+    valueFormatter: generateNumFormatter(2, 1000),
+  },
+  {
+    field: "sy",
+    headerName: "SY",
+    sortable: true,
+    flex: 0.4,
+    valueFormatter: generateNumFormatter(2, 1000),
+  },
+  {
+    field: "sz",
+    headerName: "SZ",
+    sortable: true,
+    flex: 0.4,
+    valueFormatter: generateNumFormatter(2, 1000),
+  },
+  {
+    field: "dx",
+    headerName: "DX",
+    sortable: true,
+    flex: 0.4,
+    valueFormatter: generateNumFormatter(2, 1000),
+  },
+  {
+    field: "dy",
+    headerName: "DY",
+    sortable: true,
+    flex: 0.4,
+    valueFormatter: generateNumFormatter(2, 1000),
+  },
+  {
+    field: "dz",
+    headerName: "DZ",
+    sortable: true,
+    flex: 0.4,
+    valueFormatter: generateNumFormatter(2, 1000),
+  },
+];
+
+export default function DataTable2({ data }) {
+  const rows = get3DPointEstDataRows(
+    data.LGC_DATA,
+    columns.map((col) => col.field)
+  );
+
+  return (
+    <DataGrid
+      rows={rows}
+      columns={columns}
+      hideFooter
+      disableRowSelectionOnClick
+      slots={{ toolbar: GridToolbar }}
+    />
+  );
+}
