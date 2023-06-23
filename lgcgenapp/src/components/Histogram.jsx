@@ -3,15 +3,12 @@ import Plot from "react-plotly.js";
 import { getResiduals } from "../utils/dataProcessing";
 
 const Histogram = ({ data }) => {
-  console.log("im in");
   const residuals = getResiduals(data.LGC_DATA);
-  const types = Object.keys(residuals);
-  const types4 = Object.keys(residuals[types[0]]);
-  console.log(residuals);
+  const measTypes = Object.keys(residuals);
 
   const plotData = [
     {
-      x: residuals[types[0]][types4[0]],
+      x: [],
       type: "histogram",
       xbins: {
         end: 20,
@@ -29,11 +26,24 @@ const Histogram = ({ data }) => {
     },
   ];
 
-  return (
-    <div>
-      <Plot data={plotData} layout={{ title: types4[0], bargroupgap: 0.2 }} />
-    </div>
-  );
+  let measType = measTypes[1];
+  let histList = [];
+
+  Object.keys(residuals[measType]).forEach((key) => {
+    if (key === "TGTPOS" || key === "TGTID") return;
+    plotData[0].x = residuals[measType][key];
+    console.log(residuals[measType][key]);
+    histList.push(
+      <Plot
+        data={JSON.parse(JSON.stringify(plotData))} // JSON here is used for deep copy
+        layout={{ title: key, bargroupgap: 0.2 }}
+      />
+    );
+  });
+
+  let keyee = Object.keys(residuals[measType])[1];
+
+  return <div>{histList}</div>;
 };
 
 export default Histogram;

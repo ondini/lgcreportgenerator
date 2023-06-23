@@ -12,6 +12,8 @@ const Plot3D = ({ data }) => {
 
   const layout = {
     title: "3D Scatter Plot",
+    width: 1200,
+    height: 1000,
     scene: {
       xaxis: { title: "X Axis" },
       yaxis: { title: "Y Axis" },
@@ -26,6 +28,13 @@ const Plot3D = ({ data }) => {
           {
             type: "scatter3d",
             mode: "markers",
+            x: datas.x,
+            y: datas.y,
+            z: datas.z,
+          },
+          {
+            type: "scatter3d",
+            mode: "lines",
             x: datas.x,
             y: datas.y,
             z: datas.z,
