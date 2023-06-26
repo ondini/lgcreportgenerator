@@ -11,14 +11,14 @@ const Plot3D = ({ data }) => {
   };
 
   const layout = {
-    title: "3D Scatter Plot",
     width: 1200,
     height: 1000,
     scene: {
-      xaxis: { title: "X Axis" },
-      yaxis: { title: "Y Axis" },
-      zaxis: { title: "Z Axis" },
+      xaxis: { title: "X" },
+      yaxis: { title: "Y" },
+      zaxis: { title: "Z" },
     },
+    showlegend: false,
   };
 
   return (

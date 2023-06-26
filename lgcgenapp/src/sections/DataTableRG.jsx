@@ -46,7 +46,7 @@ const columnsP = [
   { key: "dz", name: "DZ", sortable: true, resizable: true },
 ];
 
-const DataTable = ({ data, direction }) => {
+const DataTableRG = ({ data, direction }) => {
   const rowsP = get3DPointEstDataRows(
     data.LGC_DATA,
     columnsP.map((col) => col.key)
@@ -94,4 +94,4 @@ const DataTable = ({ data, direction }) => {
   );
 };
 
-export default DataTable;
+export default DataTableRG;

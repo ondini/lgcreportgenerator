@@ -1,5 +1,6 @@
 import { pointTypes } from "../data/constants";
 
+/// --- General data functions --- ///
 const estCoordSelector = (point) => {
   return point.fEstimatedValueInRoot.fVector;
 };
@@ -20,23 +21,11 @@ const getVarTypeFromFixed = (fixedState) => {
   return pointTypes[index];
 };
 
-export const get3DPointEstData = (data) => {
-  // map points to array of values
-  return data.points.map((point) => {
-    return [
-      point.fName, // point name
-      getVarTypeFromFixed(point.fixedState), // point variability type
-      ...point.fEstimatedValueInRoot.fVector, // estimated coordinates
-      point.fEstimatedHeightInRoot.fValue, // estimated height
-      ...point.fEstimatedPrecision, // estimated precision
-      ...point.fEstimatedValueInRoot.fVector.map(
-        (estVal, i) => estVal - point.fProvisionalValueInRoot.fVector[i]
-      ), // dx, dy, dz
-    ];
-  });
-};
+export const get3DPointEstData = (data, colNames) => {
+  // function for obtaining tableData for 3D points from JSON file
+  // ARGS: data - JSON file, colNames - array of column names (if empty, array returned insted of dictionary)
+  // OUT: array of dictionaries with keys from colNames
 
-export const get3DPointEstDataRows = (data, colNames) => {
   // map points to array of values which will be used in a table
   return data.points.map((point) => {
     let pointVals = [
@@ -50,47 +39,49 @@ export const get3DPointEstDataRows = (data, colNames) => {
       ), // dx, dy, dz
     ];
 
-    // convert array of values to dictionary with keys from colNames, so thtat this can be used in a table
-    return colNames.reduce((acc, key, index) => {
-      acc[key] = pointVals[index];
-      return acc;
-    }, {});
+    if (!(typeof colNames === "undefined")) {
+      // convert array of values to dictionary with keys from colNames, so thtat this can be used in a table
+      return colNames.reduce((acc, key, index) => {
+        acc[key] = pointVals[index];
+        return acc;
+      }, {});
+    }
   });
 };
 
-const fSTNResidualsSelector = (measurement) => {
-  let residuals = { ANGL: [], DIST: [], ZEND: [], TGTPOS: [], TGTID: [] };
+///  --- Residuals data selection  --- ///
+
+// -- selectors -- //
+const fTSTNResidualsSelector = (measurement) => {
+  // function for obtaining residuals for TSTN measurement type from JSON file
+  // ARGS: JSON file
+  // OUT: dictionary of residuals with keys: ANGL, DIST, ZEND, TGTPOS, TGTID
+
+  const angleConv = 63.662 * 10000; // radians to centesimal circle factor
+  const distConv = 100000; // meters to hundredths of milimeter factor
+
+  let residuals = { ANGL: [], DIST: [], ZEND: [], TGTPOS: [], TGTID: [] }; // residuals data
+
   residuals = measurement.fTSTN.reduce((acc, curr) => {
+    // reduce over all measurements
     for (let i = 0; i < curr.roms.length; i++) {
-      let rom = curr.roms[i];
-      if ("measANGL" in rom) {
-        for (let j = 0; j < rom.measANGL.length; j++) {
-          acc["ANGL"].push(
-            rom.measANGL[j].anglesResiduals[0].fValue * 63.662 * 10000
-          );
-          acc["DIST"].push(
-            rom.measDIST[j].distancesResiduals[0].fValue * 100000
-          );
-          acc["ZEND"].push(
-            rom.measZEND[j].anglesResiduals[0].fValue * 63.662 * 10000
-          );
-          acc["TGTPOS"].push(rom.measANGL[j].targetPos);
-          acc["TGTID"].push(rom.measANGL[j].target.ID);
-        }
-      } else if ("measPLR3D" in rom) {
-        for (let j = 0; j < rom.measPLR3D.length; j++) {
-          acc["ANGL"].push(
-            rom.measPLR3D[j].anglesResiduals[0].fValue * 63.662 * 10000
-          );
-          acc["DIST"].push(
-            rom.measPLR3D[j].distancesResiduals[0].fValue * 100000
-          );
-          acc["ZEND"].push(
-            rom.measPLR3D[j].anglesResiduals[1].fValue * 63.662 * 10000
-          );
-          acc["TGTPOS"].push(rom.measPLR3D[j].targetPos);
-          acc["TGTID"].push(rom.measPLR3D[j].target.ID);
-        }
+      let rom = curr.roms[i]; // current rom
+      let residualsKeys = // the paths to values are different, depending on the type of measurement (PLR3D or not)
+        "measANGL" in rom
+          ? ["measANGL", "measDIST", "measZEND"]
+          : ["measPLR3D", "measPLR3D", "measPLR3D"];
+      for (let j = 0; j < rom[residualsKeys[0]].length; j++) {
+        acc["ANGL"].push(
+          rom[residualsKeys[0]][j].anglesResiduals[0].fValue * angleConv
+        );
+        acc["DIST"].push(
+          rom[residualsKeys[1]][j].distancesResiduals[0].fValue * distConv
+        );
+        acc["ZEND"].push(
+          rom[residualsKeys[2]][j].anglesResiduals[0].fValue * angleConv
+        );
+        acc["TGTPOS"].push(rom[residualsKeys[2]][j].targetPos);
+        acc["TGTID"].push(rom[residualsKeys[2]][j].target.ID);
       }
     }
     return acc;
@@ -99,10 +90,18 @@ const fSTNResidualsSelector = (measurement) => {
 };
 
 const fECWSesidualsSelector = (measurement) => {
-  let residuals = { ECWS: [], TGTPOS: [], TGTID: [] };
+  // function for obtaining residuals for ECWS measurement type from JSON file
+  // ARGS: JSON file
+  // OUT: dictionary of residuals with keys: ECWS, TGTPOS, TGTID
+
+  const distConv = 100000; // meters to hundredths of milimeter factor
+
+  let residuals = { ECWS: [], TGTPOS: [], TGTID: [] }; // residuals data
   residuals = measurement.fECWS.reduce((acc, curr) => {
     for (let j = 0; j < curr.measECWS.length; j++) {
-      acc["ECWS"].push(curr.measECWS[j].distancesResiduals[0].fValue * 100000);
+      acc["ECWS"].push(
+        curr.measECWS[j].distancesResiduals[0].fValue * distConv
+      );
       acc["TGTPOS"].push(curr.measECWS[j].targetPos);
       acc["TGTID"].push(curr.measECWS[j].target.ID);
     }
@@ -112,11 +111,17 @@ const fECWSesidualsSelector = (measurement) => {
 };
 
 const fOBSXYZSesidualsSelector = (measurement) => {
+  // function for obtaining residuals for OBSXYZ measurement type from JSON file
+  // ARGS: JSON file
+  // OUT: dictionary of residuals with keys: X, Y, Z, TGTPOS, TGTID
+
+  const distConv = 100000; // meters to hundredths of milimeter factor
+
   let residuals = { X: [], Y: [], Z: [], TGTPOS: [], TGTID: [] };
   residuals = measurement.fOBSXYZ.reduce((acc, curr) => {
-    acc.X.push(curr.fXResidual * 100000);
-    acc.Y.push(curr.fYResidual * 100000);
-    acc.Z.push(curr.fZResidual * 100000);
+    acc.X.push(curr.fXResidual * distConv);
+    acc.Y.push(curr.fYResidual * distConv);
+    acc.Z.push(curr.fZResidual * distConv);
     acc.TGTPOS.push(curr.targetPos);
     acc.TGTID.push(curr.target);
     return acc;
@@ -127,7 +132,7 @@ const fOBSXYZSesidualsSelector = (measurement) => {
 const residualsSelector = (measurement, type) => {
   switch (type) {
     case "fTSTN":
-      return fSTNResidualsSelector(measurement);
+      return fTSTNResidualsSelector(measurement);
     case "fOBSXYZ":
       return fOBSXYZSesidualsSelector(measurement);
     case "fECWS":
@@ -137,6 +142,7 @@ const residualsSelector = (measurement, type) => {
   }
 };
 
+// -- main functions -- //
 const mergeResiduals = (resType, acc, residuals) => {
   if (!(resType in acc)) {
     acc[resType] = residuals;

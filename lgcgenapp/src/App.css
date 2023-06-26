@@ -1,17 +1,9 @@
-.App {
+.app {
   text-align: center;
+  max-width: 800;
+  padding: 2rem;
 }
 
-.App-header {
-  /* background-color: #282c34;
- display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white; */
-}
-
-.aa {
-  margin: 20px;
+.main-layout {
+  /* margin-left: 500px; */
 }

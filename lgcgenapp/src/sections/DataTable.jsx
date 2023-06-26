@@ -1,5 +1,6 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { get3DPointEstDataRows } from "../utils/dataProcessing";
+import { get3DPointEstData } from "../utils/dataProcessing";
+import Title from "../components/Title";
 
 function generateNumFormatter(decimals, factor) {
   return (params) => {
@@ -9,8 +10,6 @@ function generateNumFormatter(decimals, factor) {
     return roundedValue;
   };
 }
-
-console.log(generateNumFormatter(5, 10)(0.000656145543));
 
 const columns = [
   { field: "id", headerName: "NAME", sortable: true, flex: 1.3 },
@@ -87,19 +86,22 @@ const columns = [
   },
 ];
 
-export default function DataTable2({ data }) {
-  const rows = get3DPointEstDataRows(
+export default function DataTable({ data }) {
+  const rows = get3DPointEstData(
     data.LGC_DATA,
     columns.map((col) => col.field)
   );
 
   return (
-    <DataGrid
-      rows={rows}
-      columns={columns}
-      hideFooter
-      disableRowSelectionOnClick
-      slots={{ toolbar: GridToolbar }}
-    />
+    <div style={{ height: "1000px" }}>
+      <Title title={"3D Points overview"} />
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        hideFooter
+        disableRowSelectionOnClick
+        slots={{ toolbar: GridToolbar }}
+      />
+    </div>
   );
 }
