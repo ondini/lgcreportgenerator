@@ -89,7 +89,7 @@ const fTSTNResidualsSelector = (measurement) => {
   return residuals;
 };
 
-const fECWSesidualsSelector = (measurement) => {
+const fECWSResidualsSelector = (measurement) => {
   // function for obtaining residuals for ECWS measurement type from JSON file
   // ARGS: JSON file
   // OUT: dictionary of residuals with keys: ECWS, TGTPOS, TGTID
@@ -110,7 +110,66 @@ const fECWSesidualsSelector = (measurement) => {
   return residuals;
 };
 
-const fOBSXYZSesidualsSelector = (measurement) => {
+const fEDMesidualsSelector = (measurement) => {
+  // function for obtaining residuals for ECWS measurement type from JSON file
+  // ARGS: JSON file
+  // OUT: dictionary of residuals with keys: ECWS, TGTPOS, TGTID
+
+  const distConv = 10000; // meters to milimeters factor
+
+  let residuals = { DSPT: [], TGTPOS: [], TGTID: [] }; // residuals data
+  residuals = measurement.fEDM.reduce((acc, curr) => {
+    for (let j = 0; j < curr.measDSPT.length; j++) {
+      acc["DSPT"].push(
+        curr.measDSPT[j].distancesResiduals[0].fValue * distConv
+      );
+      acc["TGTPOS"].push(curr.measDSPT[j].targetPos);
+      acc["TGTID"].push(curr.measDSPT[j].target.ID);
+    }
+    return acc;
+  }, residuals);
+  return residuals;
+};
+
+const fECHOResidualsSelector = (measurement) => {
+  // function for obtaining residuals for ECWS measurement type from JSON file
+  // ARGS: JSON file
+  // OUT: dictionary of residuals with keys: ECWS, TGTPOS, TGTID
+
+  const distConv = 10000; // meters to hundredths of milimeter factor
+
+  let residuals = { ECHO: [], TGTPOS: [], TGTID: [] }; // residuals data
+  residuals = measurement.fECHO.reduce((acc, curr) => {
+    for (let j = 0; j < curr.measECHO.length; j++) {
+      acc["ECHO"].push(
+        curr.measECHO[j].distancesResiduals[0].fValue * distConv
+      );
+      acc["TGTPOS"].push(curr.measECHO[j].targetPos);
+      acc["TGTID"].push(curr.measECHO[j].target.ID);
+    }
+    return acc;
+  }, residuals);
+  return residuals;
+};
+
+const fRADIResidualsSelector = (measurement) => {
+  // function for obtaining residuals for ECWS measurement type from JSON file
+  // ARGS: JSON file
+  // OUT: dictionary of residuals with keys: ECWS, TGTPOS, TGTID
+
+  const distConv = 1000; // meters to hundredths of milimeter factor
+
+  let residuals = { RADI: [], TGTPOS: [], TGTID: [] }; // residuals data
+  residuals = measurement.fRADI.reduce((acc, curr) => {
+    acc["RADI"].push(curr.fResidual * distConv);
+    acc["TGTPOS"].push(curr.targetPos);
+    acc["TGTID"].push(curr.target);
+    return acc;
+  }, residuals);
+  return residuals;
+};
+
+const fOBSXYZResidualsSelector = (measurement) => {
   // function for obtaining residuals for OBSXYZ measurement type from JSON file
   // ARGS: JSON file
   // OUT: dictionary of residuals with keys: X, Y, Z, TGTPOS, TGTID
@@ -134,9 +193,15 @@ const residualsSelector = (measurement, type) => {
     case "fTSTN":
       return fTSTNResidualsSelector(measurement);
     case "fOBSXYZ":
-      return fOBSXYZSesidualsSelector(measurement);
+      return fOBSXYZResidualsSelector(measurement);
     case "fECWS":
-      return fECWSesidualsSelector(measurement);
+      return fECWSResidualsSelector(measurement);
+    case "fEDM":
+      return fEDMesidualsSelector(measurement);
+    case "fECHO":
+      return fECHOResidualsSelector(measurement);
+    case "fRADI":
+      return fRADIResidualsSelector(measurement);
     default:
       return {};
   }
