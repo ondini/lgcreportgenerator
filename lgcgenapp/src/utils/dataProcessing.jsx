@@ -18,6 +18,12 @@ const getVarTypeFromFixed = (fixedState) => {
   // compute point type from fixed state
   // convert fixed state T/F values to binary string, parse it as int and use it as index in pointTypes array (containing names)
   const index = parseInt(fixedState.map((i) => (i ? 1 : 0)).join(""), 2);
+  console.log(
+    fixedState,
+    index,
+    pointTypes[index],
+    fixedState.map((i) => (i ? 1 : 0)).join("")
+  );
   return pointTypes[index];
 };
 
@@ -31,6 +37,7 @@ export const get3DPointEstData = (data, colNames) => {
     let pointVals = [
       point.fName, // point name
       getVarTypeFromFixed(point.fixedState), // point variability type
+      point.fFramePosition_Name, // point frame
       ...point.fEstimatedValueInRoot.fVector, // estimated coordinates
       point.fEstimatedHeightInRoot.fValue, // estimated height
       ...point.fEstimatedPrecision, // estimated precision
@@ -55,12 +62,20 @@ export const get3DPointEstData = (data, colNames) => {
 const fTSTNResidualsSelector = (measurement) => {
   // function for obtaining residuals for TSTN measurement type from JSON file
   // ARGS: JSON file
-  // OUT: dictionary of residuals with keys: ANGL, DIST, ZEND, TGTPOS, TGTID
+  // OUT: dictionary of residuals with keys: ANGL, DIST, ZEND, TGTPOS, TGTLINE, INSPOS, INSLINE
 
   const angleConv = 63.662 * 10000; // radians to centesimal circle factor
   const distConv = 100000; // meters to hundredths of milimeter factor
 
-  let residuals = { ANGL: [], DIST: [], ZEND: [], TGTPOS: [], TGTID: [] }; // residuals data
+  let residuals = {
+    ANGL: [], // angle residuals
+    DIST: [], // distance residuals
+    ZEND: [], // zenith residuals
+    TGTPOS: [], // target position
+    TGTLINE: [], // target line
+    INSPOS: [], // instrument position
+    INSLINE: [], // instrument line
+  }; // residuals data
 
   residuals = measurement.fTSTN.reduce((acc, curr) => {
     // reduce over all measurements
@@ -81,7 +96,9 @@ const fTSTNResidualsSelector = (measurement) => {
           rom[residualsKeys[2]][j].anglesResiduals[0].fValue * angleConv
         );
         acc["TGTPOS"].push(rom[residualsKeys[2]][j].targetPos);
-        acc["TGTID"].push(rom[residualsKeys[2]][j].target.ID);
+        acc["TGTLINE"].push(rom[residualsKeys[2]][j].line);
+        acc["INSPOS"].push(curr.instrumentPos);
+        acc["INSLINE"].push(curr.line);
       }
     }
     return acc;
@@ -93,25 +110,43 @@ const fMultResidualsSelector = (measurement, type) => {
   // function for obtaining residuals for ECWS, ECHO or DSPT measurement type from JSON file
   // it is all in one function, since the paths to values are the same
   // ARGS: JSON file
-  // OUT: dictionary of residuals with keys: ECWS/ECHO/DSPT-DIST, TGTPOS, TGTID
+  // OUT: dictionary of residuals with keys: ECWS/ECHO/DSPT-DIST, TGTPOS, TGTID, TGTLINE, INSPOS, INSLINE
 
   const distConv = type === "fECWS" ? 100000 : 10000; // meters to hundredths (tenths) of milimeter factor
+
   const path =
     type === "fECWS"
       ? ["fECWS", "measECWS"]
       : type === "fECHO"
       ? ["fECHO", "measECHO"]
       : ["fEDM", "measDSPT"];
+
   const typeName =
     type === "fECWS" ? "ECWS" : type === "fECHO" ? "ECHO" : "DSPT";
-  let residuals = { [typeName]: [], TGTPOS: [], TGTID: [] }; // residuals data
-  residuals = measurement[keywords[0]].reduce((acc, curr) => {
-    for (let j = 0; j < curr[keywords[1]].length; j++) {
+
+  let residuals = {
+    [typeName]: [], // distance residuals
+    TGTPOS: [], // target position
+    TGTLINE: [], // target line
+    INSPOS: [], // instrument position
+    INSLINE: [], // instrument line
+  }; // residuals data
+
+  residuals = measurement[path[0]].reduce((acc, curr) => {
+    for (let j = 0; j < curr[path[1]].length; j++) {
       acc[typeName].push(
-        curr[keywords[1]][j].distancesResiduals[0].fValue * distConv
+        curr[path[1]][j].distancesResiduals[0].fValue * distConv
       );
-      acc["TGTPOS"].push(curr[keywords[1]][j].targetPos);
-      acc["TGTID"].push(curr[keywords[1]][j].target.ID);
+      acc["TGTPOS"].push(curr[path[1]][j].targetPos);
+      acc["TGTLINE"].push(curr[path[1]][j].line);
+      acc["INSPOS"].push(
+        type === "fECWS"
+          ? curr.fMeasuredWSHeight.fName
+          : type === "fECHO"
+          ? curr.fMeasuredPlane.fName
+          : curr.instrumentPos
+      );
+      acc["INSLINE"].push(curr.line);
     }
     return acc;
   }, residuals);
@@ -125,11 +160,15 @@ const fRADIResidualsSelector = (measurement) => {
 
   const distConv = 1000; // meters to hundredths of milimeter factor
 
-  let residuals = { RADI: [], TGTPOS: [], TGTID: [] }; // residuals data
+  let residuals = {
+    RADI: [], // angle residuals
+    TGTPOS: [], // target position
+    TGTLINE: [], // target line
+  }; // residuals data
   residuals = measurement.fRADI.reduce((acc, curr) => {
     acc["RADI"].push(curr.fResidual * distConv);
     acc["TGTPOS"].push(curr.targetPos);
-    acc["TGTID"].push(curr.target);
+    acc["TGTPOS"].push(curr.line);
     return acc;
   }, residuals);
   return residuals;
@@ -142,13 +181,20 @@ const fOBSXYZResidualsSelector = (measurement) => {
 
   const distConv = 100000; // meters to hundredths of milimeter factor
 
-  let residuals = { X: [], Y: [], Z: [], TGTPOS: [], TGTID: [] };
+  let residuals = {
+    X: [],
+    Y: [],
+    Z: [],
+    TGTPOS: [], // target position
+    TGTLINE: [], // target line
+  }; // residuals data
+
   residuals = measurement.fOBSXYZ.reduce((acc, curr) => {
-    acc.X.push(curr.fXResidual * distConv);
-    acc.Y.push(curr.fYResidual * distConv);
-    acc.Z.push(curr.fZResidual * distConv);
-    acc.TGTPOS.push(curr.targetPos);
-    acc.TGTID.push(curr.target);
+    acc["X"].push(curr.fXResidual * distConv);
+    acc["Y"].push(curr.fYResidual * distConv);
+    acc["Z"].push(curr.fZResidual * distConv);
+    acc["TGTPOS"].push(curr.targetPos);
+    acc["TGTPOS"].push(curr.line);
     return acc;
   }, residuals);
   return residuals;

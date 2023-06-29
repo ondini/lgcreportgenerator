@@ -14,6 +14,7 @@ function generateNumFormatter(decimals, factor) {
 const columns = [
   { field: "id", headerName: "NAME", sortable: true, flex: 1.3 },
   { field: "type", headerName: "TYPE", sortable: true, flex: 0.5 },
+  { field: "frame", headerName: "FRAME", sortable: true, flex: 0.4 },
   {
     field: "x",
     headerName: "X",
