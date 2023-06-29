@@ -18,12 +18,6 @@ const getVarTypeFromFixed = (fixedState) => {
   // compute point type from fixed state
   // convert fixed state T/F values to binary string, parse it as int and use it as index in pointTypes array (containing names)
   const index = parseInt(fixedState.map((i) => (i ? 1 : 0)).join(""), 2);
-  console.log(
-    fixedState,
-    index,
-    pointTypes[index],
-    fixedState.map((i) => (i ? 1 : 0)).join("")
-  );
   return pointTypes[index];
 };
 
@@ -233,9 +227,7 @@ export const getResiduals = (data) => {
   return data.tree.reduce((acc, curr) => {
     Object.keys(curr.measurements).forEach((key) => {
       if (key[0] === "f") {
-        console.log(key);
         let residuals = residualsSelector(curr.measurements, key);
-        console.log(residuals);
         acc = mergeResiduals(key, acc, residuals);
       }
     });

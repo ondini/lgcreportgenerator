@@ -6,49 +6,71 @@ import Title from "../components/Title";
 import "./Histogram.css";
 
 const makeBins = (data, key, nbinsx) => {
-  console.log("getting boins");
   const maxVal = Math.max(...data[key]);
   const minVal = Math.min(...data[key]);
   const binSize = (maxVal - minVal) / nbinsx;
-  console.log(maxVal, minVal, binSize);
   let xbins = {
     end: maxVal,
     size: binSize,
     start: minVal,
   };
 
-  let bins = Array(nbinsx).fill("");
+  let binsDescs = Array(nbinsx).fill("");
+  let binsCounts = Array(nbinsx).fill(0);
+  const maxBinDescCount = 20;
 
   for (let i = 0; i < data[key].length; i++) {
     const value = data[key][i];
     const binIndex = Math.floor((value - minVal) / binSize);
-    bins[binIndex] =
-      bins[binIndex] +
-      "<br>" +
-      data["INSPOS"][i] +
-      ":" +
-      data["INSLINE"][i] +
-      " -> " +
-      data["TGTPOS"][i] +
-      ":" +
-      data["TGTLINE"][i];
+    binsCounts[binIndex] += 1;
+    binsDescs[binIndex] =
+      binsDescs[binIndex] +
+      (binsCounts[binIndex] < maxBinDescCount
+        ? "<br>" +
+          data["INSPOS"][i] +
+          ":" +
+          data["INSLINE"][i] +
+          " -> " +
+          data["TGTPOS"][i] +
+          ":" +
+          data["TGTLINE"][i]
+        : binsCounts[binIndex] == maxBinDescCount
+        ? "<br>  ....  "
+        : "");
   }
 
-  console.log(bins);
-  return { xbins: xbins, customdata: bins };
+  return { xbins: xbins, customdata: binsDescs };
 };
 
-const Histogram = ({ data }) => {
-  const residuals = getResiduals(data.LGC_DATA);
-  const measTypes = Object.keys(residuals);
-  console.log(residuals);
-  const plotData = [
+const makeTraces = (residuals, key, nbinsx) => {
+  let traces = {};
+  let traceTemp = {};
+  residuals.forEach((key) => {
+    traceTemp[key] = [];
+  });
+  for (let i = 0; i < residuals[key].length; i++) {
+    const traceKey = residuals["INSPOS"][i] + ":" + residuals["INSLINE"][i];
+    if (traces[traceKey] === undefined) {
+      traces[traceKey] = JSON.parse(JSON.stringify(traceTemp));
+    }
+    residuals.forEach((key2) => {
+      traces[traceKey][key2].push(residuals[key2][i]);
+    });
+  }
+  return traces;
+};
+
+const makePlotData = (residuals, key, nbinsx) => {
+  let resBinData = makeBins(residuals, key, nbinsx);
+
+  return [
     {
-      x: [],
-      customdata: [],
-      y: [],
+      x: residuals[key],
+      customdata: resBinData.customdata, // customdata is used to display the obs. information in the hovertemplate
       type: "histogram",
       autobinx: false,
+      xbins: resBinData.xbins,
+
       marker: {
         color: "rgba(100, 200, 102, 0.7)",
         line: {
@@ -56,30 +78,27 @@ const Histogram = ({ data }) => {
           width: 1,
         },
       },
-      text: [],
-      hovertemplate: "Count: %{y}" + "%{customdata} <extra></extra>",
-      nbinsx: 30,
       opacity: 0.75,
-      xbins: {},
+
+      hovertemplate: "<-b> Count: %{y} </b>" + "%{customdata} <extra></extra>",
     },
   ];
+};
+
+const Histogram = ({ data }) => {
+  const residuals = getResiduals(data.LGC_DATA);
+  const measTypes = Object.keys(residuals);
 
   const createHists = (measType) => {
     const nonResKeys = ["TGTPOS", "TGTLINE", "INSPOS", "INSLINE"];
     let histograms = [];
     Object.keys(residuals[measType]).forEach((key) => {
       if (nonResKeys.includes(key)) return;
-      let resBinData = makeBins(residuals[measType], key, 30);
-      plotData[0].x = residuals[measType][key];
-      plotData[0].xbins = resBinData.xbins;
-      plotData[0].customdata = resBinData.customdata;
-      plotData[0].y = residuals[measType]["TGTPOS"];
-      //plotData[0].customdata = residuals[measType]["TGTLINE"];
-      console.log(residuals[measType][key]);
+
       histograms.push(
         <div className="histsec-plots-plot">
           <Plot
-            data={JSON.parse(JSON.stringify(plotData))} // JSON here is used for deep copy
+            data={makePlotData(residuals[measType], key, 30)}
             layout={{ title: key, bargroupgap: 0.2 }}
           />
         </div>
@@ -89,8 +108,6 @@ const Histogram = ({ data }) => {
   };
 
   let [histList, setHistList] = useState(createHists(measTypes[0]));
-
-  console.log(histList, setHistList);
 
   let measTypeButtons = measTypes.map((key) => {
     return (

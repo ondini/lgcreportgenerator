@@ -3,6 +3,7 @@ import { get3DPointEstData } from "../utils/dataProcessing";
 import Title from "../components/Title";
 
 function generateNumFormatter(decimals, factor) {
+  // function to generate a function, serving as number formatter for the DataGrid
   return (params) => {
     const roundedValue =
       Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) /
