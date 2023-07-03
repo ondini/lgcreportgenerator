@@ -1,18 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Plot from "react-plotly.js";
 import { useState } from "react";
 import { getResiduals } from "../utils/dataProcessing";
 import Title from "../components/Title";
 import "./Histogram.css";
+import Switch from "@mui/material/Switch";
 
 const makeBinDescs = (data, key, nbinsx, binsx) => {
-  let binsDescs = Array(nbinsx).fill("");
-  let binsCounts = Array(nbinsx).fill(0);
-  const maxBinDescCount = 20;
+  // function that creates descriptions for each bin
+  // the description is a string with the instrument position and line number,
+  // followed by the target position and line number of each observation in the bin
+
+  let binsDescs = Array(nbinsx).fill(""); // array of description strings, one for each bin
+  let binsCounts = Array(nbinsx).fill(0); // array of counts, one for each bin (just to count and then limit lines)
+  const maxBinDescCount = 20; // maximum number of lines in the description string
 
   for (let i = 0; i < data[key].length; i++) {
+    // loop over all observations
     const value = data[key][i];
-    const binIndex = Math.floor((value - binsx.start) / binsx.size);
+    const binIndex = Math.floor((value - binsx.start) / binsx.size); // index of the bin where the observation belongs
+
     binsCounts[binIndex] += 1;
     binsDescs[binIndex] =
       binsDescs[binIndex] +
@@ -30,46 +37,52 @@ const makeBinDescs = (data, key, nbinsx, binsx) => {
         : "");
   }
 
-  let i = 0;
+  let i = 0; // skip empty bins, as it would shift the histogram descriptions
   while (binsCounts[i] == 0) {
     i++;
   }
 
-  return { xbins: binsx, customdata: binsDescs.slice(i) };
+  return binsDescs.slice(i);
 };
 
-const makeTraces = (residuals, key, nbinsx) => {
-  let traces = {};
-  let traceTemp = {};
+const separateDataByInstrument = (residuals, key) => {
+  // function that separates the residuals data by instrument, so that they are filterable in histograms
+
+  let instruments = {}; // object with the data separated by instrument
+  let instruInit = {}; // template to initialize each instrument object
   Object.keys(residuals).forEach((key) => {
-    traceTemp[key] = [];
+    instruInit[key] = [];
   });
+
   for (let i = 0; i < residuals[key].length; i++) {
-    const traceKey = residuals["INSPOS"][i] + ":" + residuals["INSLINE"][i];
-    if (traces[traceKey] === undefined) {
-      traces[traceKey] = JSON.parse(JSON.stringify(traceTemp));
+    // loop over all observations
+    const traceKey = residuals["INSPOS"][i] + ":" + residuals["INSLINE"][i]; // unique key for each instrument
+    if (instruments[traceKey] === undefined) {
+      instruments[traceKey] = JSON.parse(JSON.stringify(instruInit));
     }
     Object.keys(residuals).forEach((key2) => {
-      traces[traceKey][key2].push(residuals[key2][i]);
+      instruments[traceKey][key2].push(residuals[key2][i]); // add the observation to the instrument object
     });
   }
-  return traces;
+  return instruments;
 };
 
 const makePlotLayout = (residuals, key, nbinsx, binsx, name) => {
+  // function that creates the data object for a histogram, which is then
+  // usable by Plotly, possibly as one of many traces in a plot
+
   let resBinData = makeBinDescs(residuals, key, nbinsx, binsx);
 
   return {
     x: residuals[key],
-    customdata: resBinData.customdata, // customdata is used to display the obs. information in the hovertemplate
+    customdata: resBinData, // customdata is used to display the obs. information in the hovertemplate
     type: "histogram",
     autobinx: false,
-    xbins: resBinData.xbins,
+    xbins: binsx,
     name: name,
     marker: {
-      // color: "rgba(100, 200, 102, 0.7)",
+      opacity: 0.75,
       line: {
-        // color: "rgba(100, 200, 102, 1)",
         width: 1,
       },
     },
@@ -79,7 +92,11 @@ const makePlotLayout = (residuals, key, nbinsx, binsx, name) => {
   };
 };
 
-const makePlotData = (residuals, key, nbinsx) => {
+const makePlotData = (residuals, measType, key, nbinsx, filterInstruments) => {
+  // function that creates array of data objects for a histogram, which is then
+  // directly passed to a Plotly component
+
+  // craete bins(the same for all instrument positions, so that they are stackable)
   const maxVal = Math.max(...residuals[key]);
   const minVal = Math.min(...residuals[key]);
   const binSize = (maxVal - minVal) / nbinsx;
@@ -89,11 +106,11 @@ const makePlotData = (residuals, key, nbinsx) => {
     start: minVal,
   };
 
-  let mkTrcs = true;
-  const traces = mkTrcs
-    ? makeTraces(residuals, key, nbinsx)
+  const traces = filterInstruments // separate data by instrument if filter is on
+    ? separateDataByInstrument(residuals, key, nbinsx)
     : { ";": residuals };
-  let plotData = [];
+
+  let plotData = []; // array of data objects for the histogram
   Object.keys(traces).forEach((key2) => {
     plotData.push(makePlotLayout(traces[key2], key, nbinsx, xbins, key2));
   });
@@ -101,20 +118,29 @@ const makePlotData = (residuals, key, nbinsx) => {
 };
 
 const Histogram = ({ data }) => {
-  const residuals = getResiduals(data.LGC_DATA);
-  const measTypes = Object.keys(residuals);
+  // Function representing the Histogram section of the app
+  // It is a Plotly component with a button menu to select the measurement type and turn off the filter by instrument
 
-  const createHists = (measType) => {
-    const nonResKeys = ["TGTPOS", "TGTLINE", "INSPOS", "INSLINE"];
+  const residuals = getResiduals(data.LGC_DATA); // get the residuals data from the LGC_DATA object
+  const measTypes = Object.keys(residuals); // get all the used measurement types from the residuals data
+
+  const createHists = (measType, filterInstr) => {
+    // function that creates the histogram components for each of the residuals of the selected measurement type
+    const nonResKeys = ["TGTPOS", "TGTLINE", "INSPOS", "INSLINE"]; // keys that are not residuals
+
     let histograms = [];
     Object.keys(residuals[measType]).forEach((key) => {
       if (nonResKeys.includes(key)) return;
-
-      console.log(makePlotData(residuals[measType], key, 30));
       histograms.push(
         <div className="histsec-plots-plot">
           <Plot
-            data={makePlotData(residuals[measType], key, 30)}
+            data={makePlotData(
+              residuals[measType],
+              measType,
+              key,
+              30,
+              filterInstr
+            )}
             layout={{ title: key, bargroupgap: 0.2, barmode: "stack" }}
           />
         </div>
@@ -123,14 +149,23 @@ const Histogram = ({ data }) => {
     return histograms;
   };
 
-  let [histList, setHistList] = useState(createHists(measTypes[0]));
+  let [filterInstr, setFilterInstr] = useState(true); // state of the filter by instrument
+  let [histList, setHistList] = useState(
+    // state of the histogram components
+    createHists(measTypes[0], filterInstr)
+  );
+  let [key, setKey] = useState(measTypes[0]); // state of the currently active measurement type
+
+  useEffect(() => {
+    setHistList(createHists(key, filterInstr));
+  }, [filterInstr, key]);
 
   let measTypeButtons = measTypes.map((key) => {
     return (
       <button
         className="histsec-nav-button"
         onClick={() => {
-          setHistList(createHists(key));
+          setKey(key);
         }}
       >
         {key}
@@ -144,8 +179,15 @@ const Histogram = ({ data }) => {
       <div className="histsec">
         <div className="histsec-nav">
           {" "}
-          <h4>Measurement types </h4>
+          <h4>Measurement type </h4>
           {measTypeButtons}
+          <h4>Filter by instrument</h4>
+          <Switch
+            onChange={(event) => {
+              setFilterInstr(event.target.checked);
+            }}
+            checked={filterInstr}
+          />
         </div>
         <div className="histsec-plots"> {histList} </div>
       </div>

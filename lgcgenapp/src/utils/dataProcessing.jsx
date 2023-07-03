@@ -158,11 +158,15 @@ const fRADIResidualsSelector = (measurement) => {
     RADI: [], // angle residuals
     TGTPOS: [], // target position
     TGTLINE: [], // target line
+    INSPOS: [], // instrument position
+    INSLINE: [], // instrument line
   }; // residuals data
   residuals = measurement.fRADI.reduce((acc, curr) => {
     acc["RADI"].push(curr.fResidual * distConv);
     acc["TGTPOS"].push(curr.targetPos);
     acc["TGTPOS"].push(curr.line);
+    acc["INSPOS"].push("");
+    acc["INSLINE"].push("");
     return acc;
   }, residuals);
   return residuals;
@@ -181,6 +185,8 @@ const fOBSXYZResidualsSelector = (measurement) => {
     Z: [],
     TGTPOS: [], // target position
     TGTLINE: [], // target line
+    INSPOS: [], // instrument position
+    INSLINE: [], // instrument line
   }; // residuals data
 
   residuals = measurement.fOBSXYZ.reduce((acc, curr) => {
@@ -189,6 +195,8 @@ const fOBSXYZResidualsSelector = (measurement) => {
     acc["Z"].push(curr.fZResidual * distConv);
     acc["TGTPOS"].push(curr.targetPos);
     acc["TGTPOS"].push(curr.line);
+    acc["INSPOS"].push("");
+    acc["INSLINE"].push("");
     return acc;
   }, residuals);
   return residuals;
