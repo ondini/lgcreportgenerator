@@ -47,6 +47,7 @@ export const get3DPointEstData = (data, colNames) => {
         return acc;
       }, {});
     }
+    return pointVals;
   });
 };
 
@@ -87,7 +88,9 @@ const fTSTNResidualsSelector = (measurement) => {
           rom[residualsKeys[1]][j].distancesResiduals[0].fValue * distConv
         );
         acc["ZEND"].push(
-          rom[residualsKeys[2]][j].anglesResiduals[0].fValue * angleConv
+          rom[residualsKeys[2]][j].anglesResiduals[
+            residualsKeys[2] === "measPLR3D" ? 1 : 0
+          ].fValue * angleConv
         );
         acc["TGTPOS"].push(rom[residualsKeys[2]][j].targetPos);
         acc["TGTLINE"].push(rom[residualsKeys[2]][j].line);

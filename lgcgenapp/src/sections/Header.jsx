@@ -1,6 +1,5 @@
 import React from "react";
 import "./Header.css";
-import { Plot3D } from "../sections";
 
 const Header = ({ data }) => {
   return (

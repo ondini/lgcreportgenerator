@@ -32,13 +32,13 @@ const makeBinDescs = (data, key, nbinsx, binsx) => {
           data["TGTPOS"][i] +
           ":" +
           data["TGTLINE"][i]
-        : binsCounts[binIndex] == maxBinDescCount
+        : binsCounts[binIndex] === maxBinDescCount
         ? "<br>  ....  "
         : "");
   }
 
   let i = 0; // skip empty bins, as it would shift the histogram descriptions
-  while (binsCounts[i] == 0) {
+  while (binsCounts[i] === 0) {
     i++;
   }
 
@@ -88,7 +88,7 @@ const makePlotLayout = (residuals, key, nbinsx, binsx, name) => {
     },
     opacity: 0.75,
 
-    hovertemplate: "<b> Count: %{y} </b>" + "%{customdata} <extra></extra>",
+    hovertemplate: "<b> Count: %{y} </b> %{customdata} <extra></extra>",
   };
 };
 
@@ -157,10 +157,12 @@ const Histogram = ({ data }) => {
   let [key, setKey] = useState(measTypes[0]); // state of the currently active measurement type
 
   useEffect(() => {
+    // update and re-render the histogram components when the filter or measurement type changes
     setHistList(createHists(key, filterInstr));
   }, [filterInstr, key]);
 
   let measTypeButtons = measTypes.map((key) => {
+    // create the measurement type buttons
     return (
       <button
         className="histsec-nav-button"
