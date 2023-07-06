@@ -251,6 +251,124 @@ const generatefTSTNColumns = () => {
   }; // residuals data
 };
 
+const generatefECHOColumns = () => {
+  return {
+    // == TOOLTIP DATA == //
+    // X: {
+    //   data: [],
+    //   show: false,
+    // },
+    // Y: {
+    //   data: [],
+    //   show: false,
+    // },
+    // Z: {
+    //   data: [],
+    //   show: false,
+    // },
+
+    // == OBS DATA == //
+    id: {
+      field: "id",
+      data: [],
+      show: true,
+      headerName: "id",
+      sortable: true,
+      flex: 0.1,
+      minWidth: 30,
+    }, // table id
+    REFPT: {
+      field: "REFPT",
+      data: [],
+      show: true,
+      headerName: "Reference. Pt.",
+      sortable: true,
+      flex: 1,
+      minWidth: 200,
+      cellClassName: "name-column--cell border-right--cell",
+    }, // instrument id
+    REFLINE: {
+      field: "REFLINE",
+      data: [],
+      show: true,
+      headerName: "RLine",
+      sortable: true,
+      flex: 0.11,
+      minWidth: 50,
+    }, // instrument line
+    TGTPOS: {
+      field: "TGTPOS",
+      data: [],
+      show: true,
+      headerName: "Tgt. Pos.",
+      sortable: true,
+      flex: 1,
+      minWidth: 200,
+    }, // target position
+    TGTLINE: {
+      field: "TGTLINE",
+      data: [],
+      show: true,
+      headerName: "TLine",
+      sortable: true,
+      flex: 0.11,
+      minWidth: 50,
+      cellClassName: "border-right--cell",
+    }, // target line
+    // == ANGL == //
+    OBSERVE: {
+      field: "OBSERVE",
+      data: [],
+      show: true,
+      headerName: "Observed",
+      sortable: true,
+      flex: 0.8,
+      minWidth: 100,
+      valueFormatter: generateNumFormatter(5, 1),
+    }, // angle observations
+    SIGMA: {
+      field: "SIGMA",
+      data: [],
+      show: true,
+      headerName: "Sigma",
+      sortable: true,
+      flex: 0.5,
+      minWidth: 60,
+      valueFormatter: generateNumFormatter(1, 1),
+    }, // angle standard deviation
+    CALC: {
+      field: "CALC",
+      data: [],
+      show: true,
+      headerName: "CALCULED",
+      sortable: true,
+      flex: 0.8,
+      minWidth: 100,
+      valueFormatter: generateNumFormatter(5, 1),
+    }, // angle calculated // measured+ residual
+    RES: {
+      field: "RES",
+      data: [],
+      show: true,
+      headerName: "Residual",
+      sortable: true,
+      flex: 0.5,
+      minWidth: 60,
+      valueFormatter: generateNumFormatter(1, 1),
+    }, // angle residuals
+    RESSIG: {
+      field: "RESSIG",
+      data: [],
+      show: true,
+      headerName: "Res./Sig.",
+      sortable: true,
+      flex: 0.5,
+      minWidth: 60,
+      valueFormatter: generateNumFormatter(2, 1),
+    }, // angle RES/SIGMA
+  }; // residuals data
+};
+
 const fTSTNColumnsSelector = (measurement, makeColumns) => {
   // function for obtaining residuals for TSTN measurement type from JSON file
   // ARGS: JSON file
@@ -275,12 +393,12 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
       if ("measPLR3D" in rom) {
         for (let j = 0; j < rom.measPLR3D.length; j++) {
           // == TOOLTIP DATA == //
-          acc["id"].push(idO++);
+          acc["INSHI"].push(curr.instrumentHeightAdjustable.fEstimatedValue);
           // == OBS DATA == //
+          acc["id"].push(idO++);
           acc["INSPOS"].push(curr.instrumentPos);
           acc["INSLINE"].push(curr.line);
           acc["INSID"].push(curr.instrument.ID);
-          acc["INSHI"].push(curr.instrumentHeightAdjustable.fEstimatedValue);
           acc["TGTPOS"].push(rom.measPLR3D[j].targetPos);
           acc["TGTLINE"].push(rom.measPLR3D[j].line);
           // == ANGL == //
@@ -346,6 +464,72 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
           );
         }
       }
+    }
+    return acc;
+  }, columns);
+
+  if (makeColumns) {
+    let colNames = Object.keys(cols);
+    let columnDetails = [];
+    for (let i = 0; i < colNames.length; i++) {
+      if (cols[colNames[i]].show) {
+        columnDetails.push(cols[colNames[i]]);
+      }
+    }
+
+    // convert array of values to dictionary with keys from colNames, so thtat this can be used in a table
+    obsData = obsData[colNames[0]].map((value, index) => {
+      return colNames.reduce((acc, key) => {
+        acc[key] = obsData[key][index];
+        return acc;
+      }, {});
+    });
+    return { data: obsData, columnss: columnDetails };
+  }
+
+  return obsData;
+};
+
+const fECHOColumnsSelector = (measurement, makeColumns) => {
+  // function for obtaining residuals for TSTN measurement type from JSON file
+  // ARGS: JSON file
+  // OUT: dictionary of residuals with keys: ANGL, DIST, ZEND, TGTPOS, TGTLINE, INSPOS, INSLINE
+
+  const angleConvCC = 63.662 * 10000; // radians to centesimal circle factor
+  const angleConvGON = 63.662; // radians to gon factor
+  const distConv = 1000; // meters to hundredths of milimeter factor
+
+  let cols = generatefTSTNColumns();
+  let columns = {};
+  Object.keys(cols).forEach((key) => {
+    columns[key] = [];
+    console.log(key);
+  });
+
+  var idO = 0;
+  path = ["fECHO", "measECHO"];
+
+  let obsData = measurement[path[0]].reduce((acc, curr) => {
+    // reduce over all measurements
+    for (let j = 0; j < curr[path[1]].length; j++) {
+      // == TOOLTIP DATA == //
+      // == OBS DATA == //
+      acc["id"].push(idO++);
+      acc["REFPT"].push(curr.fMeasuredPlane.fName);
+      acc["REFLINE"].push(curr.line);
+      acc["TGTPOS"].push(curr[path[1]][j].targetPos);
+      acc["TGTLINE"].push(curr[path[1]][j].line);
+      acc["OBSERVE"].push(curr[path[1]][j].distances[0].fValue);
+      acc["SIGMA"].push(curr[path[1]][j].target.sigmaCombinedDist * distConv);
+      acc["CALC"].push(
+        curr[path[1]][j].distances[0].fValue +
+          curr[path[1]][j].distancesResiduals[0].fValue
+      );
+      acc["RES"].push(curr[path[1]][j].distancesResiduals[0].fValue * distConv);
+      acc["RESSIG"].push(
+        curr[path[1]][j].distancesResiduals[0].fValue /
+          curr[path[1]][j].target.sigmaCombinedDist
+      );
     }
     return acc;
   }, columns);
