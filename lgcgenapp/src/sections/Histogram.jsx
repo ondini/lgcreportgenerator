@@ -132,7 +132,7 @@ const Histogram = ({ data }) => {
     Object.keys(residuals[measType]).forEach((key) => {
       if (nonResKeys.includes(key)) return;
       histograms.push(
-        <div className="histsec-plots-plot">
+        <div className="histsec-plots-plot" key={measType + key}>
           <Plot
             data={makePlotData(
               residuals[measType],
@@ -165,6 +165,7 @@ const Histogram = ({ data }) => {
     // create the measurement type buttons
     return (
       <button
+        key={key}
         className="histsec-nav-button"
         onClick={() => {
           setKey(key);

@@ -51,6 +51,18 @@ export const get3DPointEstData = (data, colNames) => {
   });
 };
 
+///  --- Data formatting functions --- ///
+
+export function generateNumFormatter(decimals, factor) {
+  // function to generate a function, serving as number formatter for the DataGrid
+  return (params) => {
+    const roundedValue =
+      Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) /
+      10 ** decimals;
+    return roundedValue;
+  };
+}
+
 ///  --- Residuals data selection  --- ///
 
 // -- selectors -- //

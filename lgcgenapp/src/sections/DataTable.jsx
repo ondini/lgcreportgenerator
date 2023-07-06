@@ -1,16 +1,9 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { get3DPointEstData } from "../utils/dataProcessing";
+import {
+  get3DPointEstData,
+  generateNumFormatter,
+} from "../utils/dataProcessing";
 import Title from "../components/Title";
-
-function generateNumFormatter(decimals, factor) {
-  // function to generate a function, serving as number formatter for the DataGrid
-  return (params) => {
-    const roundedValue =
-      Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) /
-      10 ** decimals;
-    return roundedValue;
-  };
-}
 
 const columns = [
   { field: "id", headerName: "NAME", sortable: true, flex: 1.3 },

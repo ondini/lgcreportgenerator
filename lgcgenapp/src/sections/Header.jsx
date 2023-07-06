@@ -1,15 +1,15 @@
 import React from "react";
 import "./Header.css";
 
-const Header = ({ data }) => {
+const Header = ({ data, fName }) => {
   return (
     <header className="header">
       <div className="info">
         <h3> LCG Report</h3>
         <h5>{data.LGC_DATA.config.title} </h5>
-        <p>Source file name: LB_calcul_3D_CCS_IP_8_HLS_4_BF.json </p>
+        <p>Source file name: {fName} </p>
         <p>Timestamp: JUL 01, 2023, 13:56 </p>
-        <h5>Staistics</h5>
+        <h5>Statistics</h5>
         <p>
           {" "}
           Number of observations: {
