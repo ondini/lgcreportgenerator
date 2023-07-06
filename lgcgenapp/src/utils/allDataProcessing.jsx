@@ -4,46 +4,268 @@ import { generateNumFormatter } from "./dataProcessing";
 
 // -- selectors -- //
 
+const generatefTSTNColumns = () => {
+  return {
+    // == TOOLTIP DATA == //
+    INSHI: {
+      field: "INSHI",
+      data: [],
+      show: false,
+      headerName: "id",
+      sortable: true,
+      flex: 0.1,
+      minWidth: 30,
+    }, // instrument height
+    // == OBS DATA == //
+    id: {
+      field: "id",
+      data: [],
+      show: true,
+      headerName: "id",
+      sortable: true,
+      flex: 0.1,
+      minWidth: 30,
+    }, // table id
+    INSID: {
+      field: "INSID",
+      data: [],
+      show: true,
+      headerName: "Instr. ID",
+      sortable: true,
+      flex: 1,
+      minWidth: 200,
+      cellClassName: "name-column--cell border-right--cell",
+    }, // instrument id
+    INSPOS: {
+      field: "INSPOS",
+      data: [],
+      show: true,
+      headerName: "Instr. Pos.",
+      sortable: true,
+      flex: 1,
+      minWidth: 200,
+    }, // instrument position
+    INSLINE: {
+      field: "INSLINE",
+      data: [],
+      show: true,
+      headerName: "ILine",
+      sortable: true,
+      flex: 0.11,
+      minWidth: 50,
+    }, // instrument line
+    TGTPOS: {
+      field: "TGTPOS",
+      data: [],
+      show: true,
+      headerName: "Tgt. Pos.",
+      sortable: true,
+      flex: 1,
+      minWidth: 200,
+    }, // target position
+    TGTLINE: {
+      field: "TGTLINE",
+      data: [],
+      show: true,
+      headerName: "TLine",
+      sortable: true,
+      flex: 0.11,
+      minWidth: 50,
+      cellClassName: "border-right--cell",
+    }, // target line
+    // == ANGL == //
+    OBSANGL: {
+      field: "OBSANGL",
+      data: [],
+      show: true,
+      headerName: "Obs. Angle",
+      sortable: true,
+      flex: 0.8,
+      minWidth: 100,
+      valueFormatter: generateNumFormatter(5, 1),
+    }, // angle observations
+    SANGL: {
+      field: "SANGL",
+      data: [],
+      show: true,
+      headerName: "S. Ang.",
+      sortable: true,
+      flex: 0.5,
+      minWidth: 60,
+      valueFormatter: generateNumFormatter(1, 1),
+    }, // angle standard deviation
+    CALCANGL: {
+      field: "CALCANGL",
+      data: [],
+      show: true,
+      headerName: "Calc. Angl.",
+      sortable: true,
+      flex: 0.8,
+      minWidth: 100,
+      valueFormatter: generateNumFormatter(5, 1),
+    }, // angle calculated // measured+ residual
+    RESANGL: {
+      field: "RESANGL",
+      data: [],
+      show: true,
+      headerName: "Res. Ang.",
+      sortable: true,
+      flex: 0.5,
+      minWidth: 60,
+      valueFormatter: generateNumFormatter(1, 1),
+    }, // angle residuals
+    RESSIGANGL: {
+      field: "RESSIGANGL",
+      data: [],
+      show: true,
+      headerName: "Res./Sig. Ang.",
+      sortable: true,
+      flex: 0.5,
+      minWidth: 60,
+      valueFormatter: generateNumFormatter(2, 1),
+    }, // angle RES/SIGMA
+    ECARTSANGL: {
+      field: "ECARTSANGL",
+      data: [],
+      show: true,
+      headerName: "Ecarts Angl.",
+      sortable: true,
+      flex: 0.5,
+      minWidth: 60,
+      valueFormatter: generateNumFormatter(2, 1),
+      cellClassName: "border-right--cell",
+    },
+    // == ZEND == //
+    OBSZEND: {
+      field: "OBSZEND",
+      data: [],
+      show: true,
+      headerName: "Obs. Zend.",
+      sortable: true,
+      flex: 0.8,
+      minWidth: 100,
+      valueFormatter: generateNumFormatter(5, 1),
+    }, // zenith observations
+    SZEND: {
+      field: "SZEND",
+      data: [],
+      show: true,
+      headerName: "S. Zend.",
+      sortable: true,
+      flex: 0.5,
+      minWidth: 60,
+      valueFormatter: generateNumFormatter(1, 1),
+    }, // zenith standard deviation
+    CALCZEND: {
+      field: "CALCZEND",
+      data: [],
+      show: true,
+      headerName: "Calc. Zend.",
+      sortable: true,
+      flex: 0.8,
+      minWidth: 100,
+      valueFormatter: generateNumFormatter(5, 1),
+    }, // zenith calculated // measured+ residual
+    RESZEND: {
+      field: "RESZEND",
+      data: [],
+      show: true,
+      headerName: "Res. Zend",
+      sortable: true,
+      flex: 0.5,
+      minWidth: 60,
+      valueFormatter: generateNumFormatter(1, 1),
+    }, // zenith residuals
+    RESSIGZEND: {
+      field: "RESSIGZEND",
+      data: [],
+      show: true,
+      headerName: "Res./Sig. Zend.",
+      sortable: true,
+      flex: 0.5,
+      minWidth: 60,
+      valueFormatter: generateNumFormatter(2, 1),
+    }, // zenith RES/SIGMA
+    ECARTSZEND: {
+      field: "ECARTSZEND",
+      data: [],
+      show: true,
+      headerName: "Ecarts Zend.",
+      sortable: true,
+      flex: 0.5,
+      minWidth: 60,
+      valueFormatter: generateNumFormatter(2, 1),
+      cellClassName: "border-right--cell",
+    },
+    // == DIST == //
+    OBSDIST: {
+      field: "OBSDIST",
+      data: [],
+      show: true,
+      headerName: "Obs. Dist.",
+      sortable: true,
+      flex: 0.8,
+      minWidth: 100,
+      valueFormatter: generateNumFormatter(5, 1),
+    }, // distance observations
+    SDIST: {
+      field: "SDIST",
+      data: [],
+      show: true,
+      headerName: "S. Dist.",
+      sortable: true,
+      flex: 0.5,
+      minWidth: 60,
+      valueFormatter: generateNumFormatter(2, 1),
+    }, // distance standard deviation
+    CALCDIST: {
+      field: "CALCDIST",
+      data: [],
+      show: true,
+      headerName: "Calc. Dist.",
+      sortable: true,
+      flex: 0.8,
+      minWidth: 100,
+      valueFormatter: generateNumFormatter(5, 1),
+    }, // distance calculated // measured+ residual
+    RESDIST: {
+      field: "RESDIST",
+      data: [],
+      show: true,
+      headerName: "Dist. Res.",
+      sortable: true,
+      flex: 0.5,
+      minWidth: 60,
+      valueFormatter: generateNumFormatter(2, 1),
+    }, // distance residuals
+    RESSIGDIST: {
+      field: "RESSIGDIST",
+      data: [],
+      show: true,
+      headerName: "Dist. Res./Sig.",
+      sortable: true,
+      flex: 0.5,
+      minWidth: 60,
+      valueFormatter: generateNumFormatter(2, 1),
+    }, // distance RES/SIGMA
+  }; // residuals data
+};
+
 const fTSTNColumnsSelector = (measurement, makeColumns) => {
   // function for obtaining residuals for TSTN measurement type from JSON file
   // ARGS: JSON file
   // OUT: dictionary of residuals with keys: ANGL, DIST, ZEND, TGTPOS, TGTLINE, INSPOS, INSLINE
 
-  const angleConv = 63.662 * 10000; // radians to centesimal circle factor
-  const distConv = 100000; // meters to hundredths of milimeter factor
+  const angleConvCC = 63.662 * 10000; // radians to centesimal circle factor
+  const angleConvGON = 63.662; // radians to gon factor
+  const distConv = 1000; // meters to hundredths of milimeter factor
 
-  let columns = {
-    // == TOOLTIP DATA == //
-
-    // == OBS DATA == //
-    id: [], // station name
-    INSPOS: [], // instrument position
-    INSLINE: [], // instrument line
-    INSID: [], // instrument id
-    INSHI: [], // instrument height
-    TGTPOS: [], // target position
-    TGTLINE: [], // target line
-    // == ANGL == //
-    OBSANGL: [], // angle observations
-    SANGL: [], // angle standard deviation
-    CALCANGL: [], // angle calculated // measured+ residual
-    RESANGL: [], // angle residuals
-    RESSIGANGL: [], // angle RES/SIGMA
-    ECARTSANGL: [],
-    // == ZEND == //
-    OBSZEND: [], // zenith observations
-    SZEND: [], // zenith standard deviation
-    CALCZEND: [], // zenith calculated // measured+ residual
-    RESZEND: [], // zenith residuals
-    RESSIGZEND: [], // zenith RES/SIGMA
-    ECARTSZEND: [],
-    // == DIST == //
-    OBSDIST: [], // distance observations
-    SDIST: [], // distance standard deviation
-    CALCDIST: [], // distance calculated // measured+ residual
-    RESDIST: [], // distance residuals
-    RESSIGDIST: [], // distance RES/SIGMA
-  }; // residuals data
+  let cols = generatefTSTNColumns();
+  let columns = {};
+  Object.keys(cols).forEach((key) => {
+    columns[key] = [];
+    console.log(key);
+  });
 
   var idO = 0;
   let obsData = measurement.fTSTN.reduce((acc, curr) => {
@@ -62,15 +284,17 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
           acc["TGTPOS"].push(rom.measPLR3D[j].targetPos);
           acc["TGTLINE"].push(rom.measPLR3D[j].line);
           // == ANGL == //
-          acc["OBSANGL"].push(rom.measPLR3D[j].angles[0].fValue * angleConv);
-          acc["SANGL"].push(rom.measPLR3D[j].target.sigmaCombinedPLRAngl);
+          acc["OBSANGL"].push(rom.measPLR3D[j].angles[0].fValue * angleConvGON);
+          acc["SANGL"].push(
+            rom.measPLR3D[j].target.sigmaCombinedPLRAngl * angleConvCC
+          );
           acc["CALCANGL"].push(
             (rom.measPLR3D[j].angles[0].fValue +
               rom.measPLR3D[j].anglesResiduals[0].fValue) *
-              angleConv
+              angleConvGON
           );
           acc["RESANGL"].push(
-            rom.measPLR3D[j].anglesResiduals[0].fValue * angleConv
+            rom.measPLR3D[j].anglesResiduals[0].fValue * angleConvCC
           );
           acc["RESSIGANGL"].push(
             rom.measPLR3D[j].anglesResiduals[0].fValue /
@@ -82,15 +306,17 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
               distConv
           );
           // == ZEND == //
-          acc["OBSZEND"].push(rom.measPLR3D[j].angles[1].fValue * angleConv);
-          acc["SZEND"].push(rom.measPLR3D[j].target.sigmaCombinedPLRZenD);
+          acc["OBSZEND"].push(rom.measPLR3D[j].angles[1].fValue * angleConvGON);
+          acc["SZEND"].push(
+            rom.measPLR3D[j].target.sigmaCombinedPLRZenD * angleConvCC
+          );
           acc["CALCZEND"].push(
             (rom.measPLR3D[j].angles[1].fValue +
               rom.measPLR3D[j].anglesResiduals[1].fValue) *
-              angleConv
+              angleConvGON
           );
           acc["RESZEND"].push(
-            rom.measPLR3D[j].anglesResiduals[1].fValue * angleConv
+            rom.measPLR3D[j].anglesResiduals[1].fValue * angleConvCC
           );
           acc["RESSIGZEND"].push(
             rom.measPLR3D[j].anglesResiduals[1].fValue /
@@ -102,12 +328,13 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
               distConv
           );
           // == DIST == //
-          acc["OBSDIST"].push(rom.measPLR3D[j].distances[0].fValue * distConv);
-          acc["SDIST"].push(rom.measPLR3D[j].target.sigmaCombinedPLRDist);
+          acc["OBSDIST"].push(rom.measPLR3D[j].distances[0].fValue);
+          acc["SDIST"].push(
+            rom.measPLR3D[j].target.sigmaCombinedPLRDist * distConv
+          );
           acc["CALCDIST"].push(
-            (rom.measPLR3D[j].distances[0].fValue +
-              rom.measPLR3D[j].distancesResiduals[0].fValue) *
-              distConv
+            rom.measPLR3D[j].distances[0].fValue +
+              rom.measPLR3D[j].distancesResiduals[0].fValue
           );
 
           acc["RESDIST"].push(
@@ -124,16 +351,13 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
   }, columns);
 
   if (makeColumns) {
-    let colNames = Object.keys(columns);
-    let columnDetails = colNames.map((key) => {
-      return {
-        field: key,
-        headerName: key,
-        sortable: true,
-        flex: 1,
-        // valueFormatter: generateNumFormatter(2, 1000),
-      };
-    });
+    let colNames = Object.keys(cols);
+    let columnDetails = [];
+    for (let i = 0; i < colNames.length; i++) {
+      if (cols[colNames[i]].show) {
+        columnDetails.push(cols[colNames[i]]);
+      }
+    }
 
     // convert array of values to dictionary with keys from colNames, so thtat this can be used in a table
     obsData = obsData[colNames[0]].map((value, index) => {

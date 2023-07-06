@@ -1,7 +1,7 @@
 import './App.css';
 import { Header, Plot3D, Histogram, DataTable, Observations } from './sections';
 // import { useState, useEffect } from 'react';
-const dataFile = '21517v2.json';
+const dataFile = 'SUS-1895_26465_TT2-radial_calage-FTN.json';
 const GMData = require(`C:/Users/okafka/Developer/LGCReportGenerator/lgcgenapp/src/data/${dataFile}`)
 
 function App() {
