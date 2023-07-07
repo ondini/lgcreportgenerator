@@ -1,5 +1,6 @@
 import { generateNumFormatter } from "./dataProcessing";
-
+import InstrumentTooltip from "../components/InstrumentTooltip";
+import React from "react";
 ///  --- Table 2 data selection  --- ///
 
 // -- selectors -- //
@@ -33,7 +34,7 @@ const generatefTSTNColumns = () => {
       headerName: "Instr. ID",
       sortable: true,
       flex: 1,
-      minWidth: 200,
+      minWidth: 150,
       cellClassName: "name-column--cell border-right--cell",
     }, // instrument id
     INSPOS: {
@@ -44,6 +45,20 @@ const generatefTSTNColumns = () => {
       sortable: true,
       flex: 1,
       minWidth: 200,
+      renderCell: ({ row: { INSPOS } }) => {
+        return (
+          <InstrumentTooltip
+            title={INSPOS}
+            details={
+              <>
+                <h3>Tooltip with HTML</h3>
+                <em>{"And here's"}</em> <b>{"some"}</b>{" "}
+                <u>{"amazing content"}</u>.
+              </>
+            }
+          />
+        );
+      },
     }, // instrument position
     INSLINE: {
       field: "INSLINE",
@@ -61,7 +76,7 @@ const generatefTSTNColumns = () => {
       headerName: "Tgt. Pos.",
       sortable: true,
       flex: 1,
-      minWidth: 200,
+      minWidth: 150,
     }, // target position
     TGTLINE: {
       field: "TGTLINE",
@@ -334,13 +349,13 @@ const generatefECHOColumns = () => {
       sortable: true,
       flex: 0.5,
       minWidth: 60,
-      valueFormatter: generateNumFormatter(1, 1),
+      valueFormatter: generateNumFormatter(2, 1),
     }, // angle standard deviation
     CALC: {
       field: "CALC",
       data: [],
       show: true,
-      headerName: "CALCULED",
+      headerName: "Calculated",
       sortable: true,
       flex: 0.8,
       minWidth: 100,
@@ -354,7 +369,7 @@ const generatefECHOColumns = () => {
       sortable: true,
       flex: 0.5,
       minWidth: 60,
-      valueFormatter: generateNumFormatter(1, 1),
+      valueFormatter: generateNumFormatter(2, 1),
     }, // angle residuals
     RESSIG: {
       field: "RESSIG",
@@ -382,7 +397,6 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
   let columns = {};
   Object.keys(cols).forEach((key) => {
     columns[key] = [];
-    console.log(key);
   });
 
   var idO = 0;
@@ -495,19 +509,16 @@ const fECHOColumnsSelector = (measurement, makeColumns) => {
   // ARGS: JSON file
   // OUT: dictionary of residuals with keys: ANGL, DIST, ZEND, TGTPOS, TGTLINE, INSPOS, INSLINE
 
-  const angleConvCC = 63.662 * 10000; // radians to centesimal circle factor
-  const angleConvGON = 63.662; // radians to gon factor
   const distConv = 1000; // meters to hundredths of milimeter factor
 
-  let cols = generatefTSTNColumns();
+  let cols = generatefECHOColumns();
   let columns = {};
   Object.keys(cols).forEach((key) => {
     columns[key] = [];
-    console.log(key);
   });
 
-  var idO = 0;
-  path = ["fECHO", "measECHO"];
+  let idO = 0;
+  let path = ["fECHO", "measECHO"];
 
   let obsData = measurement[path[0]].reduce((acc, curr) => {
     // reduce over all measurements
@@ -560,10 +571,11 @@ const obsDataSelector = (measurement, type) => {
   switch (type) {
     case "fTSTN":
       return fTSTNColumnsSelector(measurement, true);
+    case "fECHO":
+      return fECHOColumnsSelector(measurement, true);
     case "fOBSXYZ":
     case "fECWS":
     case "fEDM":
-    case "fECHO":
     case "fRADI":
     default:
       return {};

@@ -38,10 +38,8 @@ const generateTableStyle = () => {
 };
 
 export default function Observations({ data }) {
-  const rows = getObsData(data.LGC_DATA).fTSTN;
-  console.log(rows);
-
   const observations = getObsData(data.LGC_DATA); // get the residuals data from the LGC_DATA object
+  console.log(observations);
   const measTypes = Object.keys(observations); // get all the used measurement types from the residuals data
 
   const createTable = (measType) => {
@@ -65,7 +63,7 @@ export default function Observations({ data }) {
   useEffect(() => {
     // update and re-render the histogram components when the filter or measurement type changes
 
-    setTable(createTable("fTSTN"));
+    setTable(createTable(key === "fECHO" ? "fECHO" : "fTSTN"));
   }, [key]);
 
   let measTypeButtons = measTypes.map((key) => {
