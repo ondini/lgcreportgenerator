@@ -12,7 +12,7 @@ const generatefTSTNColumns = () => {
       field: "INSHI",
       data: [],
       show: false,
-      headerName: "id",
+      headerName: "INSHI",
       sortable: true,
       flex: 0.1,
       minWidth: 30,
@@ -21,7 +21,7 @@ const generatefTSTNColumns = () => {
     id: {
       field: "id",
       data: [],
-      show: true,
+      show: false,
       headerName: "id",
       sortable: true,
       flex: 0.1,
@@ -45,10 +45,10 @@ const generatefTSTNColumns = () => {
       sortable: true,
       flex: 1,
       minWidth: 200,
-      renderCell: ({ row: { INSPOS } }) => {
+      renderCell: ({ row: { INSHI } }) => {
         return (
           <InstrumentTooltip
-            title={INSPOS}
+            title={INSHI}
             details={
               <>
                 <h3>Tooltip with HTML</h3>
@@ -286,7 +286,7 @@ const generatefECHOColumns = () => {
     id: {
       field: "id",
       data: [],
-      show: true,
+      show: false,
       headerName: "id",
       sortable: true,
       flex: 0.1,
@@ -485,9 +485,11 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
   if (makeColumns) {
     let colNames = Object.keys(cols);
     let columnDetails = [];
+    let hideCols = ['__row_group_by_columns_group__'];
     for (let i = 0; i < colNames.length; i++) {
-      if (cols[colNames[i]].show) {
-        columnDetails.push(cols[colNames[i]]);
+      columnDetails.push(cols[colNames[i]]);
+      if (!cols[colNames[i]].show) {
+        hideCols.push(colNames[i]);
       }
     }
 
@@ -498,7 +500,7 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
         return acc;
       }, {});
     });
-    return { data: obsData, columnss: columnDetails };
+    return { data: obsData, columnss: columnDetails, hideCols: hideCols };
   }
 
   return obsData;
@@ -548,9 +550,11 @@ const fECHOColumnsSelector = (measurement, makeColumns) => {
   if (makeColumns) {
     let colNames = Object.keys(cols);
     let columnDetails = [];
+    let hideCols = ['__row_group_by_columns_group__'];
     for (let i = 0; i < colNames.length; i++) {
-      if (cols[colNames[i]].show) {
-        columnDetails.push(cols[colNames[i]]);
+      columnDetails.push(cols[colNames[i]]);
+      if (!cols[colNames[i]].show) {
+        hideCols.push(colNames[i]);
       }
     }
 
@@ -561,7 +565,7 @@ const fECHOColumnsSelector = (measurement, makeColumns) => {
         return acc;
       }, {});
     });
-    return { data: obsData, columnss: columnDetails };
+    return { data: obsData, columnss: columnDetails, hideCols: hideCols };
   }
 
   return obsData;
