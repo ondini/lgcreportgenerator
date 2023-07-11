@@ -45,15 +45,14 @@ const generatefTSTNColumns = () => {
       sortable: true,
       flex: 1,
       minWidth: 200,
-      renderCell: ({ row: { INSHI } }) => {
+      renderCell: ({ row: { INSHI, INSPOS } }) => {
         return (
           <InstrumentTooltip
-            title={INSHI}
+            title={INSPOS}
             details={
               <>
-                <h3>Tooltip with HTML</h3>
-                <em>{"And here's"}</em> <b>{"some"}</b>{" "}
-                <u>{"amazing content"}</u>.
+                <h5>Position data</h5>
+                <div>HI: {INSHI} SHI: 0 ROT3D: false</div>.
               </>
             }
           />
@@ -301,6 +300,19 @@ const generatefECHOColumns = () => {
       flex: 1,
       minWidth: 200,
       cellClassName: "name-column--cell border-right--cell",
+      renderCell: ({ row: { REFPT, X, Y, Z } }) => {
+        return (
+          <InstrumentTooltip
+            title={REFPT}
+            details={
+              <>
+                <h5>Ref point data</h5>
+                <div>X: 0 Y: 0 Z: false</div>.
+              </>
+            }
+          />
+        );
+      },
     }, // instrument id
     REFLINE: {
       field: "REFLINE",
@@ -485,11 +497,11 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
   if (makeColumns) {
     let colNames = Object.keys(cols);
     let columnDetails = [];
-    let hideCols = ['__row_group_by_columns_group__'];
+    let hideCols = ["__row_group_by_columns_group__"];
     for (let i = 0; i < colNames.length; i++) {
-      columnDetails.push(cols[colNames[i]]);
-      if (!cols[colNames[i]].show) {
-        hideCols.push(colNames[i]);
+      //columnDetails.push(cols[colNames[i]]);
+      if (cols[colNames[i]].show) {
+        columnDetails.push(cols[colNames[i]]); //hideCols.push(colNames[i]);
       }
     }
 
@@ -550,11 +562,11 @@ const fECHOColumnsSelector = (measurement, makeColumns) => {
   if (makeColumns) {
     let colNames = Object.keys(cols);
     let columnDetails = [];
-    let hideCols = ['__row_group_by_columns_group__'];
+    let hideCols = ["__row_group_by_columns_group__"];
     for (let i = 0; i < colNames.length; i++) {
-      columnDetails.push(cols[colNames[i]]);
-      if (!cols[colNames[i]].show) {
-        hideCols.push(colNames[i]);
+      // columnDetails.push(cols[colNames[i]]);
+      if (cols[colNames[i]].show) {
+        columnDetails.push(cols[colNames[i]]); //hideCols.push(colNames[i]);
       }
     }
 
