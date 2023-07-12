@@ -1,267 +1,143 @@
-import { generateNumFormatter } from "./dataProcessing";
+import { generateNumFormatter, numFormatter } from "./dataProcessing";
 import InstrumentTooltip from "../components/InstrumentTooltip";
 import React from "react";
 ///  --- Table 2 data selection  --- ///
+
+const fieldGen = (field, headerName, args) => {
+  let defaultArgs = {
+    field: field,
+    headerName: headerName,
+    flex: 0.5,
+    minWidth: 60,
+    show: true,
+    sortable: true,
+  };
+
+  Object.keys(args).forEach((key) => {
+    defaultArgs[key] = args[key];
+  });
+
+  return defaultArgs;
+};
 
 // -- selectors -- //
 
 const generatefTSTNColumns = () => {
   return {
-    // == TOOLTIP DATA == //
-    INSHI: {
-      field: "INSHI",
-      data: [],
-      show: false,
-      headerName: "INSHI",
-      sortable: true,
-      flex: 0.1,
-      minWidth: 30,
-    }, // instrument height
-    // == OBS DATA == //
-    id: {
-      field: "id",
-      data: [],
-      show: false,
-      headerName: "id",
-      sortable: true,
-      flex: 0.1,
-      minWidth: 30,
-    }, // table id
-    INSID: {
-      field: "INSID",
-      data: [],
-      show: true,
-      headerName: "Instr. ID",
-      sortable: true,
+    // ======== TOOLTIP DATA ======== //
+    HI: fieldGen("HI", "HI", { show: false }), // instrument height
+    SHI: fieldGen("SHI", "SHI", { show: false }), // instrument height precision
+    ROT3D: fieldGen("ROT3D", "ROT3D", { show: false }), //
+    ACST: fieldGen("ACST", "ACST", { show: false }), //
+    V0: fieldGen("V0", "V0", { show: false }), //
+    SV0: fieldGen("SV0", "SV0", { show: false }), //
+
+    // ======== OBS DATA ========== //
+    id: fieldGen("id", "id", { flex: 0.1, minWidth: 30 }), // table id
+    INSID: fieldGen("INSID", "Instr. ID", {
       flex: 1,
-      minWidth: 150,
+      minWidth: 100,
       cellClassName: "name-column--cell border-right--cell",
-    }, // instrument id
-    INSPOS: {
-      field: "INSPOS",
-      data: [],
-      show: true,
-      headerName: "Instr. Pos.",
-      sortable: true,
-      flex: 1,
-      minWidth: 200,
-      renderCell: ({ row: { INSHI, INSPOS } }) => {
+    }), // instrument id
+    INSPOS: fieldGen("INSPOS", "Instr. Pos.", {
+      felx: 1,
+      minWidth: 250,
+      renderCell: ({ row }) => {
         return (
           <InstrumentTooltip
-            title={INSPOS}
+            title={row.INSPOS}
             details={
               <>
-                <h5>Position data</h5>
-                <div>HI: {INSHI} SHI: 0 ROT3D: false</div>.
+                <div>
+                  <b>Position data:</b> HI: {numFormatter(row.HI, 5)} SHI:{" "}
+                  {numFormatter(row.SHI, 2)} ROT3D:{" "}
+                  {row.ROT3D ? "true" : "false"}
+                </div>
+                <div>
+                  <b>Rom data:</b> ACST: {numFormatter(row.ACST, 5)} V0:{" "}
+                  {numFormatter(row.V0, 5)} SV0: {numFormatter(row.SV0, 1)}
+                </div>
               </>
             }
           />
         );
       },
-    }, // instrument position
-    INSLINE: {
-      field: "INSLINE",
-      data: [],
-      show: true,
-      headerName: "ILine",
-      sortable: true,
-      flex: 0.11,
-      minWidth: 50,
-    }, // instrument line
-    TGTPOS: {
-      field: "TGTPOS",
-      data: [],
-      show: true,
-      headerName: "Tgt. Pos.",
-      sortable: true,
-      flex: 1,
-      minWidth: 150,
-    }, // target position
-    TGTLINE: {
-      field: "TGTLINE",
-      data: [],
-      show: true,
-      headerName: "TLine",
-      sortable: true,
+    }), // instrument position
+    INSLINE: fieldGen("INSLINE", "ILine", { flex: 0.11, minWidth: 50 }), // instrument line
+    TGTPOS: fieldGen("TGTPOS", "Tgt. Pos.", { flex: 1, minWidth: 150 }), // target position
+    TGTLINE: fieldGen("TGTLINE", "TLine", {
       flex: 0.11,
       minWidth: 50,
       cellClassName: "border-right--cell",
-    }, // target line
-    // == ANGL == //
-    OBSANGL: {
-      field: "OBSANGL",
-      data: [],
-      show: true,
-      headerName: "Obs. Angle",
-      sortable: true,
+    }), // target line
+    // ======== ANGL================ //
+    OBSANGL: fieldGen("OBSANGL", "Obs. Angle", {
       flex: 0.8,
       minWidth: 100,
       valueFormatter: generateNumFormatter(5, 1),
-    }, // angle observations
-    SANGL: {
-      field: "SANGL",
-      data: [],
-      show: true,
-      headerName: "S. Ang.",
-      sortable: true,
-      flex: 0.5,
-      minWidth: 60,
+    }), // angle observations
+    SANGL: fieldGen("SANGL", "S. Ang.", {
       valueFormatter: generateNumFormatter(1, 1),
-    }, // angle standard deviation
-    CALCANGL: {
-      field: "CALCANGL",
-      data: [],
-      show: true,
-      headerName: "Calc. Angl.",
-      sortable: true,
+    }), // angle standard deviation
+    CALCANGL: fieldGen("CALCANGL", "Calc. Angl.", {
       flex: 0.8,
       minWidth: 100,
       valueFormatter: generateNumFormatter(5, 1),
-    }, // angle calculated // measured+ residual
-    RESANGL: {
-      field: "RESANGL",
-      data: [],
-      show: true,
-      headerName: "Res. Ang.",
-      sortable: true,
-      flex: 0.5,
-      minWidth: 60,
+    }), // calculated angle
+    RESANGL: fieldGen("RESANGL", "Res. Angl.", {
       valueFormatter: generateNumFormatter(1, 1),
-    }, // angle residuals
-    RESSIGANGL: {
-      field: "RESSIGANGL",
-      data: [],
-      show: true,
-      headerName: "Res./Sig. Ang.",
-      sortable: true,
-      flex: 0.5,
-      minWidth: 60,
+    }), // angle residual
+    RESSIGANGL: fieldGen("RESSIGANGL", "Res./Sig. Angl.", {
       valueFormatter: generateNumFormatter(2, 1),
-    }, // angle RES/SIGMA
-    ECARTSANGL: {
-      field: "ECARTSANGL",
-      data: [],
-      show: true,
-      headerName: "Ecarts Angl.",
-      sortable: true,
-      flex: 0.5,
-      minWidth: 60,
+    }), // angle RES/SIGMA
+    ECARTSANGL: fieldGen("ECARTSANGL", "Ecarts Angl.", {
       valueFormatter: generateNumFormatter(2, 1),
       cellClassName: "border-right--cell",
-    },
-    // == ZEND == //
-    OBSZEND: {
-      field: "OBSZEND",
-      data: [],
-      show: true,
-      headerName: "Obs. Zend.",
-      sortable: true,
+    }), // angle ECARTS
+    // ======== ZEND ======== //
+    OBSZEND: fieldGen("OBSZEND", "Obs. Zend.", {
       flex: 0.8,
       minWidth: 100,
       valueFormatter: generateNumFormatter(5, 1),
-    }, // zenith observations
-    SZEND: {
-      field: "SZEND",
-      data: [],
-      show: true,
-      headerName: "S. Zend.",
-      sortable: true,
-      flex: 0.5,
-      minWidth: 60,
+    }), // zenith observations
+    SZEND: fieldGen("SZEND", "S. Zend.", {
       valueFormatter: generateNumFormatter(1, 1),
-    }, // zenith standard deviation
-    CALCZEND: {
-      field: "CALCZEND",
-      data: [],
-      show: true,
-      headerName: "Calc. Zend.",
-      sortable: true,
+    }), // zenith standard deviation
+    CALCZEND: fieldGen("CALCZEND", "Calc. Zend.", {
       flex: 0.8,
       minWidth: 100,
       valueFormatter: generateNumFormatter(5, 1),
-    }, // zenith calculated // measured+ residual
-    RESZEND: {
-      field: "RESZEND",
-      data: [],
-      show: true,
-      headerName: "Res. Zend",
-      sortable: true,
-      flex: 0.5,
-      minWidth: 60,
+    }), // calculated zenith
+    RESZEND: fieldGen("RESZEND", "Res. Zend.", {
       valueFormatter: generateNumFormatter(1, 1),
-    }, // zenith residuals
-    RESSIGZEND: {
-      field: "RESSIGZEND",
-      data: [],
-      show: true,
-      headerName: "Res./Sig. Zend.",
-      sortable: true,
-      flex: 0.5,
-      minWidth: 60,
+    }), // zenith residual
+    RESSIGZEND: fieldGen("RESSIGZEND", "Res./Sig. Zend.", {
       valueFormatter: generateNumFormatter(2, 1),
-    }, // zenith RES/SIGMA
-    ECARTSZEND: {
-      field: "ECARTSZEND",
-      data: [],
-      show: true,
-      headerName: "Ecarts Zend.",
-      sortable: true,
-      flex: 0.5,
-      minWidth: 60,
+    }), // zenith RES/SIGMA
+    ECARTSZEND: fieldGen("ECARTSZEND", "Ecarts Zend.", {
       valueFormatter: generateNumFormatter(2, 1),
       cellClassName: "border-right--cell",
-    },
-    // == DIST == //
-    OBSDIST: {
-      field: "OBSDIST",
-      data: [],
-      show: true,
-      headerName: "Obs. Dist.",
-      sortable: true,
+    }), // zenith ECARTS
+    // ======== DIST ======== //
+    OBSDIST: fieldGen("OBSDIST", "Obs. Dist.", {
       flex: 0.8,
       minWidth: 100,
       valueFormatter: generateNumFormatter(5, 1),
-    }, // distance observations
-    SDIST: {
-      field: "SDIST",
-      data: [],
-      show: true,
-      headerName: "S. Dist.",
-      sortable: true,
-      flex: 0.5,
-      minWidth: 60,
-      valueFormatter: generateNumFormatter(2, 1),
-    }, // distance standard deviation
-    CALCDIST: {
-      field: "CALCDIST",
-      data: [],
-      show: true,
-      headerName: "Calc. Dist.",
-      sortable: true,
+    }), // distance observations
+    SDIST: fieldGen("SDIST", "S. Dist.", {
+      valueFormatter: generateNumFormatter(1, 1),
+    }), // distance standard deviation
+    CALCDIST: fieldGen("CALCDIST", "Calc. Dist.", {
       flex: 0.8,
       minWidth: 100,
       valueFormatter: generateNumFormatter(5, 1),
-    }, // distance calculated // measured+ residual
-    RESDIST: {
-      field: "RESDIST",
-      data: [],
-      show: true,
-      headerName: "Dist. Res.",
-      sortable: true,
-      flex: 0.5,
-      minWidth: 60,
+    }), // calculated distance
+    RESDIST: fieldGen("RESDIST", "Res. Dist.", {
+      valueFormatter: generateNumFormatter(1, 1),
+    }), // distance residual
+    RESSIGDIST: fieldGen("RESSIGDIST", "Res./Sig. Dist.", {
       valueFormatter: generateNumFormatter(2, 1),
-    }, // distance residuals
-    RESSIGDIST: {
-      field: "RESSIGDIST",
-      data: [],
-      show: true,
-      headerName: "Dist. Res./Sig.",
-      sortable: true,
-      flex: 0.5,
-      minWidth: 60,
-      valueFormatter: generateNumFormatter(2, 1),
-    }, // distance RES/SIGMA
+    }), // distance RES/SIGMA
   }; // residuals data
 };
 
@@ -419,7 +295,13 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
       if ("measPLR3D" in rom) {
         for (let j = 0; j < rom.measPLR3D.length; j++) {
           // == TOOLTIP DATA == //
-          acc["INSHI"].push(curr.instrumentHeightAdjustable.fEstimatedValue);
+          acc["HI"].push(curr.instrumentHeightAdjustable.fEstimatedValue);
+          acc["SHI"].push(curr.instrumentHeightAdjustable.fEstimatedPrecision);
+          acc["ROT3D"].push(curr.rot3D);
+          acc["ACST"].push(rom.acst);
+          acc["V0"].push(rom.v0.fEstimatedValue * angleConvGON);
+          acc["SV0"].push(rom.v0.fEstimatedPrecision * angleConvCC);
+
           // == OBS DATA == //
           acc["id"].push(idO++);
           acc["INSPOS"].push(curr.instrumentPos);

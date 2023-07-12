@@ -63,6 +63,11 @@ export function generateNumFormatter(decimals, factor) {
   };
 }
 
+export function numFormatter(number, decimals) {
+  // function to generate a function, serving as number formatter for the DataGrid
+  return Math.round(number * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
+}
+
 ///  --- Residuals data selection  --- ///
 
 // -- selectors -- //

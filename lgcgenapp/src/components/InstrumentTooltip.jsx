@@ -9,9 +9,9 @@ const StyledTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "#f5f5f9",
+    backgroundColor: "#fff",
     color: "rgba(0, 0, 0, 0.87)",
-    maxWidth: 220,
+    maxWidth: 500,
     fontSize: theme.typography.pxToRem(12),
     border: "1px solid #dadde9",
   },
@@ -44,7 +44,7 @@ const InstrumentTooltip = ({ title, details }) => {
             disableTouchListener
             placement="right"
             TransitionComponent={Fade}
-            TransitionProps={{ timeout: 600 }}
+            TransitionProps={{ timeout: 50 }}
             title={details}
           >
             <Button onClick={handleTooltipOpen}>{title}</Button>
