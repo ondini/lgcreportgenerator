@@ -163,7 +163,7 @@ const generatefECHOColumns = () => {
                   {numFormatter(row.Y, 5)} Z (M): {numFormatter(row.Z, 5)}
                 </div>
                 <div>
-                  <b>String pars.:</b> Orient. (GON): {numFormatter(row.O, 5)}{" "}
+                  <b>Wire pars.:</b> Orient. (GON): {numFormatter(row.O, 5)}{" "}
                   SOrient. (CC): {numFormatter(row.SO, 2)} SNormale (MM):{" "}
                   {numFormatter(row.SN, 2)}
                 </div>
@@ -446,4 +446,81 @@ export const getObsData = (data) => {
     });
     return acc;
   }, {});
+};
+
+const generateObsColumns = () => {
+  return {
+    id: fieldGen("id", "id", { show: false }), // table id
+    TYPE: fieldGen("TYPE", "Type", { flex: 0.5, minWidth: 50 }),
+    TSTN_POS: fieldGen("TSTN_POS", "Station position", {
+      flex: 1,
+      minWidth: 200,
+      cellClassName: "name-column--cell border-right--cell",
+    }),
+    TSTN_LINE: fieldGen("TSTN_LINE", "Station line"),
+    RES_MAX: fieldGen("RES_MAX", "Res. Max.", { numDecs: 2 }),
+    RES_MIN: fieldGen("RES_MIN", "Res. Min.", { numDecs: 2 }),
+    RES_MOY: fieldGen("RES_AVG", "Res. Avg.", { numDecs: 2 }),
+    ECART_TYPE: fieldGen("ECART_TYPE", "Ecart-type", { numDecs: 2 }),
+  };
+};
+
+const fTSTNObsColumnsSelector = (measurement) => {
+  // function for obtaining residuals for TSTN measurement type from JSON file
+  // ARGS: JSON file
+  // OUT: dictionary of residuals with keys: ANGL, DIST, ZEND, TGTPOS, TGTLINE, INSPOS, INSLINE
+
+  const angleConvCC = 63.662 * 10000; // radians to centesimal circle factor
+  const angleConvGON = 63.662; // radians to gon factor
+  const distConv = 1000; // meters to hundredths of milimeter factor
+
+  let cols = generateObsColumns();
+  let columns = {};
+  Object.keys(cols).forEach((key) => {
+    columns[key] = [];
+  });
+
+  var idO = 0;
+  let obsData = measurement.fTSTN.reduce((acc, curr) => {
+    // reduce over all measurements
+    for (let i = 0; i < curr.roms.length; i++) {
+      let rom = curr.roms[i]; // current rom
+      if ("measPLR3D" in rom) {
+        for (let j = 0; j < rom.plr3dSummary_.length; j++) {
+          acc["id"].push(idO++);
+          acc["TYPE"].push("PLR3D");
+          acc["TSTN_POS"].push(rom.plr3dSummary_.distObsSum.fObsText);
+          acc["TSTN_LINE"].push(curr.line);
+          acc["RES_MAX"].push(rom.plr3dSummary_.distObsSum.fResMax);
+          acc["RES_MIN"].push(rom.plr3dSummary_.distObsSum.fResMin);
+          acc["RES_AVG"].push(rom.plr3dSummary_.distObsSum.fMean);
+          acc["ECART_TYPE"].push(rom.plr3dSummary_.distObsSum.fStdev);
+        }
+      }
+    }
+    return acc;
+  }, columns);
+
+  if (makeColumns) {
+    let colNames = Object.keys(cols);
+    let columnDetails = [];
+    let hideCols = ["__row_group_by_columns_group__"];
+    for (let i = 0; i < colNames.length; i++) {
+      //columnDetails.push(cols[colNames[i]]);
+      if (cols[colNames[i]].show) {
+        columnDetails.push(cols[colNames[i]]); //hideCols.push(colNames[i]);
+      }
+    }
+
+    // convert array of values to dictionary with keys from colNames, so thtat this can be used in a table
+    obsData = obsData[colNames[0]].map((value, index) => {
+      return colNames.reduce((acc, key) => {
+        acc[key] = obsData[key][index];
+        return acc;
+      }, {});
+    });
+    return { data: obsData, columnss: columnDetails, hideCols: hideCols };
+  }
+
+  return obsData;
 };
