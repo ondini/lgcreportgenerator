@@ -3,7 +3,14 @@ import InstrumentTooltip from "../components/InstrumentTooltip";
 import React from "react";
 ///  --- Table 2 data selection  --- ///
 
-const fieldGen = (field, headerName, args) => {
+const angleGONFormatter = (value) => {
+  if (value < 0) {
+    return value + 400;
+  }
+  return value;
+};
+
+const fieldGen = (field, headerName, args = {}) => {
   let defaultArgs = {
     field: field,
     headerName: headerName,
@@ -14,6 +21,9 @@ const fieldGen = (field, headerName, args) => {
   };
 
   Object.keys(args).forEach((key) => {
+    if (key === "numDecs") {
+      defaultArgs.valueFormatter = generateNumFormatter(args[key], 1);
+    }
     defaultArgs[key] = args[key];
   });
 
@@ -24,7 +34,7 @@ const fieldGen = (field, headerName, args) => {
 
 const generatefTSTNColumns = () => {
   return {
-    // ======== TOOLTIP DATA ======== //
+    // ========== TOOLTIP DATA ========== //
     HI: fieldGen("HI", "HI", { show: false }), // instrument height
     SHI: fieldGen("SHI", "SHI", { show: false }), // instrument height precision
     ROT3D: fieldGen("ROT3D", "ROT3D", { show: false }), //
@@ -32,8 +42,8 @@ const generatefTSTNColumns = () => {
     V0: fieldGen("V0", "V0", { show: false }), //
     SV0: fieldGen("SV0", "SV0", { show: false }), //
 
-    // ======== OBS DATA ========== //
-    id: fieldGen("id", "id", { flex: 0.1, minWidth: 30 }), // table id
+    // ========== OBS DATA ========== //
+    id: fieldGen("id", "id", { show: false }), // table id
     INSID: fieldGen("INSID", "Instr. ID", {
       flex: 1,
       minWidth: 100,
@@ -70,205 +80,116 @@ const generatefTSTNColumns = () => {
       minWidth: 50,
       cellClassName: "border-right--cell",
     }), // target line
-    // ======== ANGL================ //
+    // ========== ANGL ========== //
     OBSANGL: fieldGen("OBSANGL", "Obs. Angle", {
       flex: 0.8,
       minWidth: 100,
-      valueFormatter: generateNumFormatter(5, 1),
+      numDecs: 5,
     }), // angle observations
-    SANGL: fieldGen("SANGL", "S. Ang.", {
-      valueFormatter: generateNumFormatter(1, 1),
-    }), // angle standard deviation
+    SANGL: fieldGen("SANGL", "S. Ang.", { numDecs: 1 }), // angle standard deviation
     CALCANGL: fieldGen("CALCANGL", "Calc. Angl.", {
       flex: 0.8,
       minWidth: 100,
-      valueFormatter: generateNumFormatter(5, 1),
+      numDecs: 5,
     }), // calculated angle
-    RESANGL: fieldGen("RESANGL", "Res. Angl.", {
-      valueFormatter: generateNumFormatter(1, 1),
-    }), // angle residual
-    RESSIGANGL: fieldGen("RESSIGANGL", "Res./Sig. Angl.", {
-      valueFormatter: generateNumFormatter(2, 1),
-    }), // angle RES/SIGMA
+    RESANGL: fieldGen("RESANGL", "Res. Angl.", { numDecs: 1 }), // angle residual
+    RESSIGANGL: fieldGen("RESSIGANGL", "Res./Sig. Angl.", { numDecs: 2 }), // angle RES/SIGMA
     ECARTSANGL: fieldGen("ECARTSANGL", "Ecarts Angl.", {
-      valueFormatter: generateNumFormatter(2, 1),
+      numDecs: 2,
       cellClassName: "border-right--cell",
     }), // angle ECARTS
-    // ======== ZEND ======== //
+    // ========== ZEND ========== //
     OBSZEND: fieldGen("OBSZEND", "Obs. Zend.", {
       flex: 0.8,
       minWidth: 100,
-      valueFormatter: generateNumFormatter(5, 1),
+      numDecs: 5,
     }), // zenith observations
-    SZEND: fieldGen("SZEND", "S. Zend.", {
-      valueFormatter: generateNumFormatter(1, 1),
-    }), // zenith standard deviation
+    SZEND: fieldGen("SZEND", "S. Zend.", { numDecs: 1 }), // zenith standard deviation
     CALCZEND: fieldGen("CALCZEND", "Calc. Zend.", {
       flex: 0.8,
       minWidth: 100,
-      valueFormatter: generateNumFormatter(5, 1),
+      numDecs: 5,
     }), // calculated zenith
-    RESZEND: fieldGen("RESZEND", "Res. Zend.", {
-      valueFormatter: generateNumFormatter(1, 1),
-    }), // zenith residual
-    RESSIGZEND: fieldGen("RESSIGZEND", "Res./Sig. Zend.", {
-      valueFormatter: generateNumFormatter(2, 1),
-    }), // zenith RES/SIGMA
+    RESZEND: fieldGen("RESZEND", "Res. Zend.", { numDecs: 1 }), // zenith residual
+    RESSIGZEND: fieldGen("RESSIGZEND", "Res./Sig. Zend.", { numDecs: 2 }), // zenith RES/SIGMA
     ECARTSZEND: fieldGen("ECARTSZEND", "Ecarts Zend.", {
-      valueFormatter: generateNumFormatter(2, 1),
+      numDecs: 2,
       cellClassName: "border-right--cell",
     }), // zenith ECARTS
-    // ======== DIST ======== //
+    // ========== DIST ========== //
     OBSDIST: fieldGen("OBSDIST", "Obs. Dist.", {
       flex: 0.8,
       minWidth: 100,
-      valueFormatter: generateNumFormatter(5, 1),
+      numDecs: 5,
     }), // distance observations
-    SDIST: fieldGen("SDIST", "S. Dist.", {
-      valueFormatter: generateNumFormatter(1, 1),
-    }), // distance standard deviation
+    SDIST: fieldGen("SDIST", "S. Dist.", { numDecs: 1 }), // distance standard deviation
     CALCDIST: fieldGen("CALCDIST", "Calc. Dist.", {
       flex: 0.8,
       minWidth: 100,
-      valueFormatter: generateNumFormatter(5, 1),
+      numDecs: 5,
     }), // calculated distance
-    RESDIST: fieldGen("RESDIST", "Res. Dist.", {
-      valueFormatter: generateNumFormatter(1, 1),
-    }), // distance residual
-    RESSIGDIST: fieldGen("RESSIGDIST", "Res./Sig. Dist.", {
-      valueFormatter: generateNumFormatter(2, 1),
-    }), // distance RES/SIGMA
+    RESDIST: fieldGen("RESDIST", "Res. Dist.", { numDecs: 1 }), // distance residual
+    RESSIGDIST: fieldGen("RESSIGDIST", "Res./Sig. Dist.", { numDecs: 2 }), // distance RES/SIGMA
   }; // residuals data
 };
 
 const generatefECHOColumns = () => {
   return {
-    // == TOOLTIP DATA == //
-    // X: {
-    //   data: [],
-    //   show: false,
-    // },
-    // Y: {
-    //   data: [],
-    //   show: false,
-    // },
-    // Z: {
-    //   data: [],
-    //   show: false,
-    // },
+    // ========== TOOLTIP DATA ========== //
+    X: fieldGen("X", "X", { show: false }), // reference point x coordinate
+    Y: fieldGen("Y", "Y", { show: false }), // reference point y coordinate
+    Z: fieldGen("Z", "Z", { show: false }), // reference point z coordinate
 
-    // == OBS DATA == //
-    id: {
-      field: "id",
-      data: [],
-      show: false,
-      headerName: "id",
-      sortable: true,
-      flex: 0.1,
-      minWidth: 30,
-    }, // table id
-    REFPT: {
-      field: "REFPT",
-      data: [],
-      show: true,
-      headerName: "Reference. Pt.",
-      sortable: true,
+    PX: fieldGen("PX", "PX", { show: false }), // reference string x coordinate
+    PY: fieldGen("PY", "PY", { show: false }), // reference string y coordinate
+    O: fieldGen("O", "O", { show: false }), // reference string orientation
+    SO: fieldGen("SO", "SO", { show: false }), // reference string orientation precision
+    SN: fieldGen("SN", "SN", { show: false }), // reference string normale precision
+
+    // ========== OBS DATA ========== //
+    id: fieldGen("id", "id", { show: false }), // table id
+    REFPT: fieldGen("REFPT", "Referenve. Pt.", {
       flex: 1,
       minWidth: 200,
       cellClassName: "name-column--cell border-right--cell",
-      renderCell: ({ row: { REFPT, X, Y, Z } }) => {
+      renderCell: ({ row }) => {
         return (
           <InstrumentTooltip
-            title={REFPT}
+            title={row.REFPT}
             details={
               <>
-                <h5>Ref point data</h5>
-                <div>X: 0 Y: 0 Z: false</div>.
+                <div>
+                  <b>Ref. point:</b> X (M): {numFormatter(row.X, 5)} Y (M):{" "}
+                  {numFormatter(row.Y, 5)} Z (M): {numFormatter(row.Z, 5)}
+                </div>
+                <div>
+                  <b>String pars.:</b> Orient. (GON): {numFormatter(row.O, 5)}{" "}
+                  SOrient. (CC): {numFormatter(row.SO, 2)} SNormale (MM):{" "}
+                  {numFormatter(row.SN, 2)}
+                </div>
               </>
             }
           />
         );
       },
-    }, // instrument id
-    REFLINE: {
-      field: "REFLINE",
-      data: [],
-      show: true,
-      headerName: "RLine",
-      sortable: true,
-      flex: 0.11,
-      minWidth: 50,
-    }, // instrument line
-    TGTPOS: {
-      field: "TGTPOS",
-      data: [],
-      show: true,
-      headerName: "Tgt. Pos.",
-      sortable: true,
-      flex: 1,
-      minWidth: 200,
-    }, // target position
-    TGTLINE: {
-      field: "TGTLINE",
-      data: [],
-      show: true,
-      headerName: "TLine",
-      sortable: true,
-      flex: 0.11,
-      minWidth: 50,
-      cellClassName: "border-right--cell",
-    }, // target line
-    // == ANGL == //
-    OBSERVE: {
-      field: "OBSERVE",
-      data: [],
-      show: true,
-      headerName: "Observed",
-      sortable: true,
+    }), // instrument id
+    REFLINE: fieldGen("REFLINE", "RLine", { flex: 0.11, minWidth: 50 }), // instrument line
+    TGTPOS: fieldGen("TGTPOS", "Tgt. Pos.", { flex: 1, minWidth: 200 }), // target position
+    TGTLINE: fieldGen("TGTLINE", "TLine", { flex: 0.11, minWidth: 50 }), // target line
+    // ========== ECHO DATA ========== //
+    OBS: fieldGen("OBS", "Observed", {
       flex: 0.8,
       minWidth: 100,
-      valueFormatter: generateNumFormatter(5, 1),
-    }, // angle observations
-    SIGMA: {
-      field: "SIGMA",
-      data: [],
-      show: true,
-      headerName: "Sigma",
-      sortable: true,
-      flex: 0.5,
-      minWidth: 60,
-      valueFormatter: generateNumFormatter(2, 1),
-    }, // angle standard deviation
-    CALC: {
-      field: "CALC",
-      data: [],
-      show: true,
-      headerName: "Calculated",
-      sortable: true,
+      numDecs: 5,
+    }), // observations
+    SIGMA: fieldGen("SIGMA", "Sigma", { numDecs: 2 }), // standard deviation
+    CALC: fieldGen("CALC", "Calculated", {
       flex: 0.8,
       minWidth: 100,
-      valueFormatter: generateNumFormatter(5, 1),
-    }, // angle calculated // measured+ residual
-    RES: {
-      field: "RES",
-      data: [],
-      show: true,
-      headerName: "Residual",
-      sortable: true,
-      flex: 0.5,
-      minWidth: 60,
-      valueFormatter: generateNumFormatter(2, 1),
-    }, // angle residuals
-    RESSIG: {
-      field: "RESSIG",
-      data: [],
-      show: true,
-      headerName: "Res./Sig.",
-      sortable: true,
-      flex: 0.5,
-      minWidth: 60,
-      valueFormatter: generateNumFormatter(2, 1),
-    }, // angle RES/SIGMA
+      numDecs: 5,
+    }), // calculated
+    RES: fieldGen("RES", "Residual", { numDecs: 1 }), // residual
+    RESSIG: fieldGen("RESSIG", "Res./Sig.", { numDecs: 2 }), // RES/SIGMA
   }; // residuals data
 };
 
@@ -405,6 +326,8 @@ const fECHOColumnsSelector = (measurement, makeColumns) => {
   // ARGS: JSON file
   // OUT: dictionary of residuals with keys: ANGL, DIST, ZEND, TGTPOS, TGTLINE, INSPOS, INSLINE
 
+  const angleConvCC = 63.662 * 10000; // radians to centesimal circle factor
+  const angleConvGON = 63.662; // radians to gon factor
   const distConv = 1000; // meters to hundredths of milimeter factor
 
   let cols = generatefECHOColumns();
@@ -420,13 +343,34 @@ const fECHOColumnsSelector = (measurement, makeColumns) => {
     // reduce over all measurements
     for (let j = 0; j < curr[path[1]].length; j++) {
       // == TOOLTIP DATA == //
+      acc["X"].push(
+        curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[0]
+      );
+      acc["Y"].push(
+        curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[1]
+      );
+      acc["Z"].push(
+        curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[2]
+      );
+      acc["PX"].push(
+        curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[0]
+      );
+      acc["PY"].push(
+        curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[1]
+      );
+      acc["O"].push(
+        angleGONFormatter(curr.fMeasuredPlane.fEstValTheta * angleConvGON)
+      );
+      acc["SO"].push(curr.fMeasuredPlane.fEstPrecisionTheta * angleConvCC);
+      acc["SN"].push(curr.fMeasuredPlane.fEstPrecisionRefPtDist * distConv);
+
       // == OBS DATA == //
       acc["id"].push(idO++);
       acc["REFPT"].push(curr.fMeasuredPlane.fName);
       acc["REFLINE"].push(curr.line);
       acc["TGTPOS"].push(curr[path[1]][j].targetPos);
       acc["TGTLINE"].push(curr[path[1]][j].line);
-      acc["OBSERVE"].push(curr[path[1]][j].distances[0].fValue);
+      acc["OBS"].push(curr[path[1]][j].distances[0].fValue);
       acc["SIGMA"].push(curr[path[1]][j].target.sigmaCombinedDist * distConv);
       acc["CALC"].push(
         curr[path[1]][j].distances[0].fValue +
