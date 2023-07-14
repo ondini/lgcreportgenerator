@@ -584,20 +584,77 @@ export const getSmObsData = (data) => {
 const generateFrameColumns = () => {
   return {
     id: fieldGen("id", "id", { show: false }), // table id
-    TYPE: fieldGen("TYPE", "Type", { flex: 0.5, minWidth: 50 }),
-    TSTN_POS: fieldGen("TSTN_POS", "Station position", {
-      flex: 1,
-      minWidth: 200,
-      cellClassName: "name-column--cell border-right--cell",
-    }),
-    TSTN_LINE: fieldGen("TSTN_LINE", "Station line"),
-    RES_MAX: fieldGen("RES_MAX", "Res. Max.", { numDecs: 2 }),
-    RES_MIN: fieldGen("RES_MIN", "Res. Min.", { numDecs: 2 }),
-    RES_AVG: fieldGen("RES_AVG", "Res. Avg.", { numDecs: 2 }),
-    ECART_TYPE: fieldGen("ECART_TYPE", "Ecart-type", { numDecs: 2 }),
+    NAME: fieldGen("NAME", "Name", { flex: 1, minWidth: 200 }),
+    TX_INIT: fieldGen("TX_INIT", "TX initial", { numDecs: 6 }),
+    TY_INIT: fieldGen("TY_INIT", "TY initial", { numDecs: 6 }),
+    TZ_INIT: fieldGen("TZ_INIT", "TZ initial", { numDecs: 6 }),
+    RX_INIT: fieldGen("RX_INIT", "RX initial", { numDecs: 6 }),
+    RY_INIT: fieldGen("RY_INIT", "RY initial", { numDecs: 6 }),
+    RZ_INIT: fieldGen("RZ_INIT", "RZ initial", { numDecs: 6 }),
+    TX_CALC: fieldGen("TX_CALC", "TX calculated", { numDecs: 6 }),
+    TY_CALC: fieldGen("TY_CALC", "TY calculated", { numDecs: 6 }),
+    TZ_CALC: fieldGen("TZ_CALC", "TZ calculated", { numDecs: 6 }),
+    RX_CALC: fieldGen("RX_CALC", "RX calculated", { numDecs: 6 }),
+    RY_CALC: fieldGen("RY_CALC", "RY calculated", { numDecs: 6 }),
+    RZ_CALC: fieldGen("RZ_CALC", "RZ calculated", { numDecs: 6 }),
+    TX_SIG: fieldGen("TX_SIG", "TX sigma", { numDecs: 6 }),
+    TY_SIG: fieldGen("TY_SIG", "TY sigma", { numDecs: 6 }),
+    TZ_SIG: fieldGen("TZ_SIG", "TZ sigma", { numDecs: 6 }),
+    RX_SIG: fieldGen("RX_SIG", "RX sigma", { numDecs: 6 }),
+    RY_SIG: fieldGen("RY_SIG", "RY sigma", { numDecs: 6 }),
+    RZ_SIG: fieldGen("RZ_SIG", "RZ sigma", { numDecs: 6 }),
   };
 };
 
-// const getFrameTree = (data) => {
-//   data.tree.reduce((acc, curr) => {
-//     curr.frame
+export const getFrameTree = (data) => {
+  let cols = generateFrameColumns();
+  let columns = {};
+  Object.keys(cols).forEach((key) => {
+    columns[key] = [];
+  });
+  var idO = 0;
+
+  var obsData = data.tree.reduce((acc, curr) => {
+    acc["id"].push(idO++);
+    acc["NAME"].push(curr.frame.name);
+    acc["TX_INIT"].push(curr.frame.fProvParameter[0]);
+    acc["TY_INIT"].push(curr.frame.fProvParameter[1]);
+    acc["TZ_INIT"].push(curr.frame.fProvParameter[2]);
+    acc["RX_INIT"].push(curr.frame.fProvParameter[3]);
+    acc["RY_INIT"].push(curr.frame.fProvParameter[4]);
+    acc["RZ_INIT"].push(curr.frame.fProvParameter[5]);
+    acc["TX_CALC"].push(curr.frame.fEstParameter[0]);
+    acc["TY_CALC"].push(curr.frame.fEstParameter[1]);
+    acc["TZ_CALC"].push(curr.frame.fEstParameter[2]);
+    acc["RX_CALC"].push(curr.frame.fEstParameter[3]);
+    acc["RY_CALC"].push(curr.frame.fEstParameter[4]);
+    acc["RZ_CALC"].push(curr.frame.fEstParameter[5]);
+    acc["TX_SIG"].push(curr.frame.fEstPrecision[0]);
+    acc["TY_SIG"].push(curr.frame.fEstPrecision[1]);
+    acc["TZ_SIG"].push(curr.frame.fEstPrecision[2]);
+    acc["RX_SIG"].push(curr.frame.fEstPrecision[3]);
+    acc["RY_SIG"].push(curr.frame.fEstPrecision[4]);
+    acc["RZ_SIG"].push(curr.frame.fEstPrecision[5]);
+    return acc;
+  }, columns);
+
+  let colNames = Object.keys(cols);
+  let columnDetails = [];
+  let hideCols = ["__row_group_by_columns_group__"];
+  for (let i = 0; i < colNames.length; i++) {
+    //columnDetails.push(cols[colNames[i]]);
+    if (cols[colNames[i]].show) {
+      columnDetails.push(cols[colNames[i]]); //hideCols.push(colNames[i]);
+    }
+  }
+
+  // convert array of values to dictionary with keys from colNames, so thtat this can be used in a table
+  obsData = obsData[colNames[0]].map((value, index) => {
+    return colNames.reduce((acc, key) => {
+      acc[key] = obsData[key][index];
+      return acc;
+    }, {});
+  });
+
+  return { data: obsData, columnss: columnDetails, hideCols: hideCols };
+};

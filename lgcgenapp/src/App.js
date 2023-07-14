@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import "./App.css";
-import { Header, Plot3D, Histogram, DataTable, Observations, StationsTable } from "./sections";
-import Plot from 'react-plotly.js';
-// import { Graph } from 'react-d3-graph';
-// import { useState, useEffect } from 'react';
+import { Header, Plot3D, Histogram, DataTable, Observations, StationsTable, FrameTable } from "./sections";
+
+
 const dataFile = "SUS-1895_26465_TT2-radial_calage-FTN.json";
 const GMData = require(`./data/${dataFile}`); //`C:/Users/okafka/Developer/LGCReportGenerator/lgcgenapp/src/data/${dataFile}`)
 
@@ -17,6 +16,7 @@ function App() {
         <StationsTable data={GMData} />
         <DataTable data={GMData} />
         <Observations data={GMData} />
+        <FrameTable data={GMData} />
       </div>
     </div>
   );
