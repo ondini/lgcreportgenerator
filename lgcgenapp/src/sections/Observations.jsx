@@ -40,40 +40,35 @@ const generateTableStyle = () => {
 const generateTableInitState = (hiddenFields) => {
   let hiddenCols = {};
   hiddenFields.forEach((field) => {
-    if (field !== '__row_group_by_columns_group__') {
+    if (field !== "__row_group_by_columns_group__") {
       hiddenCols[field] = false;
     }
   });
-  console.log(hiddenCols)
   return {
     columns: {
-      columnVisibilityModel: hiddenCols
+      columnVisibilityModel: hiddenCols,
     },
-  }
-}
+  };
+};
 
 function getTogglableColumnsFun(hiddenFields) {
-  return(columns) => {
+  return (columns) => {
     return columns
       .filter((column) => !hiddenFields.includes(column.field))
       .map((column) => column.field);
   };
-  
 }
-
 
 export default function Observations({ data }) {
   const observations = getObsData(data.LGC_DATA); // get the residuals data from the LGC_DATA object
-  console.log(observations);
   const measTypes = Object.keys(observations); // get all the used measurement types from the residuals data
-  
+
   const createTable = (measType) => {
     // function that creates the histogram components for each of the residuals of the selected measurement type
-    const getTogglableColumns = getTogglableColumnsFun(observations[measType].hideCols);
-    console.log(observations[measType].hideCols)
-    console.log(observations[measType].columnss)
-    const init = generateTableInitState(observations[measType].hideCols)
-    console.log(init)
+    const getTogglableColumns = getTogglableColumnsFun(
+      observations[measType].hideCols
+    );
+    const init = generateTableInitState(observations[measType].hideCols);
     return (
       <Box sx={generateTableStyle()}>
         <DataGrid
@@ -86,8 +81,8 @@ export default function Observations({ data }) {
             columnsPanel: {
               getTogglableColumns,
             },
-          }}  
-          initialState={init}  
+          }}
+          initialState={init}
         />
       </Box>
     );

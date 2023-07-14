@@ -3,6 +3,23 @@ import InstrumentTooltip from "../components/InstrumentTooltip";
 import React from "react";
 ///  --- Table 2 data selection  --- ///
 
+const getFromDictP = (data, path) => {
+  let pathArr = path.split(".");
+  let res = data;
+  pathArr.forEach((key) => {
+    res = res[key];
+  });
+  return res;
+};
+
+const getFromDict = (data, pathArr) => {
+  let res = data;
+  pathArr.forEach((key) => {
+    res = res[key];
+  });
+  return res;
+};
+
 const angleGONFormatter = (value) => {
   if (value < 0) {
     return value + 400;
@@ -448,7 +465,7 @@ export const getObsData = (data) => {
   }, {});
 };
 
-const generateObsColumns = () => {
+const generateObsTSTNColumns = () => {
   return {
     id: fieldGen("id", "id", { show: false }), // table id
     TYPE: fieldGen("TYPE", "Type", { flex: 0.5, minWidth: 50 }),
@@ -460,7 +477,7 @@ const generateObsColumns = () => {
     TSTN_LINE: fieldGen("TSTN_LINE", "Station line"),
     RES_MAX: fieldGen("RES_MAX", "Res. Max.", { numDecs: 2 }),
     RES_MIN: fieldGen("RES_MIN", "Res. Min.", { numDecs: 2 }),
-    RES_MOY: fieldGen("RES_AVG", "Res. Avg.", { numDecs: 2 }),
+    RES_AVG: fieldGen("RES_AVG", "Res. Avg.", { numDecs: 2 }),
     ECART_TYPE: fieldGen("ECART_TYPE", "Ecart-type", { numDecs: 2 }),
   };
 };
@@ -474,53 +491,113 @@ const fTSTNObsColumnsSelector = (measurement) => {
   const angleConvGON = 63.662; // radians to gon factor
   const distConv = 1000; // meters to hundredths of milimeter factor
 
-  let cols = generateObsColumns();
+  let cols = generateObsTSTNColumns();
   let columns = {};
   Object.keys(cols).forEach((key) => {
     columns[key] = [];
   });
+  console.log(cols);
 
   var idO = 0;
   let obsData = measurement.fTSTN.reduce((acc, curr) => {
     // reduce over all measurements
-    for (let i = 0; i < curr.roms.length; i++) {
-      let rom = curr.roms[i]; // current rom
-      if ("measPLR3D" in rom) {
-        for (let j = 0; j < rom.plr3dSummary_.length; j++) {
+    [
+      ["ANGL", "anglObsSum"],
+      ["ZEND", "zendObsSum"],
+      ["DIST", "distObsSum"],
+    ].forEach(([key, path]) => {
+      for (let i = 0; i < curr.roms.length; i++) {
+        let rom = curr.roms[i]; // current rom
+        if ("measPLR3D" in rom) {
           acc["id"].push(idO++);
-          acc["TYPE"].push("PLR3D");
-          acc["TSTN_POS"].push(rom.plr3dSummary_.distObsSum.fObsText);
+          acc["TYPE"].push("PLR3D:" + key);
+          acc["TSTN_POS"].push(rom.plr3dSummary_[path].fObsText);
           acc["TSTN_LINE"].push(curr.line);
-          acc["RES_MAX"].push(rom.plr3dSummary_.distObsSum.fResMax);
-          acc["RES_MIN"].push(rom.plr3dSummary_.distObsSum.fResMin);
-          acc["RES_AVG"].push(rom.plr3dSummary_.distObsSum.fMean);
-          acc["ECART_TYPE"].push(rom.plr3dSummary_.distObsSum.fStdev);
+          acc["RES_MAX"].push(rom.plr3dSummary_[path].fResMax);
+          acc["RES_MIN"].push(rom.plr3dSummary_[path].fResMin);
+          acc["RES_AVG"].push(rom.plr3dSummary_[path].fMean);
+          acc["ECART_TYPE"].push(rom.plr3dSummary_[path].fStdev);
         }
       }
-    }
+    });
     return acc;
   }, columns);
 
-  if (makeColumns) {
-    let colNames = Object.keys(cols);
-    let columnDetails = [];
-    let hideCols = ["__row_group_by_columns_group__"];
-    for (let i = 0; i < colNames.length; i++) {
-      //columnDetails.push(cols[colNames[i]]);
-      if (cols[colNames[i]].show) {
-        columnDetails.push(cols[colNames[i]]); //hideCols.push(colNames[i]);
-      }
+  let colNames = Object.keys(cols);
+  let columnDetails = [];
+  let hideCols = ["__row_group_by_columns_group__"];
+  for (let i = 0; i < colNames.length; i++) {
+    //columnDetails.push(cols[colNames[i]]);
+    if (cols[colNames[i]].show) {
+      columnDetails.push(cols[colNames[i]]); //hideCols.push(colNames[i]);
     }
-
-    // convert array of values to dictionary with keys from colNames, so thtat this can be used in a table
-    obsData = obsData[colNames[0]].map((value, index) => {
-      return colNames.reduce((acc, key) => {
-        acc[key] = obsData[key][index];
-        return acc;
-      }, {});
-    });
-    return { data: obsData, columnss: columnDetails, hideCols: hideCols };
   }
 
-  return obsData;
+  // convert array of values to dictionary with keys from colNames, so thtat this can be used in a table
+  obsData = obsData[colNames[0]].map((value, index) => {
+    return colNames.reduce((acc, key) => {
+      acc[key] = obsData[key][index];
+      return acc;
+    }, {});
+  });
+  return { data: obsData, columnss: columnDetails, hideCols: hideCols };
 };
+
+const smDataSelector = (measurement, type) => {
+  switch (type) {
+    case "fTSTN":
+      return fTSTNObsColumnsSelector(measurement);
+    case "fECHO":
+    case "fOBSXYZ":
+    case "fECWS":
+    case "fEDM":
+    case "fRADI":
+    default:
+      return {};
+  }
+};
+
+// -- main functions -- //
+const mergeSmObsData = (resType, acc, residuals) => {
+  if (!(resType in acc)) {
+    acc[resType] = residuals;
+  } else {
+    Object.keys(residuals).forEach((key) => {
+      acc[resType][key] = acc[resType][key].concat(residuals[key]);
+    });
+  }
+  return acc;
+};
+
+export const getSmObsData = (data) => {
+  return data.tree.reduce((acc, curr) => {
+    Object.keys(curr.measurements).forEach((key) => {
+      if (key[0] === "f") {
+        let obsData = smDataSelector(curr.measurements, key);
+        acc = mergeSmObsData(key, acc, obsData);
+      }
+    });
+    return acc;
+  }, {});
+};
+
+const generateFrameColumns = () => {
+  return {
+    id: fieldGen("id", "id", { show: false }), // table id
+    TYPE: fieldGen("TYPE", "Type", { flex: 0.5, minWidth: 50 }),
+    TSTN_POS: fieldGen("TSTN_POS", "Station position", {
+      flex: 1,
+      minWidth: 200,
+      cellClassName: "name-column--cell border-right--cell",
+    }),
+    TSTN_LINE: fieldGen("TSTN_LINE", "Station line"),
+    RES_MAX: fieldGen("RES_MAX", "Res. Max.", { numDecs: 2 }),
+    RES_MIN: fieldGen("RES_MIN", "Res. Min.", { numDecs: 2 }),
+    RES_AVG: fieldGen("RES_AVG", "Res. Avg.", { numDecs: 2 }),
+    ECART_TYPE: fieldGen("ECART_TYPE", "Ecart-type", { numDecs: 2 }),
+  };
+};
+
+// const getFrameTree = (data) => {
+//   data.tree.reduce((acc, curr) => {
+//     curr.frame
