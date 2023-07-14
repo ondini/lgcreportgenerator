@@ -606,7 +606,7 @@ const generateFrameColumns = () => {
   };
 };
 
-export const getFrameTree = (data) => {
+export const getFrames = (data) => {
   let cols = generateFrameColumns();
   let columns = {};
   Object.keys(cols).forEach((key) => {
@@ -657,4 +657,21 @@ export const getFrameTree = (data) => {
   });
 
   return { data: obsData, columnss: columnDetails, hideCols: hideCols };
+};
+
+export const getFrameTree = (data) => {
+  var acc = { nodes: [], edges: [] };
+
+  var obsData = data.tree.reduce((acc, curr) => {
+    var node = {
+      id: curr.frame.name,
+      label: curr.frame.name,
+    };
+    acc.nodes.push(node);
+    if (curr.branch.length > 1) {
+      acc.edges.push({ from: curr.branch[-1], to: curr.frame.name });
+    }
+    return acc;
+  }, acc);
+  return obsData;
 };
