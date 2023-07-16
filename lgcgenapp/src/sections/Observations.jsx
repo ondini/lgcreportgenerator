@@ -62,7 +62,7 @@ function getTogglableColumnsFun(hiddenFields) {
 export default function Observations({ data }) {
   const observations = getObsData(data.LGC_DATA); // get the residuals data from the LGC_DATA object
   const measTypes = Object.keys(observations); // get all the used measurement types from the residuals data
-  console.log(observations);
+
   const createTable = (measType) => {
     // function that creates the histogram components for each of the residuals of the selected measurement type
     const getTogglableColumns = getTogglableColumnsFun(

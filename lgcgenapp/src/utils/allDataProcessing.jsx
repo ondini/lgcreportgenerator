@@ -781,16 +781,22 @@ export const getFrames = (data) => {
 };
 
 export const getFrameTree = (data) => {
-  var acc = { nodes: [], edges: [] };
+  var acc = { nodes: [], edges: [], map: {} };
 
   var obsData = data.tree.reduce((acc, curr) => {
+    let x = Math.random();
+    let y = Math.random();
+
     var node = {
       id: curr.frame.name,
       label: curr.frame.name,
+      x: x,
+      y: y,
     };
     acc.nodes.push(node);
+    acc.map[curr.frame.name] = node;
     if (curr.branch.length > 1) {
-      acc.edges.push({ from: curr.branch[-1], to: curr.frame.name });
+      acc.edges.push({ from: curr.branch.slice(-1), to: curr.frame.name });
     }
     return acc;
   }, acc);

@@ -17,7 +17,7 @@ function App() {
         <DataTable data={GMData} />
         <Observations data={GMData} />
         <FrameTable data={GMData} />
-        {/* <FrameTree data={GMData} /> */}
+        <FrameTree data={GMData} />
       </div>
     </div>
   );

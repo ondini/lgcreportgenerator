@@ -8,8 +8,8 @@ const FrameTree = ({ data }) => {
   const nodes = frameTree.nodes.map((node) => ({
     id: node.id,
     label: node.label,
-    x: Math.random(),
-    y: Math.random(),
+    x: node.x,
+    y: node.y,
     size: 15,
     color: "blue",
     type: "scatter",
@@ -20,19 +20,13 @@ const FrameTree = ({ data }) => {
   const edges = frameTree.edges.map((edge) => ({
     type: "scatter",
     mode: "lines",
-    x: [
-      nodes.find((node) => node.id === edge.source).x,
-      nodes.find((node) => node.id === edge.target).x,
-    ],
-    y: [
-      nodes.find((node) => node.id === edge.source).y,
-      nodes.find((node) => node.id === edge.target).y,
-    ],
+    x: [frameTree.map[edge.from].x, frameTree.map[edge.to].x],
+    y: [frameTree.map[edge.from].y, frameTree.map[edge.to].y],
     line: { width: 2 },
   }));
 
   const data2 = [...nodes, ...edges];
-
+  console.log(data2);
   const layout = {
     title: "Network Graph",
     showlegend: false,
