@@ -5,9 +5,9 @@ import Title from "../components/Title";
 
 export default function StationsTable({ data }) {
   const observations = getSmObsData(data.LGC_DATA);
-  console.log(observations);
   const measTypes = Object.keys(observations); // get all the used measurement types from the residuals data
-  const measType = "fTSTN";
+  console.log(measTypes, measTypes.includes("fTSTN"));
+  const measType = measTypes.includes("fTSTN") ? "fTSTN" : "fOBSXYZ";
 
   let rows = observations[measType].data;
   let columns = observations[measType].columnss;

@@ -209,6 +209,75 @@ const generatefECHOColumns = () => {
     RESSIG: fieldGen("RESSIG", "Res./Sig.", { numDecs: 2 }), // RES/SIGMA
   }; // residuals data
 };
+const generatefOBSXYZColumns = () => {
+  return {
+    // ========== OBS DATA ========== //
+    id: fieldGen("id", "id", { show: false }), // table id
+    TGTPOS: fieldGen("TGTPOS", "Tgt. Pos.", { flex: 1, minWidth: 200 }), // target position
+    TGTLINE: fieldGen("TGTLINE", "TLine", { flex: 0.11, minWidth: 50 }), // target line
+    // ========== OBSXYZ DATA ========== //
+    RESX: fieldGen("RESX", "Res. X", { numDecs: 3 }), // X residual
+    SX: fieldGen("SX", "S. X", { numDecs: 3 }), // X standard deviation
+    RESSIGX: fieldGen("RESSIGX", "Res./Sig. X", { numDecs: 3 }), // X RES/SIGMA
+    RESY: fieldGen("RESY", "Res. Y", { numDecs: 3 }), // Y residual
+    SY: fieldGen("SY", "S. Y", { numDecs: 3 }), // Y standard deviation
+    RESSIGY: fieldGen("RESSIGY", "Res./Sig. Y", { numDecs: 3 }), // Y RES/SIGMA
+    RESZ: fieldGen("RESZ", "Res. Z", { numDecs: 3 }), // Z residual
+    SZ: fieldGen("SZ", "S. Z", { numDecs: 3 }), // Z standard deviation
+    RESSIGZ: fieldGen("RESSIGZ", "Res./Sig. Z", { numDecs: 3 }), // Z RES/SIGMA
+  };
+};
+
+const fOBSXYZColumnsSelector = (measurement) => {
+  // function for obtaining residuals for OBSXYZ measurement type from JSON file
+  // ARGS: JSON file
+  // OUT: dictionary of residuals
+
+  const distConv = 100000; // meters to hundredths of milimeter factor
+
+  let cols = generatefOBSXYZColumns();
+  let columns = {};
+  Object.keys(cols).forEach((key) => {
+    columns[key] = [];
+  });
+
+  var idO = 0;
+  let obsData = measurement.fOBSXYZ.reduce((acc, curr) => {
+    acc["id"].push(idO++);
+    acc["TGTPOS"].push(curr.targetPos);
+    acc["TGTLINE"].push(curr.line);
+    acc["RESX"].push(curr.fXResidual * distConv);
+    acc["SX"].push(curr.fXSigmaObsVal * distConv);
+    acc["RESSIGX"].push(curr.fXResidual / curr.fXSigmaObsVal);
+    acc["RESY"].push(curr.fYResidual * distConv);
+    acc["SY"].push(curr.fYSigmaObsVal * distConv);
+    acc["RESSIGY"].push(curr.fYResidual / curr.fYSigmaObsVal);
+    acc["RESZ"].push(curr.fZResidual * distConv);
+    acc["SZ"].push(curr.fZSigmaObsVal * distConv);
+    acc["RESSIGZ"].push(curr.fZResidual / curr.fZSigmaObsVal);
+
+    return acc;
+  }, columns);
+
+  let colNames = Object.keys(cols);
+  let columnDetails = [];
+  let hideCols = ["__row_group_by_columns_group__"];
+  for (let i = 0; i < colNames.length; i++) {
+    //columnDetails.push(cols[colNames[i]]);
+    if (cols[colNames[i]].show) {
+      columnDetails.push(cols[colNames[i]]); //hideCols.push(colNames[i]);
+    }
+  }
+
+  // convert array of values to dictionary with keys from colNames, so thtat this can be used in a table
+  obsData = obsData[colNames[0]].map((value, index) => {
+    return colNames.reduce((acc, key) => {
+      acc[key] = obsData[key][index];
+      return acc;
+    }, {});
+  });
+  return { data: obsData, columnss: columnDetails, hideCols: hideCols };
+};
 
 const fTSTNColumnsSelector = (measurement, makeColumns) => {
   // function for obtaining residuals for TSTN measurement type from JSON file
@@ -433,6 +502,7 @@ const obsDataSelector = (measurement, type) => {
     case "fECHO":
       return fECHOColumnsSelector(measurement, true);
     case "fOBSXYZ":
+      return fOBSXYZColumnsSelector(measurement, true);
     case "fECWS":
     case "fEDM":
     case "fRADI":
@@ -458,7 +528,7 @@ export const getObsData = (data) => {
     Object.keys(curr.measurements).forEach((key) => {
       if (key[0] === "f") {
         let obsData = obsDataSelector(curr.measurements, key);
-        acc = mergeObsData(key, acc, obsData);
+        acc = mergeSmObsData(key, acc, obsData);
       }
     });
     return acc;
@@ -496,7 +566,6 @@ const fTSTNObsColumnsSelector = (measurement) => {
   Object.keys(cols).forEach((key) => {
     columns[key] = [];
   });
-  console.log(cols);
 
   var idO = 0;
   let obsData = measurement.fTSTN.reduce((acc, curr) => {
@@ -543,12 +612,66 @@ const fTSTNObsColumnsSelector = (measurement) => {
   return { data: obsData, columnss: columnDetails, hideCols: hideCols };
 };
 
+const fOBSXYZObsColumnsSelector = (measurement) => {
+  // function for obtaining residuals for TSTN measurement type from JSON file
+  // ARGS: JSON file
+  // OUT: dictionary of residuals with keys: ANGL, DIST, ZEND, TGTPOS, TGTLINE, INSPOS, INSLINE
+
+  const angleConvCC = 63.662 * 10000; // radians to centesimal circle factor
+  const angleConvGON = 63.662; // radians to gon factor
+  const distConv = 1000; // meters to hundredths of milimeter factor
+
+  let cols = generateObsTSTNColumns();
+  let columns = {};
+  Object.keys(cols).forEach((key) => {
+    columns[key] = [];
+  });
+
+  var idO = 0;
+  [
+    ["X", "obsXObsSum"],
+    ["Y", "obsYObsSum"],
+    ["Z", "obsZObsSum"],
+  ].forEach(([key, path]) => {
+    columns["id"].push(Math.floor(Math.random() * 100000000) + 1); // ad hoc, needs to be solved
+    columns["TYPE"].push("OBSXYZ:" + key);
+    columns["TSTN_POS"].push(measurement.obsxyzSummary_[path].fObsText);
+    columns["TSTN_LINE"].push(measurement.obsxyzSummary_[path].fNumberOfObs); /// NOT LINE!!
+    columns["RES_MAX"].push(measurement.obsxyzSummary_[path].fResMax);
+    columns["RES_MIN"].push(measurement.obsxyzSummary_[path].fResMin);
+    columns["RES_AVG"].push(measurement.obsxyzSummary_[path].fMean);
+    columns["ECART_TYPE"].push(measurement.obsxyzSummary_[path].fStdev);
+  });
+
+  let colNames = Object.keys(cols);
+  let columnDetails = [];
+
+  let hideCols = ["__row_group_by_columns_group__"];
+  for (let i = 0; i < colNames.length; i++) {
+    //columnDetails.push(cols[colNames[i]]);
+    if (cols[colNames[i]].show) {
+      columnDetails.push(cols[colNames[i]]); //hideCols.push(colNames[i]);
+    }
+  }
+
+  // convert array of values to dictionary with keys from colNames, so thtat this can be used in a table
+  let obsData = columns[colNames[0]].map((value, index) => {
+    return colNames.reduce((acc, key) => {
+      acc[key] = columns[key][index];
+      return acc;
+    }, {});
+  });
+
+  return { data: obsData, columnss: columnDetails, hideCols: hideCols };
+};
+
 const smDataSelector = (measurement, type) => {
   switch (type) {
     case "fTSTN":
       return fTSTNObsColumnsSelector(measurement);
-    case "fECHO":
     case "fOBSXYZ":
+      return fOBSXYZObsColumnsSelector(measurement);
+    case "fECHO":
     case "fECWS":
     case "fEDM":
     case "fRADI":
@@ -558,13 +681,11 @@ const smDataSelector = (measurement, type) => {
 };
 
 // -- main functions -- //
-const mergeSmObsData = (resType, acc, residuals) => {
+const mergeSmObsData = (resType, acc, obsData) => {
   if (!(resType in acc)) {
-    acc[resType] = residuals;
+    acc[resType] = obsData;
   } else {
-    Object.keys(residuals).forEach((key) => {
-      acc[resType][key] = acc[resType][key].concat(residuals[key]);
-    });
+    acc[resType].data = acc[resType].data.concat(obsData.data);
   }
   return acc;
 };

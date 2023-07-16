@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import "./App.css";
-import { Header, Plot3D, Histogram, DataTable, Observations, StationsTable, FrameTable } from "./sections";
+import { Header, Plot3D, Histogram, DataTable, Observations, StationsTable, FrameTable, FrameTree } from "./sections";
 
 
-const dataFile = "SUS-1895_26465_TT2-radial_calage-FTN.json";
+const dataFile = "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json";
 const GMData = require(`./data/${dataFile}`); //`C:/Users/okafka/Developer/LGCReportGenerator/lgcgenapp/src/data/${dataFile}`)
 
 function App() {
@@ -17,6 +17,7 @@ function App() {
         <DataTable data={GMData} />
         <Observations data={GMData} />
         <FrameTable data={GMData} />
+        {/* <FrameTree data={GMData} /> */}
       </div>
     </div>
   );

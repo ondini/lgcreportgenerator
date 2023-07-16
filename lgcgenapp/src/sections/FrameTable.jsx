@@ -5,7 +5,6 @@ import Title from "../components/Title";
 
 export default function FrameTable({ data }) {
   const observations = getFrames(data.LGC_DATA);
-  console.log(observations);
 
   let rows = observations.data;
   let columns = observations.columnss;
