@@ -243,7 +243,7 @@ const fOBSXYZColumnsSelector = (measurement) => {
 
   var idO = 0;
   let obsData = measurement.fOBSXYZ.reduce((acc, curr) => {
-    acc["id"].push(idO++);
+    acc["id"].push(Math.floor(Math.random() * 100000000));
     acc["TGTPOS"].push(curr.targetPos);
     acc["TGTLINE"].push(curr.line);
     acc["RESX"].push(curr.fXResidual * distConv);
@@ -783,22 +783,22 @@ export const getFrames = (data) => {
 export const getFrameTree = (data) => {
   var acc = { nodes: [], edges: [], map: {} };
 
-  var obsData = data.tree.reduce((acc, curr) => {
+  data.tree.forEach((frame, index) => {
     let x = Math.random();
     let y = Math.random();
 
     var node = {
-      id: curr.frame.name,
-      label: curr.frame.name,
+      id: frame.frame.name,
+      label: frame.frame.name,
       x: x,
       y: y,
     };
     acc.nodes.push(node);
-    acc.map[curr.frame.name] = node;
-    if (curr.branch.length > 1) {
-      acc.edges.push({ from: curr.branch.slice(-1), to: curr.frame.name });
+    acc.map[frame.frame.name] = node;
+    if (frame.branch.length > 1) {
+      acc.edges.push({ from: frame.branch[frame.branch.length-2], to: frame.frame.name });
     }
-    return acc;
-  }, acc);
-  return obsData;
+  });
+
+  return acc;
 };

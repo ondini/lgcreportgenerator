@@ -1,7 +1,6 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { generateNumFormatter } from "../utils/dataProcessing";
-import { getFrames } from "../utils/allDataProcessing";
-import Title from "../components/Title";
+import { getFrames } from "../../utils/allDataProcessing";
+import Title from "../../components/Title";
 
 export default function FrameTable({ data }) {
   const observations = getFrames(data.LGC_DATA);
@@ -10,8 +9,8 @@ export default function FrameTable({ data }) {
   let columns = observations.columnss;
 
   return (
-    <div style={{ height: "1000px" }}>
-      <Title title={"3D Points overview"} />
+    <div style={{  height: '900px', marginBottom: "4rem"  }}>
+      <Title title={"Frame overview"} />
       <DataGrid
         rows={rows}
         columns={columns}

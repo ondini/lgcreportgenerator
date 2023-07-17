@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
 import "./App.css";
-import { Header, Plot3D, Histogram, DataTable, Observations, StationsTable, FrameTable, FrameTree } from "./sections";
-
+import {
+  Header,
+  Plot3D,
+  Histogram,
+  Point3DTable,
+  ObservationsTable,
+  StationsTable,
+  FrameTable,
+  FrameTree,
+} from "./sections";
 
 const dataFile = "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json";
-const GMData = require(`./data/${dataFile}`); //`C:/Users/okafka/Developer/LGCReportGenerator/lgcgenapp/src/data/${dataFile}`)
+const GMData = require(`./data/${dataFile}`);
 
 function App() {
   return (
@@ -14,8 +21,8 @@ function App() {
         <Plot3D data={GMData} />
         <Histogram data={GMData} />
         <StationsTable data={GMData} />
-        <DataTable data={GMData} />
-        <Observations data={GMData} />
+        <Point3DTable data={GMData} />
+        <ObservationsTable data={GMData} />
         <FrameTable data={GMData} />
         <FrameTree data={GMData} />
       </div>

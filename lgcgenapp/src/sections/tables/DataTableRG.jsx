@@ -1,7 +1,7 @@
 import "react-data-grid/lib/styles.css";
 
 import DataGrid from "react-data-grid";
-import { get3DPointEstDataRows } from "../utils/dataProcessing";
+import { get3DPointEstDataRows } from "../../utils/dataProcessing";
 import { useState, useCallback, useMemo } from "react";
 
 function RoundedNumberFormatter({ value }) {

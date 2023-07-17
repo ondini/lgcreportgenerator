@@ -1,7 +1,6 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { generateNumFormatter } from "../utils/dataProcessing";
-import { getSmObsData } from "../utils/allDataProcessing";
-import Title from "../components/Title";
+import { getSmObsData } from "../../utils/allDataProcessing";
+import Title from "../../components/Title";
 
 export default function StationsTable({ data }) {
   const observations = getSmObsData(data.LGC_DATA);
@@ -12,8 +11,8 @@ export default function StationsTable({ data }) {
   let columns = observations[measType].columnss;
 
   return (
-    <div style={{ height: "1000px" }}>
-      <Title title={"3D Points overview"} />
+    <div style={{  height: '900px', marginBottom: "4rem"  }}>
+      <Title title={"Instrument positions overview"} />
       <DataGrid
         rows={rows}
         columns={columns}

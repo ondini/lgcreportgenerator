@@ -1,6 +1,6 @@
 import React from "react";
 import Plot from "react-plotly.js";
-import { get3DPoints } from "../utils/dataProcessing";
+import { get3DPoints } from "../../utils/dataProcessing";
 
 const Plot3D = ({ data }) => {
   let coords = get3DPoints(data.LGC_DATA);
