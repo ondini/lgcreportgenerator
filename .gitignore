@@ -19,4 +19,4 @@ yarn-error.log*
 *.code-workspace
 
 # big files
-data/
+data/*.json
