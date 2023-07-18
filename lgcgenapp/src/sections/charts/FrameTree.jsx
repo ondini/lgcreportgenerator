@@ -24,7 +24,6 @@ const FrameTree = ({ data }) => {
   }));
 
   const data2 = [...edges];
-  console.log(data2);
   const layout = {
     title: "Network Graph",
     showlegend: false,
@@ -36,9 +35,7 @@ const FrameTree = ({ data }) => {
     height: 400,
   };
 
-  return (
-    <Plot data={data2} layout={layout} />
-  );
+  return <Plot data={data2} layout={layout} />;
 };
 
 export default FrameTree;

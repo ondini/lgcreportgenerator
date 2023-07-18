@@ -3,23 +3,6 @@ import InstrumentTooltip from "../components/InstrumentTooltip";
 import React from "react";
 ///  --- Table 2 data selection  --- ///
 
-const getFromDictP = (data, path) => {
-  let pathArr = path.split(".");
-  let res = data;
-  pathArr.forEach((key) => {
-    res = res[key];
-  });
-  return res;
-};
-
-const getFromDict = (data, pathArr) => {
-  let res = data;
-  pathArr.forEach((key) => {
-    res = res[key];
-  });
-  return res;
-};
-
 const angleGONFormatter = (value) => {
   if (value < 0) {
     return value + 400;
@@ -796,7 +779,10 @@ export const getFrameTree = (data) => {
     acc.nodes.push(node);
     acc.map[frame.frame.name] = node;
     if (frame.branch.length > 1) {
-      acc.edges.push({ from: frame.branch[frame.branch.length-2], to: frame.frame.name });
+      acc.edges.push({
+        from: frame.branch[frame.branch.length - 2],
+        to: frame.frame.name,
+      });
     }
   });
 

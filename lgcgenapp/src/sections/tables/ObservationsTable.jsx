@@ -4,11 +4,12 @@ import { getObsData } from "../../utils/allDataProcessing";
 import { generateNumFormatter } from "../../utils/dataProcessing";
 import Title from "../../components/Title";
 import { useState, useEffect } from "react";
+import { getECHOObsRows } from "../../utils/processing";
 
 const generateTableStyle = () => {
   return {
-    height: '900px', 
-    marginBottom: "4rem" ,
+    height: "900px",
+    marginBottom: "4rem",
     width: "100%",
     // boxShadow: theme.customShadows.Card,
     "& .MuiDataGrid-root": {
@@ -63,7 +64,9 @@ function getTogglableColumnsFun(hiddenFields) {
 export default function ObservationsTable({ data }) {
   const observations = getObsData(data.LGC_DATA); // get the residuals data from the LGC_DATA object
   const measTypes = Object.keys(observations); // get all the used measurement types from the residuals data
-
+  const obs2 = getECHOObsRows(data.LGC_DATA.tree[0].measurements); // get the residuals data from the LGC_DATA object
+  console.log(obs2);
+  console.log(observations);
   const createTable = (measType) => {
     // function that creates the histogram components for each of the residuals of the selected measurement type
     const getTogglableColumns = getTogglableColumnsFun(
