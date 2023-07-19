@@ -3,6 +3,7 @@ export const measurementTypes = ['fTSTN', 'fOBSXYZ', 'fECWS', 'fECHO', 'fRADI', 
 export const pointTypes = ['POIN', 'VXY', 'VXZ', 'VX', 'VYZ','VY','VZ', 'CALA'];
 export const pointTypesBE = ['POIN', 'VYZ', 'VXZ', 'VZ', 'VXY', 'VY', 'VX', 'CALA']; // point types in Big Endian encoding order
 
+
 export const navbarWidth = '300px';
 
 const angleRad2CC = 63.662 * 10000; // radians to centesimal circle conv. factor

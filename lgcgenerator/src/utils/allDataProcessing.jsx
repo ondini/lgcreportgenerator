@@ -540,10 +540,6 @@ const fTSTNObsColumnsSelector = (measurement) => {
   // ARGS: JSON file
   // OUT: dictionary of residuals with keys: ANGL, DIST, ZEND, TGTPOS, TGTLINE, INSPOS, INSLINE
 
-  const angleConvCC = 63.662 * 10000; // radians to centesimal circle factor
-  const angleConvGON = 63.662; // radians to gon factor
-  const distConv = 1000; // meters to hundredths of milimeter factor
-
   let cols = generateObsTSTNColumns();
   let columns = {};
   Object.keys(cols).forEach((key) => {

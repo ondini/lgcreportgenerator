@@ -6,3 +6,4 @@ export { default as ObservationsTable } from "./tables/ObservationsTable.jsx";
 export { default as StationsTable } from "./tables/StationsTable.jsx";
 export { default as FrameTable } from "./tables/FrameTable.jsx";
 export { default as FrameTree } from "./charts/FrameTree.jsx";
+export { default as TreeGraph } from "./charts/TreeGraph.jsx";

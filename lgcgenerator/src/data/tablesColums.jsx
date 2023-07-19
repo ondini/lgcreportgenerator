@@ -145,10 +145,15 @@ export const generateTSTNObsCols = () => {
       numDecs: 1,
       path: "roms/i/measPLR3D/i/anglesResiduals/0/fValue",
     }), // angle residual
-    RESSIGANGL: fieldGen("RESSIGANGL", "Res./Sig. Angl.", { numDecs: 2 }), // angle RES/SIGMA
+    RESSIGANGL: fieldGen("RESSIGANGL", "Res./Sig. Angl.", {
+      numDecs: 2,
+      path: "!roms/i/measPLR3D/i/anglesResiduals/0/fValue!/!roms/i/measPLR3D/i/target/sigmaCombinedPLRAngl!",
+    }), // angle RES/SIGMA
     ECARTSANGL: fieldGen("ECARTSANGL", "Ecarts Angl.", {
       numDecs: 2,
       cellClassName: "border-right--cell",
+      path: "!roms/i/measPLR3D/i/distances/0/fValue!*roms/i/measPLR3D/i/anglesResiduals/0/fValue",
+      unitConv: distM2MMf,
     }), // angle ECARTS
 
     // ========== ZEND ========== //
@@ -156,18 +161,35 @@ export const generateTSTNObsCols = () => {
       flex: 0.8,
       minWidth: 100,
       numDecs: 5,
+      path: "roms/i/measPLR3D/i/angles/1/fValue",
+      unitConv: angleRad2GONf,
     }), // zenith observations
-    SZEND: fieldGen("SZEND", "S. Zend.", { numDecs: 1 }), // zenith standard deviation
+    SZEND: fieldGen("SZEND", "S. Zend.", {
+      numDecs: 1,
+      path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRZenD",
+      unitConv: angleRad2CCf,
+    }), // zenith standard deviation
     CALCZEND: fieldGen("CALCZEND", "Calc. Zend.", {
       flex: 0.8,
       minWidth: 100,
       numDecs: 5,
+      path: "!roms/i/measPLR3D/i/angles/1/fValue!+!roms/i/measPLR3D/i/anglesResiduals/1/fValue",
+      unitConv: angleRad2GONf,
     }), // calculated zenith
-    RESZEND: fieldGen("RESZEND", "Res. Zend.", { numDecs: 1 }), // zenith residual
-    RESSIGZEND: fieldGen("RESSIGZEND", "Res./Sig. Zend.", { numDecs: 2 }), // zenith RES/SIGMA
+    RESZEND: fieldGen("RESZEND", "Res. Zend.", {
+      numDecs: 1,
+      path: "roms/i/measPLR3D/i/anglesResiduals/1/fValue",
+      unitConv: angleRad2CCf,
+    }), // zenith residual
+    RESSIGZEND: fieldGen("RESSIGZEND", "Res./Sig. Zend.", {
+      numDecs: 2,
+      path: "!roms/i/measPLR3D/i/anglesResiduals/1/fValue!/!roms/i/measPLR3D/i/target/sigmaCombinedPLRZenD!",
+    }), // zenith RES/SIGMA
     ECARTSZEND: fieldGen("ECARTSZEND", "Ecarts Zend.", {
       numDecs: 2,
       cellClassName: "border-right--cell",
+      path: "!roms/i/measPLR3D/i/distances/0/fValue!*roms/i/measPLR3D/i/anglesResiduals/1/fValue",
+      unitConv: distM2MMf,
     }), // zenith ECARTS
 
     // ========== DIST ========== //
@@ -175,15 +197,28 @@ export const generateTSTNObsCols = () => {
       flex: 0.8,
       minWidth: 100,
       numDecs: 5,
+      path: "roms/i/measPLR3D/i/distances/0/fValue",
     }), // distance observations
-    SDIST: fieldGen("SDIST", "S. Dist.", { numDecs: 1 }), // distance standard deviation
+    SDIST: fieldGen("SDIST", "S. Dist.", {
+      numDecs: 1,
+      path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRDist",
+      unitConv: distM2MMf,
+    }), // distance standard deviation
     CALCDIST: fieldGen("CALCDIST", "Calc. Dist.", {
       flex: 0.8,
       minWidth: 100,
       numDecs: 5,
+      path: "!roms/i/measPLR3D/i/distances/0/fValue!+!roms/i/measPLR3D/i/distancesResiduals/0/fValue!",
     }), // calculated distance
-    RESDIST: fieldGen("RESDIST", "Res. Dist.", { numDecs: 1 }), // distance residual
-    RESSIGDIST: fieldGen("RESSIGDIST", "Res./Sig. Dist.", { numDecs: 2 }), // distance RES/SIGMA
+    RESDIST: fieldGen("RESDIST", "Res. Dist.", {
+      numDecs: 1,
+      path: "roms/i/measPLR3D/i/distancesResiduals/0/fValue",
+      unitConv: distM2MMf,
+    }), // distance residual
+    RESSIGDIST: fieldGen("RESSIGDIST", "Res./Sig. Dist.", {
+      numDecs: 2,
+      path: "!roms/i/measPLR3D/i/distancesResiduals/0/fValue!/!roms/i/measPLR3D/i/target/sigmaCombinedPLRDist!",
+    }), // distance RES/SIGMA
   }; // residuals data
 };
 
@@ -328,21 +363,32 @@ export const generateOBSXYZObsCols = () => {
 // =============== STATIONS TABLE COLUMNS ================
 // =======================================================
 
-export const generateStationsCols = () => {
+const generateStationsCols = () => {
   return {
     id: fieldGen("id", "id", { show: false }), // table id
     TYPE: fieldGen("TYPE", "Type", { flex: 0.5, minWidth: 50 }),
-    TSTN_POS: fieldGen("TSTN_POS", "Station position", {
+    STN_POS: fieldGen("STN_POS", "Station position", {
       flex: 1,
       minWidth: 200,
       cellClassName: "name-column--cell border-right--cell",
     }),
-    TSTN_LINE: fieldGen("TSTN_LINE", "Station line"),
+    STN_LINE: fieldGen("STN_LINE", "Station line"),
     RES_MAX: fieldGen("RES_MAX", "Res. Max.", { numDecs: 2 }),
     RES_MIN: fieldGen("RES_MIN", "Res. Min.", { numDecs: 2 }),
     RES_AVG: fieldGen("RES_AVG", "Res. Avg.", { numDecs: 2 }),
     ECART_TYPE: fieldGen("ECART_TYPE", "Ecart-type", { numDecs: 2 }),
   };
+};
+
+export const generateTSTNStationsCols = () => {
+  let cols = generateStationsCols();
+  cols.STN_POS.path = "measTST/i/stationPos";
+  cols.STN_LINE.path = "measTST/i/stationLine";
+  cols.RES_MAX.path = "measTST/i/residuals/max";
+  cols.RES_MIN.path = "measTST/i/residuals/min";
+  cols.RES_AVG.path = "measTST/i/residuals/avg";
+  cols.ECART_TYPE.path = "measTST/i/residuals/ecartType";
+  return cols;
 };
 
 // =======================================================

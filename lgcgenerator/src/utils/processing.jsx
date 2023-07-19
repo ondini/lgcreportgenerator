@@ -1,5 +1,10 @@
 import { generateTSTNObsCols, generateECHOObsCols } from "../data/tablesColums";
-import { angleRad2CC, angleRad2GON, distM2HMM } from "../data/constants";
+import {
+  angleRad2CC,
+  angleRad2GON,
+  distM2HMM,
+  measurementTypes,
+} from "../data/constants";
 
 const getFromDictP = (data, path, it, unitConv, formatter) => {
   if (path.startsWith("!")) {
@@ -86,7 +91,6 @@ const getTSTNObsRows = (measurement, makeColumns) => {
     columns[key] = [];
   });
 
-  var idO = 0;
   let obsData = measurement.fTSTN.reduce((acc, curr) => {
     // reduce over all measurements
     for (let i = 0; i < curr.roms.length; i++) {
@@ -98,83 +102,6 @@ const getTSTNObsRows = (measurement, makeColumns) => {
               getFromDictP(curr, cols[key].path, [j], cols[key].unitConv)
             );
           }
-
-          // // == TOOLTIP DATA == //
-          // acc["HI"].push(curr.instrumentHeightAdjustable.fEstimatedValue);
-          // acc["SHI"].push(curr.instrumentHeightAdjustable.fEstimatedPrecision);
-          // acc["ROT3D"].push(curr.rot3D);
-          // acc["ACST"].push(rom.acst);
-          // acc["V0"].push(rom.v0.fEstimatedValue * angleConvGON);
-          // acc["SV0"].push(rom.v0.fEstimatedPrecision * angleConvCC);
-
-          // // == OBS DATA == //
-          // acc["id"].push(idO++);
-          // acc["INSPOS"].push(curr.instrumentPos);
-          // acc["INSLINE"].push(curr.line);
-          // acc["INSID"].push(curr.instrument.ID);
-          // acc["TGTPOS"].push(rom.measPLR3D[j].targetPos);
-          // acc["TGTLINE"].push(rom.measPLR3D[j].line);
-          // // == ANGL == //
-          // acc["OBSANGL"].push(rom.measPLR3D[j].angles[0].fValue * angleConvGON);
-          // acc["SANGL"].push(
-          //   rom.measPLR3D[j].target.sigmaCombinedPLRAngl * angleConvCC
-          // );
-          // acc["CALCANGL"].push(
-          //   (rom.measPLR3D[j].angles[0].fValue +
-          //     rom.measPLR3D[j].anglesResiduals[0].fValue) *
-          //     angleConvGON
-          // );
-          // acc["RESANGL"].push(
-          //   rom.measPLR3D[j].anglesResiduals[0].fValue * angleConvCC
-          // );
-          // acc["RESSIGANGL"].push(
-          //   rom.measPLR3D[j].anglesResiduals[0].fValue /
-          //     rom.measPLR3D[j].target.sigmaCombinedPLRAngl
-          // );
-          // acc["ECARTSANGL"].push(
-          //   rom.measPLR3D[j].distances[0].fValue *
-          //     rom.measPLR3D[j].anglesResiduals[0].fValue *
-          //     distConv
-          // );
-          // // == ZEND == //
-          // acc["OBSZEND"].push(rom.measPLR3D[j].angles[1].fValue * angleConvGON);
-          // acc["SZEND"].push(
-          //   rom.measPLR3D[j].target.sigmaCombinedPLRZenD * angleConvCC
-          // );
-          // acc["CALCZEND"].push(
-          //   (rom.measPLR3D[j].angles[1].fValue +
-          //     rom.measPLR3D[j].anglesResiduals[1].fValue) *
-          //     angleConvGON
-          // );
-          // acc["RESZEND"].push(
-          //   rom.measPLR3D[j].anglesResiduals[1].fValue * angleConvCC
-          // );
-          // acc["RESSIGZEND"].push(
-          //   rom.measPLR3D[j].anglesResiduals[1].fValue /
-          //     rom.measPLR3D[j].target.sigmaCombinedPLRZenD
-          // );
-          // acc["ECARTSZEND"].push(
-          //   rom.measPLR3D[j].distances[0].fValue *
-          //     rom.measPLR3D[j].anglesResiduals[1].fValue *
-          //     distConv
-          // );
-          // // == DIST == //
-          // acc["OBSDIST"].push(rom.measPLR3D[j].distances[0].fValue);
-          // acc["SDIST"].push(
-          //   rom.measPLR3D[j].target.sigmaCombinedPLRDist * distConv
-          // );
-          // acc["CALCDIST"].push(
-          //   rom.measPLR3D[j].distances[0].fValue +
-          //     rom.measPLR3D[j].distancesResiduals[0].fValue
-          // );
-
-          // acc["RESDIST"].push(
-          //   rom.measPLR3D[j].distancesResiduals[0].fValue * distConv
-          // );
-          // acc["RESSIGDIST"].push(
-          //   rom.measPLR3D[j].distancesResiduals[0].fValue /
-          //     rom.measPLR3D[j].target.sigmaCombinedPLRDist
-          // );
         }
       }
     }
@@ -189,6 +116,7 @@ const obsDataSelector = (measurement, type) => {
     case "fECHO":
       return getECHOObsRows(measurement);
     case "fTSTN":
+      return getTSTNObsRows(measurement);
     case "fOBSXYZ":
     case "fECWS":
     case "fEDM":
@@ -208,10 +136,13 @@ const mergeSmObsData = (resType, acc, obsData) => {
   return acc;
 };
 
-export const getObsData2 = (data) => {
+export const getObsData = (data) => {
   return data.tree.reduce((acc, curr) => {
+    // reduce over all frames
     Object.keys(curr.measurements).forEach((key) => {
-      if (key[0] === "f") {
+      // get measurement data for each measurement type
+      if (measurementTypes.includes(key)) {
+        // this filters measurement types from other attributess
         let obsData = obsDataSelector(curr.measurements, key);
         acc = mergeSmObsData(key, acc, obsData);
       }
