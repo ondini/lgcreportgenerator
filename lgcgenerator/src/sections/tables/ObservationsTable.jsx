@@ -1,6 +1,8 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Box } from "@mui/system";
-import { getObsData } from "../../utils/allDataProcessing";
+import { getObsData } from "../../utils/processing";
+import { getObsData2 } from "../../utils/allDataProcessing";
+
 import { generateNumFormatter } from "../../utils/dataProcessing";
 import Title from "../../components/Title";
 import { useState, useEffect } from "react";
@@ -39,53 +41,38 @@ const generateTableStyle = () => {
   };
 };
 
-const generateTableInitState = (hiddenFields) => {
-  let hiddenCols = {};
-  hiddenFields.forEach((field) => {
-    if (field !== "__row_group_by_columns_group__") {
-      hiddenCols[field] = false;
-    }
-  });
-  return {
-    columns: {
-      columnVisibilityModel: hiddenCols,
-    },
-  };
-};
-
-function getTogglableColumnsFun(hiddenFields) {
-  return (columns) => {
-    return columns
-      .filter((column) => !hiddenFields.includes(column.field))
-      .map((column) => column.field);
-  };
-}
+// const generateTableInitState = (hiddenFields) => {
+//   let hiddenCols = {};
+//   hiddenFields.forEach((field) => {
+//     if (field !== "__row_group_by_columns_group__") {
+//       hiddenCols[field] = false;
+//     }
+//   });
+//   return {
+//     columns: {
+//       columnVisibilityModel: hiddenCols,
+//     },
+//   };
+// };
 
 export default function ObservationsTable({ data }) {
   const observations = getObsData(data.LGC_DATA); // get the residuals data from the LGC_DATA object
   const measTypes = Object.keys(observations); // get all the used measurement types from the residuals data
-  // const obs2 = getECHOObsRows(data.LGC_DATA.tree[0].measurements); // get the residuals data from the LGC_DATA object
-  // console.log(obs2);
-  // console.log(observations);
+
   const createTable = (measType) => {
     // function that creates the histogram components for each of the residuals of the selected measurement type
-    const getTogglableColumns = getTogglableColumnsFun(
-      observations[measType].hideCols
-    );
-    const init = generateTableInitState(observations[measType].hideCols);
+    // const init = generateTableInitState(observations[measType].hideCols);
     return (
       <Box sx={generateTableStyle()}>
         <DataGrid
+          getRowId={(row) => {
+            return row.TGTPOS + row.TGTLINE;
+          }}
           rows={observations[measType].data}
-          columns={observations[measType].columnss}
+          columns={observations[measType].columnDetails}
           hideFooter
           disableRowSelectionOnClick
           slots={{ toolbar: GridToolbar }}
-          // slotProps={{
-          //   columnsPanel: {
-          //     getTogglableColumns,
-          //   },
-          // }}
           // initialState={init}
         />
       </Box>

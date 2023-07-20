@@ -338,20 +338,60 @@ export const generateECHOObsCols = () => {
 export const generateOBSXYZObsCols = () => {
   return {
     // ========== OBS DATA ========== //
-    id: fieldGen("id", "id", { show: false }), // table id
-    TGTPOS: fieldGen("TGTPOS", "Tgt. Pos.", { flex: 1, minWidth: 200 }), // target position
-    TGTLINE: fieldGen("TGTLINE", "TLine", { flex: 0.11, minWidth: 50 }), // target line
+    TGTPOS: fieldGen("TGTPOS", "Tgt. Pos.", {
+      flex: 1,
+      minWidth: 200,
+      path: "targetPos",
+    }), // target position
+    TGTLINE: fieldGen("TGTLINE", "TLine", {
+      flex: 0.11,
+      minWidth: 50,
+      path: "line",
+    }), // target line
 
     // ========== OBSXYZ DATA ========== //
-    RESX: fieldGen("RESX", "Res. X", { numDecs: 3 }), // X residual
-    SX: fieldGen("SX", "S. X", { numDecs: 3 }), // X standard deviation
-    RESSIGX: fieldGen("RESSIGX", "Res./Sig. X", { numDecs: 3 }), // X RES/SIGMA
-    RESY: fieldGen("RESY", "Res. Y", { numDecs: 3 }), // Y residual
-    SY: fieldGen("SY", "S. Y", { numDecs: 3 }), // Y standard deviation
-    RESSIGY: fieldGen("RESSIGY", "Res./Sig. Y", { numDecs: 3 }), // Y RES/SIGMA
-    RESZ: fieldGen("RESZ", "Res. Z", { numDecs: 3 }), // Z residual
-    SZ: fieldGen("SZ", "S. Z", { numDecs: 3 }), // Z standard deviation
-    RESSIGZ: fieldGen("RESSIGZ", "Res./Sig. Z", { numDecs: 3 }), // Z RES/SIGMA
+    RESX: fieldGen("RESX", "Res. X", {
+      numDecs: 3,
+      path: "fXResidual",
+      unitConv: distM2HMMf,
+    }), // X residual
+    SX: fieldGen("SX", "S. X", {
+      numDecs: 3,
+      path: "fXSigmaObsVal",
+      unitConv: distM2HMMf,
+    }), // X standard deviation
+    RESSIGX: fieldGen("RESSIGX", "Res./Sig. X", {
+      numDecs: 3,
+      path: "!fXResidual!/!fXSigmaObsVal!",
+    }), // X RES/SIGMA
+    RESY: fieldGen("RESY", "Res. Y", {
+      numDecs: 3,
+      path: "fYResidual",
+      unitConv: distM2HMMf,
+    }), // Y residual
+    SY: fieldGen("SY", "S. Y", {
+      numDecs: 3,
+      path: "fYSigmaObsVal",
+      unitConv: distM2HMMf,
+    }), // Y standard deviation
+    RESSIGY: fieldGen("RESSIGY", "Res./Sig. Y", {
+      numDecs: 3,
+      path: "!fYResidual!/!fYSigmaObsVal!",
+    }), // Y RES/SIGMA
+    RESZ: fieldGen("RESZ", "Res. Z", {
+      numDecs: 3,
+      path: "fZResidual",
+      unitConv: distM2HMMf,
+    }), // Z residual
+    SZ: fieldGen("SZ", "S. Z", {
+      numDecs: 3,
+      path: "fZSigmaObsVal",
+      unitConv: distM2HMMf,
+    }), // Z standard deviation
+    RESSIGZ: fieldGen("RESSIGZ", "Res./Sig. Z", {
+      numDecs: 3,
+      path: "!fZResidual!/!fZSigmaObsVal!",
+    }), // Z RES/SIGMA
   };
 };
 

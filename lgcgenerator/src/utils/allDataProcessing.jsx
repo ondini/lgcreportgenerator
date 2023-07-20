@@ -506,7 +506,7 @@ const mergeObsData = (resType, acc, residuals) => {
   return acc;
 };
 
-export const getObsData = (data) => {
+export const getObsData2 = (data) => {
   return data.tree.reduce((acc, curr) => {
     Object.keys(curr.measurements).forEach((key) => {
       if (key[0] === "f") {
@@ -783,4 +783,28 @@ export const getFrameTree = (data) => {
   });
 
   return acc;
+};
+
+export const getFrameTree2 = (data) => {
+  var structure = [];
+
+  data.tree.forEach((frame, index) => {
+    let children = structure;
+    var node = {
+      name: frame.frame.name,
+      children: [],
+    };
+
+    frame.branch.forEach((frameName, index) => {
+      console.log(frameName, frame.frame.name);
+      if (!(frameName === frame.frame.name)) {
+        children = children.find((child) => child.name === frameName).children;
+        console.log(structure);
+      }
+    });
+
+    children.push(node);
+  });
+
+  return structure;
 };

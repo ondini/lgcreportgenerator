@@ -1,5 +1,6 @@
 import React from "react";
 import Tree from "react-d3-tree";
+import { getFrameTree, getFrameTree2 } from "../../utils/allDataProcessing";
 
 const treeData = {
   name: "Root",
@@ -15,16 +16,9 @@ const treeData = {
   ],
 };
 
-const NodeLabel = ({ nodeData }) => {
-  return (
-    <text x="-30" y="-20" fill="white">
-      {nodeData.name}
-    </text>
-  );
-};
-
-const TreeGraph = () => {
-  const myTreeData = [treeData];
+const TreeGraph = ({ data }) => {
+  // const myTreeData = [treeData];
+  const myTreeData = getFrameTree2(data.LGC_DATA);
 
   return (
     <div
@@ -37,9 +31,9 @@ const TreeGraph = () => {
     >
       <div
         style={{
-          width: "1100px",
-          height: "900px",
-          border: "1px solid black",
+          // width: "1100px",
+          height: "100vh",
+          // border: "1px solid black",
         }}
       >
         <Tree
@@ -47,6 +41,7 @@ const TreeGraph = () => {
           collapsible={false}
           pathFunc={"straight"}
           separation={{ nonSiblings: 1, siblings: 0.5 }}
+          depthFactor={350}
         />
       </div>
     </div>

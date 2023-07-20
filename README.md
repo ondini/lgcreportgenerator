@@ -39,6 +39,7 @@ Observation Table:
 
 General stuff:
 
+- ! navigation bar
 - ! filter nuerical values
 - ! add table resume de mesures
 - ! put units everywhere it is possible
