@@ -2,6 +2,7 @@ import {
   generateTSTNObsCols,
   generateECHOObsCols,
   generateOBSXYZObsCols,
+  generateStationsCols,
 } from "../data/tablesColumseee";
 import {
   angleRad2CC,
@@ -89,6 +90,14 @@ const mergeRowsData = (measType, acc, obsData) => {
   return acc;
 };
 
+const generateColsData = (cols) => {
+  let columns = {};
+  Object.keys(cols).forEach((key) => {
+    columns[key] = [];
+  });
+  return columns;
+};
+
 const obsTypeSelector = (measurement, type) => {
   switch (type) {
     case "fECHO":
@@ -122,15 +131,67 @@ export const getObsData = (data) => {
 };
 
 // ================================================= //
+// ============== POINT ESTIMATION ================= //
+// ================================================= //
+
+const getTSTNStationRows = (measurement) => {
+  let cols = generateStationsCols();
+  let columns = generateColsData(cols);
+
+  let obsData = measurement.fTSTN.reduce((acc, curr) => {
+    // reduce over all measurements
+    [
+      ["ANGL", "anglObsSum"],
+      ["ZEND", "zendObsSum"],
+      ["DIST", "distObsSum"],
+    ].forEach(([key, path]) => {
+      for (let i = 0; i < curr.roms.length; i++) {
+        let rom = curr.roms[i]; // current rom
+        if ("measPLR3D" in rom) {
+          acc["TYPE"].push("PLR3D:" + key);
+          acc["TSTN_POS"].push(rom.plr3dSummary_[path].fObsText);
+          acc["TSTN_LINE"].push(curr.line);
+          acc["RES_MAX"].push(rom.plr3dSummary_[path].fResMax);
+          acc["RES_MIN"].push(rom.plr3dSummary_[path].fResMin);
+          acc["RES_AVG"].push(rom.plr3dSummary_[path].fMean);
+          acc["ECART_TYPE"].push(rom.plr3dSummary_[path].fStdev);
+        }
+      }
+    });
+    return acc;
+  }, columns);
+
+  return makeGridData(cols, obsData);
+};
+
+const getOBSXYZStationRows = (measurement) => {
+  let cols = generateStationsCols();
+  let columns = generateColsData(cols);
+
+  [
+    ["X", "obsXObsSum"],
+    ["Y", "obsYObsSum"],
+    ["Z", "obsZObsSum"],
+  ].forEach(([key, path]) => {
+    columns["TYPE"].push("OBSXYZ:" + key);
+    columns["TSTN_POS"].push(measurement.obsxyzSummary_[path].fObsText);
+    columns["TSTN_LINE"].push(measurement.obsxyzSummary_[path].fNumberOfObs); /// NOT LINE!!
+    columns["RES_MAX"].push(measurement.obsxyzSummary_[path].fResMax);
+    columns["RES_MIN"].push(measurement.obsxyzSummary_[path].fResMin);
+    columns["RES_AVG"].push(measurement.obsxyzSummary_[path].fMean);
+    columns["ECART_TYPE"].push(measurement.obsxyzSummary_[path].fStdev);
+  });
+
+  return makeGridData(cols, obsData);
+};
+
+// ================================================= //
 // ======= OBSERVATION MINING FUNCTIONS ============ //
 // ================================================= //
 
 export const getECHOObsRows = (measurement) => {
   let cols = generateECHOObsCols();
-  let columns = {};
-  Object.keys(cols).forEach((key) => {
-    columns[key] = [];
-  });
+  let columns = generateColsData(cols);
 
   let path = ["fECHO", "measECHO"];
 
@@ -152,10 +213,7 @@ export const getECHOObsRows = (measurement) => {
 
 const getTSTNObsRows = (measurement, makeColumns) => {
   let cols = generateTSTNObsCols();
-  let columns = {};
-  Object.keys(cols).forEach((key) => {
-    columns[key] = [];
-  });
+  let columns = generateColsData(cols);
 
   let obsData = measurement.fTSTN.reduce((acc, curr) => {
     // reduce over all measurements
@@ -179,10 +237,7 @@ const getTSTNObsRows = (measurement, makeColumns) => {
 
 const getOBSXYZRows = (measurement) => {
   let cols = generateOBSXYZObsCols();
-  let colsData = {};
-  Object.keys(cols).forEach((key) => {
-    colsData[key] = [];
-  });
+  let colsData = generateColsData(cols);
 
   let obsData = measurement.fOBSXYZ.reduce((acc, curr) => {
     // reduce over all measurements

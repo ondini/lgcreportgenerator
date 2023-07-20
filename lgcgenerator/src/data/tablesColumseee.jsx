@@ -405,7 +405,6 @@ export const generateOBSXYZObsCols = () => {
 
 const generateStationsCols = () => {
   return {
-    id: fieldGen("id", "id", { show: false }), // table id
     TYPE: fieldGen("TYPE", "Type", { flex: 0.5, minWidth: 50 }),
     STN_POS: fieldGen("STN_POS", "Station position", {
       flex: 1,
@@ -418,6 +417,17 @@ const generateStationsCols = () => {
     RES_AVG: fieldGen("RES_AVG", "Res. Avg.", { numDecs: 2 }),
     ECART_TYPE: fieldGen("ECART_TYPE", "Ecart-type", { numDecs: 2 }),
   };
+};
+
+export const generatePLR3DAnglStationsCols = () => {
+  let cols = generateStationsCols();
+  cols.STN_POS.path = "";
+  cols.STN_LINE.path = "measTST/i/stationLine";
+  cols.RES_MAX.path = "measTST/i/residuals/max";
+  cols.RES_MIN.path = "measTST/i/residuals/min";
+  cols.RES_AVG.path = "measTST/i/residuals/avg";
+  cols.ECART_TYPE.path = "measTST/i/residuals/ecartType";
+  return cols;
 };
 
 export const generateTSTNStationsCols = () => {
