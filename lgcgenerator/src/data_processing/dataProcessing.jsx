@@ -57,8 +57,7 @@ export function generateNumFormatter(decimals, factor) {
   // function to generate a function, serving as number formatter for the DataGrid
   return (params) => {
     const roundedValue =
-      Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) /
-      10 ** decimals;
+      Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
     return roundedValue;
   };
 }
@@ -98,16 +97,11 @@ const fTSTNResidualsSelector = (measurement) => {
           ? ["measANGL", "measDIST", "measZEND"]
           : ["measPLR3D", "measPLR3D", "measPLR3D"];
       for (let j = 0; j < rom[residualsKeys[0]].length; j++) {
-        acc["ANGL"].push(
-          rom[residualsKeys[0]][j].anglesResiduals[0].fValue * angleConv
-        );
-        acc["DIST"].push(
-          rom[residualsKeys[1]][j].distancesResiduals[0].fValue * distConv
-        );
+        acc["ANGL"].push(rom[residualsKeys[0]][j].anglesResiduals[0].fValue * angleConv);
+        acc["DIST"].push(rom[residualsKeys[1]][j].distancesResiduals[0].fValue * distConv);
         acc["ZEND"].push(
-          rom[residualsKeys[2]][j].anglesResiduals[
-            residualsKeys[2] === "measPLR3D" ? 1 : 0
-          ].fValue * angleConv
+          rom[residualsKeys[2]][j].anglesResiduals[residualsKeys[2] === "measPLR3D" ? 1 : 0]
+            .fValue * angleConv
         );
         acc["TGTPOS"].push(rom[residualsKeys[2]][j].targetPos);
         acc["TGTLINE"].push(rom[residualsKeys[2]][j].line);
@@ -135,8 +129,7 @@ const fMultResidualsSelector = (measurement, type) => {
       ? ["fECHO", "measECHO"]
       : ["fEDM", "measDSPT"];
 
-  const typeName =
-    type === "fECWS" ? "ECWS" : type === "fECHO" ? "ECHO" : "DSPT";
+  const typeName = type === "fECWS" ? "ECWS" : type === "fECHO" ? "ECHO" : "DSPT";
 
   let residuals = {
     [typeName]: [], // distance residuals
@@ -148,9 +141,7 @@ const fMultResidualsSelector = (measurement, type) => {
 
   residuals = measurement[path[0]].reduce((acc, curr) => {
     for (let j = 0; j < curr[path[1]].length; j++) {
-      acc[typeName].push(
-        curr[path[1]][j].distancesResiduals[0].fValue * distConv
-      );
+      acc[typeName].push(curr[path[1]][j].distancesResiduals[0].fValue * distConv);
       acc["TGTPOS"].push(curr[path[1]][j].targetPos);
       acc["TGTLINE"].push(curr[path[1]][j].line);
       acc["INSPOS"].push(

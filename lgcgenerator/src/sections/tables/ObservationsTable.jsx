@@ -1,15 +1,9 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Box } from "@mui/system";
-import { getObsData } from "../../data_processing/processing";
-import { getObsData2 } from "../../data_processing/allDataProcessing";
+import { getData } from "../../data_processing/processing";
 
-import { generateNumFormatter } from "../../data_processing/dataProcessing";
 import Title from "../../components/Title";
 import { useState, useEffect } from "react";
-import {
-  getECHOObsRows,
-  getTSTNObsRows,
-} from "../../data_processing/processing";
 
 const generateTableStyle = () => {
   return {
@@ -59,7 +53,7 @@ const generateTableStyle = () => {
 // };
 
 export default function ObservationsTable({ data }) {
-  const observations = getObsData(data.LGC_DATA); // get the residuals data from the LGC_DATA object
+  const observations = getData(data.LGC_DATA, "OBS"); // get the residuals data from the LGC_DATA object
   const measTypes = Object.keys(observations); // get all the used measurement types from the residuals data
 
   const createTable = (measType) => {

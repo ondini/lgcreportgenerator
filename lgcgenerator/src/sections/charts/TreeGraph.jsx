@@ -1,27 +1,9 @@
 import React from "react";
 import Tree from "react-d3-tree";
-import {
-  getFrameTree,
-  getFrameTree2,
-} from "../../data_processing/allDataProcessing";
-
-const treeData = {
-  name: "Root",
-  children: [
-    {
-      name: "Node 1",
-      children: [{ name: "Leaf 1" }, { name: "Leaf 2" }],
-    },
-    {
-      name: "Node 2",
-      children: [{ name: "Leaf 3" }, { name: "Leaf 4" }],
-    },
-  ],
-};
+import { getFrameTree } from "../../data_processing/processing";
 
 const TreeGraph = ({ data }) => {
-  // const myTreeData = [treeData];
-  const myTreeData = getFrameTree2(data.LGC_DATA);
+  const myTreeData = getFrameTree(data.LGC_DATA);
 
   return (
     <div
@@ -34,9 +16,9 @@ const TreeGraph = ({ data }) => {
     >
       <div
         style={{
-          // width: "1100px",
-          height: "100vh",
-          // border: "1px solid black",
+          width: "1100px",
+          height: "500px",
+          border: "1px solid black",
         }}
       >
         <Tree

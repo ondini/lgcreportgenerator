@@ -5,7 +5,8 @@ import {
  } from './obsTableCols.jsx';
 
  import {
-    generateStationsCols
+    generateStationsCols,
+    generateFrameCols
  } from './otherColumns.jsx';
 
 
@@ -13,5 +14,7 @@ export {
     generateTSTNObsCols, 
     generateECHOObsCols,
     generateOBSXYZObsCols,
-    generateStationsCols
+    
+    generateStationsCols,
+    generateFrameCols
 };

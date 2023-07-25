@@ -1,12 +1,9 @@
 import React from "react";
 import Plot from "react-plotly.js";
-import {
-  getFrameTree,
-  getFrameTree2,
-} from "../../data_processing/allDataProcessing";
+import { getFrameTreeEdges } from "../../data_processing/processing";
 
 const FrameTree = ({ data }) => {
-  const frameTree = getFrameTree(data.LGC_DATA);
+  const frameTree = getFrameTreeEdges(data.LGC_DATA);
 
   const nodes = frameTree.nodes.map((node) => ({
     id: node.id,

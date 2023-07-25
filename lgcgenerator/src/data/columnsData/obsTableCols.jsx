@@ -57,12 +57,11 @@ export const generateTSTNObsCols = () => {
               <>
                 <div>
                   <b>Position data:</b> HI: {numFormatter(row.HI, 5)} SHI:{" "}
-                  {numFormatter(row.SHI, 2)} ROT3D:{" "}
-                  {row.ROT3D ? "true" : "false"}
+                  {numFormatter(row.SHI, 2)} ROT3D: {row.ROT3D ? "true" : "false"}
                 </div>
                 <div>
-                  <b>Rom data:</b> ACST: {numFormatter(row.ACST, 5)} V0:{" "}
-                  {numFormatter(row.V0, 5)} SV0: {numFormatter(row.SV0, 1)}
+                  <b>Rom data:</b> ACST: {numFormatter(row.ACST, 5)} V0: {numFormatter(row.V0, 5)}{" "}
+                  SV0: {numFormatter(row.SV0, 1)}
                 </div>
               </>
             }
@@ -78,13 +77,13 @@ export const generateTSTNObsCols = () => {
     TGTPOS: fieldGen("TGTPOS", "Tgt. Pos.", {
       flex: 1,
       minWidth: 150,
-      path: "rom/measPLR3D/i/targetPos",
+      path: "roms/i/measPLR3D/i/targetPos",
     }), // target position
     TGTLINE: fieldGen("TGTLINE", "TLine", {
       flex: 0.11,
       minWidth: 50,
       cellClassName: "border-right--cell",
-      path: "rom/measPLR3D/i/line",
+      path: "roms/i/measPLR3D/i/line",
     }), // target line
 
     // ========== ANGL ========== //
@@ -237,13 +236,12 @@ export const generateECHOObsCols = () => {
             details={
               <>
                 <div>
-                  <b>Ref. point:</b> X (M): {numFormatter(row.X, 5)} Y (M):{" "}
-                  {numFormatter(row.Y, 5)} Z (M): {numFormatter(row.Z, 5)}
+                  <b>Ref. point:</b> X (M): {numFormatter(row.X, 5)} Y (M): {numFormatter(row.Y, 5)}{" "}
+                  Z (M): {numFormatter(row.Z, 5)}
                 </div>
                 <div>
-                  <b>Wire pars.:</b> Orient. (GON): {numFormatter(row.O, 5)}{" "}
-                  SOrient. (CC): {numFormatter(row.SO, 2)} SNormale (MM):{" "}
-                  {numFormatter(row.SN, 2)}
+                  <b>Wire pars.:</b> Orient. (GON): {numFormatter(row.O, 5)} SOrient. (CC):{" "}
+                  {numFormatter(row.SO, 2)} SNormale (MM): {numFormatter(row.SN, 2)}
                 </div>
               </>
             }

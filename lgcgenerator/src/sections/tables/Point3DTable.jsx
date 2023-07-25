@@ -1,8 +1,5 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import {
-  get3DPointEstData,
-  generateNumFormatter,
-} from "../../data_processing/dataProcessing";
+import { get3DPointEstData, generateNumFormatter } from "../../data_processing/dataProcessing";
 import Title from "../../components/Title";
 
 const columns = [

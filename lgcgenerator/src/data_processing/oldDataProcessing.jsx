@@ -60,12 +60,11 @@ const generatefTSTNColumns = () => {
               <>
                 <div>
                   <b>Position data:</b> HI: {numFormatter(row.HI, 5)} SHI:{" "}
-                  {numFormatter(row.SHI, 2)} ROT3D:{" "}
-                  {row.ROT3D ? "true" : "false"}
+                  {numFormatter(row.SHI, 2)} ROT3D: {row.ROT3D ? "true" : "false"}
                 </div>
                 <div>
-                  <b>Rom data:</b> ACST: {numFormatter(row.ACST, 5)} V0:{" "}
-                  {numFormatter(row.V0, 5)} SV0: {numFormatter(row.SV0, 1)}
+                  <b>Rom data:</b> ACST: {numFormatter(row.ACST, 5)} V0: {numFormatter(row.V0, 5)}{" "}
+                  SV0: {numFormatter(row.SV0, 1)}
                 </div>
               </>
             }
@@ -159,13 +158,12 @@ const generatefECHOColumns = () => {
             details={
               <>
                 <div>
-                  <b>Ref. point:</b> X (M): {numFormatter(row.X, 5)} Y (M):{" "}
-                  {numFormatter(row.Y, 5)} Z (M): {numFormatter(row.Z, 5)}
+                  <b>Ref. point:</b> X (M): {numFormatter(row.X, 5)} Y (M): {numFormatter(row.Y, 5)}{" "}
+                  Z (M): {numFormatter(row.Z, 5)}
                 </div>
                 <div>
-                  <b>Wire pars.:</b> Orient. (GON): {numFormatter(row.O, 5)}{" "}
-                  SOrient. (CC): {numFormatter(row.SO, 2)} SNormale (MM):{" "}
-                  {numFormatter(row.SN, 2)}
+                  <b>Wire pars.:</b> Orient. (GON): {numFormatter(row.O, 5)} SOrient. (CC):{" "}
+                  {numFormatter(row.SO, 2)} SNormale (MM): {numFormatter(row.SN, 2)}
                 </div>
               </>
             }
@@ -301,17 +299,12 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
           acc["TGTLINE"].push(rom.measPLR3D[j].line);
           // == ANGL == //
           acc["OBSANGL"].push(rom.measPLR3D[j].angles[0].fValue * angleConvGON);
-          acc["SANGL"].push(
-            rom.measPLR3D[j].target.sigmaCombinedPLRAngl * angleConvCC
-          );
+          acc["SANGL"].push(rom.measPLR3D[j].target.sigmaCombinedPLRAngl * angleConvCC);
           acc["CALCANGL"].push(
-            (rom.measPLR3D[j].angles[0].fValue +
-              rom.measPLR3D[j].anglesResiduals[0].fValue) *
+            (rom.measPLR3D[j].angles[0].fValue + rom.measPLR3D[j].anglesResiduals[0].fValue) *
               angleConvGON
           );
-          acc["RESANGL"].push(
-            rom.measPLR3D[j].anglesResiduals[0].fValue * angleConvCC
-          );
+          acc["RESANGL"].push(rom.measPLR3D[j].anglesResiduals[0].fValue * angleConvCC);
           acc["RESSIGANGL"].push(
             rom.measPLR3D[j].anglesResiduals[0].fValue /
               rom.measPLR3D[j].target.sigmaCombinedPLRAngl
@@ -323,17 +316,12 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
           );
           // == ZEND == //
           acc["OBSZEND"].push(rom.measPLR3D[j].angles[1].fValue * angleConvGON);
-          acc["SZEND"].push(
-            rom.measPLR3D[j].target.sigmaCombinedPLRZenD * angleConvCC
-          );
+          acc["SZEND"].push(rom.measPLR3D[j].target.sigmaCombinedPLRZenD * angleConvCC);
           acc["CALCZEND"].push(
-            (rom.measPLR3D[j].angles[1].fValue +
-              rom.measPLR3D[j].anglesResiduals[1].fValue) *
+            (rom.measPLR3D[j].angles[1].fValue + rom.measPLR3D[j].anglesResiduals[1].fValue) *
               angleConvGON
           );
-          acc["RESZEND"].push(
-            rom.measPLR3D[j].anglesResiduals[1].fValue * angleConvCC
-          );
+          acc["RESZEND"].push(rom.measPLR3D[j].anglesResiduals[1].fValue * angleConvCC);
           acc["RESSIGZEND"].push(
             rom.measPLR3D[j].anglesResiduals[1].fValue /
               rom.measPLR3D[j].target.sigmaCombinedPLRZenD
@@ -345,17 +333,12 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
           );
           // == DIST == //
           acc["OBSDIST"].push(rom.measPLR3D[j].distances[0].fValue);
-          acc["SDIST"].push(
-            rom.measPLR3D[j].target.sigmaCombinedPLRDist * distConv
-          );
+          acc["SDIST"].push(rom.measPLR3D[j].target.sigmaCombinedPLRDist * distConv);
           acc["CALCDIST"].push(
-            rom.measPLR3D[j].distances[0].fValue +
-              rom.measPLR3D[j].distancesResiduals[0].fValue
+            rom.measPLR3D[j].distances[0].fValue + rom.measPLR3D[j].distancesResiduals[0].fValue
           );
 
-          acc["RESDIST"].push(
-            rom.measPLR3D[j].distancesResiduals[0].fValue * distConv
-          );
+          acc["RESDIST"].push(rom.measPLR3D[j].distancesResiduals[0].fValue * distConv);
           acc["RESSIGDIST"].push(
             rom.measPLR3D[j].distancesResiduals[0].fValue /
               rom.measPLR3D[j].target.sigmaCombinedPLRDist
@@ -412,24 +395,12 @@ const fECHOColumnsSelector = (measurement, makeColumns) => {
     // reduce over all measurements
     for (let j = 0; j < curr[path[1]].length; j++) {
       // == TOOLTIP DATA == //
-      acc["X"].push(
-        curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[0]
-      );
-      acc["Y"].push(
-        curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[1]
-      );
-      acc["Z"].push(
-        curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[2]
-      );
-      acc["PX"].push(
-        curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[0]
-      );
-      acc["PY"].push(
-        curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[1]
-      );
-      acc["O"].push(
-        angleGONFormatter(curr.fMeasuredPlane.fEstValTheta * angleConvGON)
-      );
+      acc["X"].push(curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[0]);
+      acc["Y"].push(curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[1]);
+      acc["Z"].push(curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[2]);
+      acc["PX"].push(curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[0]);
+      acc["PY"].push(curr.fMeasuredPlane.fReferencePoint.fEstimatedValue.fVector[1]);
+      acc["O"].push(angleGONFormatter(curr.fMeasuredPlane.fEstValTheta * angleConvGON));
       acc["SO"].push(curr.fMeasuredPlane.fEstPrecisionTheta * angleConvCC);
       acc["SN"].push(curr.fMeasuredPlane.fEstPrecisionRefPtDist * distConv);
 
@@ -442,13 +413,11 @@ const fECHOColumnsSelector = (measurement, makeColumns) => {
       acc["OBS"].push(curr[path[1]][j].distances[0].fValue);
       acc["SIGMA"].push(curr[path[1]][j].target.sigmaCombinedDist * distConv);
       acc["CALC"].push(
-        curr[path[1]][j].distances[0].fValue +
-          curr[path[1]][j].distancesResiduals[0].fValue
+        curr[path[1]][j].distances[0].fValue + curr[path[1]][j].distancesResiduals[0].fValue
       );
       acc["RES"].push(curr[path[1]][j].distancesResiduals[0].fValue * distConv);
       acc["RESSIG"].push(
-        curr[path[1]][j].distancesResiduals[0].fValue /
-          curr[path[1]][j].target.sigmaCombinedDist
+        curr[path[1]][j].distancesResiduals[0].fValue / curr[path[1]][j].target.sigmaCombinedDist
       );
     }
     return acc;
@@ -706,7 +675,7 @@ const generateFrameColumns = () => {
   };
 };
 
-export const getFrames = (data) => {
+export const getFramesOld = (data) => {
   let cols = generateFrameColumns();
   let columns = {};
   Object.keys(cols).forEach((key) => {
@@ -796,10 +765,8 @@ export const getFrameTree2 = (data) => {
     };
 
     frame.branch.forEach((frameName, index) => {
-      console.log(frameName, frame.frame.name);
       if (!(frameName === frame.frame.name)) {
         children = children.find((child) => child.name === frameName).children;
-        console.log(structure);
       }
     });
 

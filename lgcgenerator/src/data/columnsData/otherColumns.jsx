@@ -1,4 +1,4 @@
-import { numFormatter, fieldGen } from "./colUtils";
+import { fieldGen } from "./colUtils";
 
 // =======================================================
 // =============== POINT3D TABLE COLUMNS =================
@@ -52,25 +52,24 @@ export const generateTSTNStationsCols = () => {
 
 export const generateFrameCols = () => {
   return {
-    id: fieldGen("id", "id", { show: false }), // table id
-    NAME: fieldGen("NAME", "Name", { flex: 1, minWidth: 200 }),
-    TX_INIT: fieldGen("TX_INIT", "TX initial", { numDecs: 6 }),
-    TY_INIT: fieldGen("TY_INIT", "TY initial", { numDecs: 6 }),
-    TZ_INIT: fieldGen("TZ_INIT", "TZ initial", { numDecs: 6 }),
-    RX_INIT: fieldGen("RX_INIT", "RX initial", { numDecs: 6 }),
-    RY_INIT: fieldGen("RY_INIT", "RY initial", { numDecs: 6 }),
-    RZ_INIT: fieldGen("RZ_INIT", "RZ initial", { numDecs: 6 }),
-    TX_CALC: fieldGen("TX_CALC", "TX calculated", { numDecs: 6 }),
-    TY_CALC: fieldGen("TY_CALC", "TY calculated", { numDecs: 6 }),
-    TZ_CALC: fieldGen("TZ_CALC", "TZ calculated", { numDecs: 6 }),
-    RX_CALC: fieldGen("RX_CALC", "RX calculated", { numDecs: 6 }),
-    RY_CALC: fieldGen("RY_CALC", "RY calculated", { numDecs: 6 }),
-    RZ_CALC: fieldGen("RZ_CALC", "RZ calculated", { numDecs: 6 }),
-    TX_SIG: fieldGen("TX_SIG", "TX sigma", { numDecs: 6 }),
-    TY_SIG: fieldGen("TY_SIG", "TY sigma", { numDecs: 6 }),
-    TZ_SIG: fieldGen("TZ_SIG", "TZ sigma", { numDecs: 6 }),
-    RX_SIG: fieldGen("RX_SIG", "RX sigma", { numDecs: 6 }),
-    RY_SIG: fieldGen("RY_SIG", "RY sigma", { numDecs: 6 }),
-    RZ_SIG: fieldGen("RZ_SIG", "RZ sigma", { numDecs: 6 }),
+    NAME: fieldGen("NAME", "Name", { flex: 1, minWidth: 200, path: "frame/name" }),
+    TX_INIT: fieldGen("TX_INIT", "TX initial", { numDecs: 6, path: "frame/fProvParameter/0" }),
+    TY_INIT: fieldGen("TY_INIT", "TY initial", { numDecs: 6, path: "frame/fProvParameter/1" }),
+    TZ_INIT: fieldGen("TZ_INIT", "TZ initial", { numDecs: 6, path: "frame/fProvParameter/2" }),
+    RX_INIT: fieldGen("RX_INIT", "RX initial", { numDecs: 6, path: "frame/fProvParameter/3" }),
+    RY_INIT: fieldGen("RY_INIT", "RY initial", { numDecs: 6, path: "frame/fProvParameter/4" }),
+    RZ_INIT: fieldGen("RZ_INIT", "RZ initial", { numDecs: 6, path: "frame/fProvParameter/5" }),
+    TX_CALC: fieldGen("TX_CALC", "TX calculated", { numDecs: 6, path: "frame/fEstParameter/0" }),
+    TY_CALC: fieldGen("TY_CALC", "TY calculated", { numDecs: 6, path: "frame/fEstParameter/1" }),
+    TZ_CALC: fieldGen("TZ_CALC", "TZ calculated", { numDecs: 6, path: "frame/fEstParameter/2" }),
+    RX_CALC: fieldGen("RX_CALC", "RX calculated", { numDecs: 6, path: "frame/fEstParameter/3" }),
+    RY_CALC: fieldGen("RY_CALC", "RY calculated", { numDecs: 6, path: "frame/fEstParameter/4" }),
+    RZ_CALC: fieldGen("RZ_CALC", "RZ calculated", { numDecs: 6, path: "frame/fEstParameter/5" }),
+    TX_SIG: fieldGen("TX_SIG", "TX sigma", { numDecs: 6, path: "frame/fEstPrecision/0" }),
+    TY_SIG: fieldGen("TY_SIG", "TY sigma", { numDecs: 6, path: "frame/fEstPrecision/1" }),
+    TZ_SIG: fieldGen("TZ_SIG", "TZ sigma", { numDecs: 6, path: "frame/fEstPrecision/2" }),
+    RX_SIG: fieldGen("RX_SIG", "RX sigma", { numDecs: 6, path: "frame/fEstPrecision/3" }),
+    RY_SIG: fieldGen("RY_SIG", "RY sigma", { numDecs: 6, path: "frame/fEstPrecision/4" }),
+    RZ_SIG: fieldGen("RZ_SIG", "RZ sigma", { numDecs: 6, path: "frame/fEstPrecision/5" }),
   };
 };
