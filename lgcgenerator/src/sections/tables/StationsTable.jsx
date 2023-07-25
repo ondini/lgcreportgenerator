@@ -1,5 +1,5 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { getSmObsData } from "../../utils/allDataProcessing";
+import { getSmObsData } from "../../data_processing/allDataProcessing";
 import Title from "../../components/Title";
 
 export default function StationsTable({ data }) {
@@ -11,7 +11,7 @@ export default function StationsTable({ data }) {
   let columns = observations[measType].columnss;
 
   return (
-    <div style={{  height: '900px', marginBottom: "4rem"  }}>
+    <div style={{ height: "900px", marginBottom: "4rem" }}>
       <Title title={"Instrument positions overview"} />
       <DataGrid
         rows={rows}

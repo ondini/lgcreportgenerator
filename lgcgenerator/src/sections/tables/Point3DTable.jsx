@@ -2,7 +2,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import {
   get3DPointEstData,
   generateNumFormatter,
-} from "../../utils/dataProcessing";
+} from "../../data_processing/dataProcessing";
 import Title from "../../components/Title";
 
 const columns = [
@@ -88,7 +88,7 @@ export default function Point3DTable({ data }) {
   );
 
   return (
-    <div style={{ height: '900px', marginBottom: "4rem"  }}>
+    <div style={{ height: "900px", marginBottom: "4rem" }}>
       <Title title={"3D Points overview"} />
       <DataGrid
         rows={rows}

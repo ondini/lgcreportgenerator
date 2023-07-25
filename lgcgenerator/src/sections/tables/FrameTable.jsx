@@ -1,5 +1,5 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { getFrames } from "../../utils/allDataProcessing";
+import { getFrames } from "../../data_processing/allDataProcessing";
 import Title from "../../components/Title";
 
 export default function FrameTable({ data }) {
@@ -9,7 +9,7 @@ export default function FrameTable({ data }) {
   let columns = observations.columnss;
 
   return (
-    <div style={{  height: '900px', marginBottom: "4rem"  }}>
+    <div style={{ height: "900px", marginBottom: "4rem" }}>
       <Title title={"Frame overview"} />
       <DataGrid
         rows={rows}

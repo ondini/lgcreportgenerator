@@ -1,6 +1,9 @@
 import React from "react";
 import Plot from "react-plotly.js";
-import { getFrameTree, getFrameTree2 } from "../../utils/allDataProcessing";
+import {
+  getFrameTree,
+  getFrameTree2,
+} from "../../data_processing/allDataProcessing";
 
 const FrameTree = ({ data }) => {
   const frameTree = getFrameTree(data.LGC_DATA);

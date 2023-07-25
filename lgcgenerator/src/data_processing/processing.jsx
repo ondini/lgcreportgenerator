@@ -3,7 +3,7 @@ import {
   generateECHOObsCols,
   generateOBSXYZObsCols,
   generateStationsCols,
-} from "../data/tablesColumseee";
+} from "../data/columnsData";
 import {
   angleRad2CC,
   angleRad2GON,
@@ -182,7 +182,7 @@ const getOBSXYZStationRows = (measurement) => {
     columns["ECART_TYPE"].push(measurement.obsxyzSummary_[path].fStdev);
   });
 
-  return makeGridData(cols, obsData);
+  return makeGridData(cols, columns);
 };
 
 // ================================================= //

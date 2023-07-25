@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Plot from "react-plotly.js";
 import { useState } from "react";
-import { getResiduals } from "../../utils/dataProcessing";
+import { getResiduals } from "../../data_processing/dataProcessing";
 import Title from "../../components/Title";
 import "./Histogram.css";
 import Switch from "@mui/material/Switch";

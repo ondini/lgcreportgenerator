@@ -1,12 +1,15 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Box } from "@mui/system";
-import { getObsData } from "../../utils/processing";
-import { getObsData2 } from "../../utils/allDataProcessing";
+import { getObsData } from "../../data_processing/processing";
+import { getObsData2 } from "../../data_processing/allDataProcessing";
 
-import { generateNumFormatter } from "../../utils/dataProcessing";
+import { generateNumFormatter } from "../../data_processing/dataProcessing";
 import Title from "../../components/Title";
 import { useState, useEffect } from "react";
-import { getECHOObsRows, getTSTNObsRows } from "../../utils/processing";
+import {
+  getECHOObsRows,
+  getTSTNObsRows,
+} from "../../data_processing/processing";
 
 const generateTableStyle = () => {
   return {

@@ -1,6 +1,9 @@
 import React from "react";
 import Tree from "react-d3-tree";
-import { getFrameTree, getFrameTree2 } from "../../utils/allDataProcessing";
+import {
+  getFrameTree,
+  getFrameTree2,
+} from "../../data_processing/allDataProcessing";
 
 const treeData = {
   name: "Root",
