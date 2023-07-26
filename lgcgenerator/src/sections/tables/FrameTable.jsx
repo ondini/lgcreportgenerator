@@ -7,7 +7,7 @@ export default function FrameTable({ data }) {
 
   return (
     <div style={{ height: "900px", marginBottom: "4rem" }}>
-      <Title title={"Frame overview"} />
+      <Title title="Frame overview" id="frames" />
       <DataGrid
         getRowId={(row) => {
           return row.NAME;

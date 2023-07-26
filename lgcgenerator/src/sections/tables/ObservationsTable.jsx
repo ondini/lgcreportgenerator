@@ -100,7 +100,7 @@ export default function ObservationsTable({ data }) {
 
   return (
     <div>
-      <Title title={"Observations overview"} />
+      <Title title="Observations overview" id="observations" />
       <div className="histsec">
         <div className="histsec-nav">
           {" "}

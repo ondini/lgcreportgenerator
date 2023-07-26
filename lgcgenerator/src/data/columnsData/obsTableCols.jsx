@@ -91,10 +91,14 @@ export const generateTSTNObsCols = () => {
       flex: 0.8,
       minWidth: 100,
       numDecs: 5,
-      path: "roms/i/measPLR3D/i/angles/0/Value",
+      path: "roms/i/measPLR3D/i/angles/0/fValue",
       unitConv: angleRad2GONf,
     }), // angle observations
-    SANGL: fieldGen("SANGL", "S. Ang.", { numDecs: 1 }), // angle standard deviation
+    SANGL: fieldGen("SANGL", "S. Ang.", {
+      numDecs: 1,
+      path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRAngl",
+      unitConv: angleRad2CCf,
+    }), // angle standard deviation
     CALCANGL: fieldGen("CALCANGL", "Calc. Angl.", {
       flex: 0.8,
       minWidth: 100,
@@ -113,7 +117,7 @@ export const generateTSTNObsCols = () => {
     ECARTSANGL: fieldGen("ECARTSANGL", "Ecarts Angl.", {
       numDecs: 2,
       cellClassName: "border-right--cell",
-      path: "!roms/i/measPLR3D/i/distances/0/fValue!*roms/i/measPLR3D/i/anglesResiduals/0/fValue",
+      path: "!roms/i/measPLR3D/i/distances/0/fValue!*!roms/i/measPLR3D/i/anglesResiduals/0/fValue!",
       unitConv: distM2MMf,
     }), // angle ECARTS
 
@@ -134,7 +138,7 @@ export const generateTSTNObsCols = () => {
       flex: 0.8,
       minWidth: 100,
       numDecs: 5,
-      path: "!roms/i/measPLR3D/i/angles/1/fValue!+!roms/i/measPLR3D/i/anglesResiduals/1/fValue",
+      path: "!roms/i/measPLR3D/i/angles/1/fValue!+!roms/i/measPLR3D/i/anglesResiduals/1/fValue!",
       unitConv: angleRad2GONf,
     }), // calculated zenith
     RESZEND: fieldGen("RESZEND", "Res. Zend.", {
@@ -149,7 +153,7 @@ export const generateTSTNObsCols = () => {
     ECARTSZEND: fieldGen("ECARTSZEND", "Ecarts Zend.", {
       numDecs: 2,
       cellClassName: "border-right--cell",
-      path: "!roms/i/measPLR3D/i/distances/0/fValue!*roms/i/measPLR3D/i/anglesResiduals/1/fValue",
+      path: "!roms/i/measPLR3D/i/distances/0/fValue!*!roms/i/measPLR3D/i/anglesResiduals/1/fValue!",
       unitConv: distM2MMf,
     }), // zenith ECARTS
 

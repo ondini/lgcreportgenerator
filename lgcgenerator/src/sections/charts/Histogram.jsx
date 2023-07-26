@@ -134,13 +134,7 @@ const Histogram = ({ data }) => {
       histograms.push(
         <div className="histsec-plots-plot" key={measType + key}>
           <Plot
-            data={makePlotData(
-              residuals[measType],
-              measType,
-              key,
-              30,
-              filterInstr
-            )}
+            data={makePlotData(residuals[measType], measType, key, 30, filterInstr)}
             layout={{ title: key, bargroupgap: 0.2, barmode: "stack" }}
           />
         </div>
@@ -178,7 +172,7 @@ const Histogram = ({ data }) => {
 
   return (
     <div>
-      <Title title="Histograms" />
+      <Title title="Histograms" id="histograms" />
       <div className="histsec">
         <div className="histsec-nav">
           {" "}

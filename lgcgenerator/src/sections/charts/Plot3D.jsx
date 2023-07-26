@@ -1,6 +1,7 @@
 import React from "react";
 import Plot from "react-plotly.js";
 import { get3DPoints } from "../../data_processing/dataProcessing";
+import Title from "../../components/Title";
 
 const Plot3D = ({ data }) => {
   let coords = get3DPoints(data.LGC_DATA);
@@ -23,6 +24,7 @@ const Plot3D = ({ data }) => {
 
   return (
     <div>
+      <Title title="3D Plot" id="plotPt3D" />
       <Plot
         data={[
           {

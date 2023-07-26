@@ -1,41 +1,41 @@
 import React from "react";
-import Plot from "react-plotly.js";
-import { getFrameTreeEdges } from "../../data_processing/processing";
+import Tree from "react-d3-tree";
+import Title from "../../components/Title";
+import { getFrameTree } from "../../data_processing/processing";
 
 const FrameTree = ({ data }) => {
-  const frameTree = getFrameTreeEdges(data.LGC_DATA);
+  const myTreeData = getFrameTree(data.LGC_DATA);
 
-  const nodes = frameTree.nodes.map((node) => ({
-    id: node.id,
-    label: node.label,
-    x: node.x,
-    y: node.y,
-    size: 15,
-    color: "blue",
-    type: "scatter",
-    //mode: "markers",
-    // hovertemplate: node.label,
-  }));
-
-  const edges = frameTree.edges.map((edge) => ({
-    type: "scatter",
-    x: [frameTree.map[edge.from].x, frameTree.map[edge.to].x],
-    y: [frameTree.map[edge.from].y, frameTree.map[edge.to].y],
-  }));
-
-  const data2 = [...edges];
-  const layout = {
-    title: "Network Graph",
-    showlegend: false,
-    // hovermode: "closest",
-    margin: { t: 40, l: 40, r: 40, b: 40 },
-    xaxis: { showgrid: false, zeroline: false },
-    yaxis: { showgrid: false, zeroline: false },
-    width: 600,
-    height: 400,
-  };
-
-  return <Plot data={data2} layout={layout} />;
+  return (
+    <>
+      {" "}
+      <Title title={"Frame Tree"} id={"framesTree"} />
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            width: "70vw",
+            height: "90vh",
+            border: "1px solid #e0e0e0",
+          }}
+        >
+          <Tree
+            data={myTreeData}
+            collapsible={false}
+            pathFunc={"straight"}
+            separation={{ nonSiblings: 1, siblings: 0.5 }}
+            depthFactor={350}
+          />
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default FrameTree;

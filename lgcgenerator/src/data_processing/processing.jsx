@@ -244,7 +244,7 @@ const getTSTNObsRows = (measurement, makeColumns) => {
       if ("measPLR3D" in rom) {
         for (let j = 0; j < rom.measPLR3D.length; j++) {
           for (const key of Object.keys(cols)) {
-            columns[key].push(getFromDict(curr, cols[key].path, [j], cols[key].unitConv));
+            columns[key].push(getFromDict(curr, cols[key].path, [i, j], cols[key].unitConv));
           }
         }
       }
@@ -252,7 +252,7 @@ const getTSTNObsRows = (measurement, makeColumns) => {
     return acc;
   }, columns);
 
-  return makeGridData(columns, obsData);
+  return makeGridData(cols, obsData);
 };
 
 const getOBSXYZRows = (measurement) => {

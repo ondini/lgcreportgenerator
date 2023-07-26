@@ -1,29 +1,16 @@
-import {
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Tooltip,
-  Drawer,
-  Box,
-  Stack,
-} from "@mui/material";
+import { List, ListItemButton, ListItemText, Drawer, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useState } from "react";
 
-import { SIDEBAR_WIDTH, NAVBAR_WIDTH_WIDE } from "../data/constants";
-import { useTheme } from "@emotion/react";
+import { NAVBAR_WIDTH_WIDE } from "../data/constants";
 
 const sidebarItems = [
-  { title: "Header", url: "/" },
-  { title: "3DPlot", url: "trades" },
-  { title: "3DPoints", url: "sources" },
-  { title: "Histogram", url: "strategies" },
-  { title: "Observations", url: "staking" },
-  { title: "Frames", url: "taxes" },
-  { title: "Account", url: "account" },
-  { title: "Support", url: "support" },
+  { title: "Header", url: "#header" },
+  { title: "3DPlot", url: "#plotPt3D" },
+  { title: "Histograms", url: "#histograms" },
+  { title: "3D Points Tab.", url: "#tablePt3D" },
+  { title: "Observations Tab.", url: "#observations" },
+  { title: "Frames Tab.", url: "#frames" },
+  { title: "Frames Tree", url: "#framesTree" },
 ];
 
 const ListStyled = styled("div")({
@@ -31,6 +18,7 @@ const ListStyled = styled("div")({
   flexDirection: "column",
   height: "100%",
   width: "100%",
+  padding: "1rem 2rem",
   justifyContent: "space-between",
 });
 
@@ -44,26 +32,6 @@ const sidebarWideContent = (
     <Box sx={{ px: 2.5, py: 3, display: "inline-flex" }}></Box>
   </ListStyled>
 );
-
-// export const StyledNavItem = styled((props) => <ListItemButton disableGutters {...props} />)(
-//   ({ theme }) => ({
-//     // ...theme.typography.body1,
-//     height: 50,
-//     position: "relative",
-//     textTransform: "capitalize",
-//     // color: theme.palette.text.secondary,
-//     // borderRadius: theme.shape.borderRadius,
-//   })
-// );
-
-export const StyledNavItemIcon = styled(ListItemIcon)({
-  width: 23,
-  height: 23,
-  color: "inherit",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-});
 
 function NavItem({ item }) {
   const { title, url, icon, info } = item;
@@ -79,15 +47,12 @@ function NavItem({ item }) {
         },
       }}
     >
-      <StyledNavItemIcon>{icon && icon}</StyledNavItemIcon>
-
       <ListItemText disableTypography primary={title} />
     </ListItemButton>
   );
 }
 
 const Navbar = ({ mobileOpen, handleDrawerToggle }) => {
-  //   const theme = useTheme();
   return (
     <Box component="nav" aria-label="nav links">
       {/* MOBILE DRAWER */}
@@ -96,14 +61,13 @@ const Navbar = ({ mobileOpen, handleDrawerToggle }) => {
         open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{
-          keepMounted: true, // Better open performance on mobile.
+          keepMounted: true,
         }}
         sx={{
           display: { xs: "block", sm: "none" },
           "& .MuiDrawer-paper": {
             boxSizing: "border-box",
             width: NAVBAR_WIDTH_WIDE,
-            // background: theme.palette.background.default,
           },
         }}
       >
@@ -120,9 +84,8 @@ const Navbar = ({ mobileOpen, handleDrawerToggle }) => {
             width: NAVBAR_WIDTH_WIDE,
             height: "100vh",
             overflow: "hidden",
-            borderRight: "dashed 1px",
-            // borderColor: theme.palette.border.main,
-            // background: theme.palette.background.default,
+            borderRight: "solid 1px",
+            borderColor: "#e0e0e0",
           },
         }}
         open

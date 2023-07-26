@@ -86,7 +86,7 @@ export default function Point3DTable({ data }) {
 
   return (
     <div style={{ height: "900px", marginBottom: "4rem" }}>
-      <Title title={"3D Points overview"} />
+      <Title title="3D Points overview" id="tablePt3D" />
       <DataGrid
         rows={rows}
         columns={columns}
