@@ -4,6 +4,56 @@
 
 Javascript source code for LGC Report generator, using React.js. The input is JSON file.
 
+### Usage instructions
+
+#### Single file compilation
+
+Firstly, install rewired and webpack plugins as
+
+    npm i react-app-rewired html-inline-script-webpack-plugin html-inline-css-webpack-plugin
+
+then create **config-overrides.js** file in the project root folder.
+The contents of the file are:
+
+    const HtmlWebpackPlugin = require('html-webpack-plugin');
+    const HtmlInlineCssWebpackPlugin = require('html-inline-css-webpack-plugin').default;
+    const HtmlInlineScriptPlugin = require('html-inline-script-webpack-plugin');
+
+    module.exports = {
+    webpack: function (config, env) {
+        //inline css and scripts right after chunk plugin.
+        //chunk plugin will not be present for development build and thats ok.
+        const inlineChunkHtmlPlugin = config.plugins.find(element => element.constructor.name === "InlineChunkHtmlPlugin");
+        if (inlineChunkHtmlPlugin) {
+        config.plugins.splice(config.plugins.indexOf(inlineChunkHtmlPlugin), 0,
+            new HtmlInlineCssWebpackPlugin(),
+            new HtmlInlineScriptPlugin()
+        );
+        }
+
+        //Override HtmlWebpack plugin with preserving all options and modifying what we want
+        const htmlWebpackPlugin = config.plugins.find(element => element.constructor.name === "HtmlWebpackPlugin");
+        config.plugins.splice(config.plugins.indexOf(htmlWebpackPlugin), 1,
+        new HtmlWebpackPlugin(
+            {
+            ...htmlWebpackPlugin.userOptions,
+            inject: 'body'
+            }
+        )
+        );
+
+        return config;
+    }
+    }
+
+Lastly, in the **package.json** file in "scripts" part replace _react-scripts_ in _build:react-scripts build_ line with _react-app-rewired_.
+
+Then by simply calling
+
+    npm run build
+
+you will obtain self standing **index.html** file in the build/ folder.
+
 ### Roadmap
 
 3D part
