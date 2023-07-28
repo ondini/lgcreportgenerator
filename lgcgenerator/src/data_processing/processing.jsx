@@ -4,6 +4,7 @@ import {
   generateOBSXYZObsCols,
   generateStationsCols,
   generateFrameCols,
+  generatePoint3DCols,
 } from "../data/columnsData";
 import { measurementTypes, pointTypes } from "../data/constants";
 
@@ -347,39 +348,18 @@ export const getFrameTreeEdges = (data) => {
 // ============= 3D POINTS SELECTION =============== //
 // ================================================= //
 
-const getVarTypeFromFixed = (fixedState) => {
-  // compute point type from fixed state
-  // convert fixed state T/F values to binary string, parse it as int and use it as index in pointTypes array (containing names)
-  const index = parseInt(fixedState.map((i) => (i ? 1 : 0)).join(""), 2);
-  return pointTypes[index];
-};
+export const get3DPointEstData = (data, colNames) => {
+  let cols = generatePoint3DCols();
+  let columns = generateColsData(cols);
 
-const get3DPointEstData = (data, colNames) => {
-  // function for obtaining tableData for 3D points from JSON file
-  // ARGS: data - JSON file, colNames - array of column names (if empty, array returned insted of dictionary)
-  // OUT: array of dictionaries with keys from colNames
-
-  // map points to array of values which will be used in a table
-  return data.points.map((point) => {
-    let pointVals = [
-      point.fName, // point name
-      getVarTypeFromFixed(point.fixedState), // point variability type
-      point.fFramePosition_Name, // point frame
-      ...point.fEstimatedValueInRoot.fVector, // estimated coordinates
-      point.fEstimatedHeightInRoot.fValue, // estimated height
-      ...point.fEstimatedPrecision, // estimated precision
-      ...point.fEstimatedValueInRoot.fVector.map(
-        (estVal, i) => estVal - point.fProvisionalValueInRoot.fVector[i]
-      ), // dx, dy, dz
-    ];
-
-    if (!(typeof colNames === "undefined")) {
-      // convert array of values to dictionary with keys from colNames, so thtat this can be used in a table
-      return colNames.reduce((acc, key, index) => {
-        acc[key] = pointVals[index];
-        return acc;
-      }, {});
+  var obsData = data.points.reduce((acc, curr) => {
+    // reduce over all frames
+    for (const key of Object.keys(cols)) {
+      // get all data defined in cols
+      columns[key].push(getFromDict(curr, cols[key].path, [], cols[key].unitConv));
     }
-    return pointVals;
-  });
+    return acc;
+  }, columns);
+
+  return makeGridData(cols, obsData);
 };

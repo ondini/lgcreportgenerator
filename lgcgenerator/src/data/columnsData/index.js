@@ -6,7 +6,8 @@ import {
 
  import {
     generateStationsCols,
-    generateFrameCols
+    generateFrameCols,
+    generatePoint3DCols
  } from './otherColumns.jsx';
 
 
@@ -16,5 +17,6 @@ export {
     generateOBSXYZObsCols,
     
     generateStationsCols,
-    generateFrameCols
+    generateFrameCols,
+    generatePoint3DCols
 };

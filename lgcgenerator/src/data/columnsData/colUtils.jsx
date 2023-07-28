@@ -1,3 +1,5 @@
+import { pointTypes } from "../constants";
+
 // =======================================================
 // ============= COLUMNS UTILITY FUNCTIONS ===============
 // =======================================================
@@ -7,8 +9,7 @@ export const linkPathPlaceholder = "linkPathPlaceholder";
 export function generateNumFormatter(decimals, factor) {
   // function for generating other function which serves as number formatter for the DataGrid
   return (params) => {
-    const roundedValue =
-      Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
+    const roundedValue = Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
     return roundedValue;
   };
 }
@@ -38,3 +39,10 @@ export function fieldGen(field, headerName, args = {}) {
 
   return defaultArgs;
 }
+
+export const getVarTypeFromFixed = (fixedState) => {
+  // compute point type from fixed state
+  // convert fixed state T/F values to binary string, parse it as int and use it as index in pointTypes array (containing names)
+  const index = parseInt(fixedState.map((i) => (i ? 1 : 0)).join(""), 2);
+  return pointTypes[index];
+};

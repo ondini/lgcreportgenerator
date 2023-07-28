@@ -21,7 +21,7 @@ const getVarTypeFromFixed = (fixedState) => {
   return pointTypes[index];
 };
 
-export const get3DPointEstData = (data, colNames) => {
+export const get3DPointEstDataOld = (data, colNames) => {
   // function for obtaining tableData for 3D points from JSON file
   // ARGS: data - JSON file, colNames - array of column names (if empty, array returned insted of dictionary)
   // OUT: array of dictionaries with keys from colNames
@@ -35,9 +35,7 @@ export const get3DPointEstData = (data, colNames) => {
       ...point.fEstimatedValueInRoot.fVector, // estimated coordinates
       point.fEstimatedHeightInRoot.fValue, // estimated height
       ...point.fEstimatedPrecision, // estimated precision
-      ...point.fEstimatedValueInRoot.fVector.map(
-        (estVal, i) => estVal - point.fProvisionalValueInRoot.fVector[i]
-      ), // dx, dy, dz
+      ...point.fEstimatedValueInRoot.fVector.map((estVal, i) => estVal - point.fProvisionalValueInRoot.fVector[i]), // dx, dy, dz
     ];
 
     if (!(typeof colNames === "undefined")) {
@@ -56,8 +54,7 @@ export const get3DPointEstData = (data, colNames) => {
 export function generateNumFormatter(decimals, factor) {
   // function to generate a function, serving as number formatter for the DataGrid
   return (params) => {
-    const roundedValue =
-      Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
+    const roundedValue = Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
     return roundedValue;
   };
 }
@@ -93,15 +90,12 @@ const fTSTNResidualsSelector = (measurement) => {
     for (let i = 0; i < curr.roms.length; i++) {
       let rom = curr.roms[i]; // current rom
       let residualsKeys = // the paths to values are different, depending on the type of measurement (PLR3D or not)
-        "measANGL" in rom
-          ? ["measANGL", "measDIST", "measZEND"]
-          : ["measPLR3D", "measPLR3D", "measPLR3D"];
+        "measANGL" in rom ? ["measANGL", "measDIST", "measZEND"] : ["measPLR3D", "measPLR3D", "measPLR3D"];
       for (let j = 0; j < rom[residualsKeys[0]].length; j++) {
         acc["ANGL"].push(rom[residualsKeys[0]][j].anglesResiduals[0].fValue * angleConv);
         acc["DIST"].push(rom[residualsKeys[1]][j].distancesResiduals[0].fValue * distConv);
         acc["ZEND"].push(
-          rom[residualsKeys[2]][j].anglesResiduals[residualsKeys[2] === "measPLR3D" ? 1 : 0]
-            .fValue * angleConv
+          rom[residualsKeys[2]][j].anglesResiduals[residualsKeys[2] === "measPLR3D" ? 1 : 0].fValue * angleConv
         );
         acc["TGTPOS"].push(rom[residualsKeys[2]][j].targetPos);
         acc["TGTLINE"].push(rom[residualsKeys[2]][j].line);
@@ -123,11 +117,7 @@ const fMultResidualsSelector = (measurement, type) => {
   const distConv = type === "fECWS" ? 100000 : 10000; // meters to hundredths (tenths) of milimeter factor
 
   const path =
-    type === "fECWS"
-      ? ["fECWS", "measECWS"]
-      : type === "fECHO"
-      ? ["fECHO", "measECHO"]
-      : ["fEDM", "measDSPT"];
+    type === "fECWS" ? ["fECWS", "measECWS"] : type === "fECHO" ? ["fECHO", "measECHO"] : ["fEDM", "measDSPT"];
 
   const typeName = type === "fECWS" ? "ECWS" : type === "fECHO" ? "ECHO" : "DSPT";
 

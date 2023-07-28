@@ -1,8 +1,40 @@
-import { fieldGen } from "./colUtils";
+import { fieldGen, getVarTypeFromFixed } from "./colUtils";
+import { distM2MMf } from "../constants";
 
 // =======================================================
 // =============== POINT3D TABLE COLUMNS =================
 // =======================================================
+// path in this part start at root.LGC_DATA.points.point
+
+export const generatePoint3DCols = () => {
+  return {
+    id: fieldGen("id", "Name", { flex: 1.3, minWidth: 130, path: "fName" }),
+    TYPE: fieldGen("TYPE", "Type", { path: "fixedState", unitConv: getVarTypeFromFixed }),
+    FRAME: fieldGen("FRAME", "Frame", { flex: 0.4, minWidth: 50, path: "fFramePosition_Name" }),
+    X: fieldGen("X", "X", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedValueInRoot/fVector/0" }),
+    Y: fieldGen("Y", "Y", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedValueInRoot/fVector/1" }),
+    Z: fieldGen("Z", "Z", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedValueInRoot/fVector/2" }),
+    H: fieldGen("H", "H", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedHeightInRoot/fValue" }),
+    SX: fieldGen("SX", "SX", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fEstimatedPrecision/0" }),
+    SY: fieldGen("SY", "SY", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fEstimatedPrecision/1" }),
+    SZ: fieldGen("SZ", "SZ", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fEstimatedPrecision/2" }),
+    DX: fieldGen("DX", "DX", {
+      numDecs: 2,
+      unitConv: distM2MMf,
+      path: "!fEstimatedValueInRoot/fVector/0!-!fProvisionalValueInRoot/fVector/0!",
+    }),
+    DY: fieldGen("DY", "DY", {
+      numDecs: 2,
+      unitConv: distM2MMf,
+      path: "!fEstimatedValueInRoot/fVector/1!-!fProvisionalValueInRoot/fVector/1!",
+    }),
+    DZ: fieldGen("DZ", "DZ", {
+      numDecs: 2,
+      unitConv: distM2MMf,
+      path: "!fEstimatedValueInRoot/fVector/2!-!fProvisionalValueInRoot/fVector/2!",
+    }),
+  };
+};
 
 // =======================================================
 // =============== STATIONS TABLE COLUMNS ================
