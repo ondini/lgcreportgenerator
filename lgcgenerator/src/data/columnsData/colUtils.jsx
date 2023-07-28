@@ -2,12 +2,13 @@
 // ============= COLUMNS UTILITY FUNCTIONS ===============
 // =======================================================
 
+export const linkPathPlaceholder = "linkPathPlaceholder";
+
 export function generateNumFormatter(decimals, factor) {
   // function for generating other function which serves as number formatter for the DataGrid
   return (params) => {
     const roundedValue =
-      Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) /
-      10 ** decimals;
+      Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
     return roundedValue;
   };
 }

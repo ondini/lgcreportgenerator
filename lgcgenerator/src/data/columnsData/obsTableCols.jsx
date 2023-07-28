@@ -7,7 +7,7 @@ import {
   angleRad2GONPosf,
 } from "../../data/constants";
 
-import { numFormatter, fieldGen } from "./colUtils";
+import { numFormatter, fieldGen, linkPathPlaceholder } from "./colUtils";
 
 // =======================================================
 // ============= OBSERVATIONS TABLE COLUMNS ==============
@@ -73,6 +73,9 @@ export const generateTSTNObsCols = () => {
       flex: 0.11,
       minWidth: 50,
       path: "line",
+      renderCell: ({ row: { INSLINE } }) => {
+        return <a href={`surveypad://link//${linkPathPlaceholder},${INSLINE}`}>{INSLINE}</a>;
+      },
     }), // instrument line
     TGTPOS: fieldGen("TGTPOS", "Tgt. Pos.", {
       flex: 1,
@@ -84,6 +87,9 @@ export const generateTSTNObsCols = () => {
       minWidth: 50,
       cellClassName: "border-right--cell",
       path: "roms/i/measPLR3D/i/line",
+      renderCell: ({ row: { TGTLINE } }) => {
+        return <a href={`surveypad://link//${linkPathPlaceholder},${TGTLINE}`}>{TGTLINE}</a>;
+      },
     }), // target line
 
     // ========== ANGL ========== //
