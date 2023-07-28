@@ -348,6 +348,7 @@ export const getFrameTreeEdges = (data) => {
 // ============= 3D POINTS SELECTION =============== //
 // ================================================= //
 
+// 3D points for table
 export const get3DPointEstData = (data, colNames) => {
   let cols = generatePoint3DCols();
   let columns = generateColsData(cols);
@@ -362,4 +363,18 @@ export const get3DPointEstData = (data, colNames) => {
   }, columns);
 
   return makeGridData(cols, obsData);
+};
+
+// 3D points for 3D plot
+const estCoordSelector = (point) => {
+  return point.fEstimatedValueInRoot.fVector;
+};
+
+const initCoordSelector = (point) => {
+  return point.fProvisionalValueInRoot.fVector;
+};
+
+export const get3DPoints = (data, type) => {
+  // get array of 3D points coordinates - either estimated or initial based on type
+  return data.points.map(type === "est" ? estCoordSelector : initCoordSelector);
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import Plot from "react-plotly.js";
-import { get3DPoints } from "../../data_processing/dataProcessing";
+import { get3DPoints } from "../../data_processing/processing";
 import Title from "../../components/Title";
 
 const Plot3D = ({ data }) => {
