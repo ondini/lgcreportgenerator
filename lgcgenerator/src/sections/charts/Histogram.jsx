@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Plot from "react-plotly.js";
 import { useState } from "react";
 import { getResiduals } from "../../data_processing/dataProcessing";
+import { getData } from "../../data_processing/processing";
 import Title from "../../components/Title";
 import "./Histogram.css";
 import Switch from "@mui/material/Switch";
@@ -24,14 +25,7 @@ const makeBinDescs = (data, key, nbinsx, binsx) => {
     binsDescs[binIndex] =
       binsDescs[binIndex] +
       (binsCounts[binIndex] < maxBinDescCount
-        ? "<br>" +
-          data["INSPOS"][i] +
-          ":" +
-          data["INSLINE"][i] +
-          " -> " +
-          data["TGTPOS"][i] +
-          ":" +
-          data["TGTLINE"][i]
+        ? "<br>" + data["INSPOS"][i] + ":" + data["INSLINE"][i] + " -> " + data["TGTPOS"][i] + ":" + data["TGTLINE"][i]
         : binsCounts[binIndex] === maxBinDescCount
         ? "<br>  ....  "
         : "");
@@ -92,6 +86,26 @@ const makePlotLayout = (residuals, key, nbinsx, binsx, name) => {
   };
 };
 
+const makeNormPlotLayout = (residuals) => {
+  // function that creates the data object for a histogram, which is then
+  // usable by Plotly, possibly as one of many traces in a plot
+
+  return {
+    x: residuals,
+    type: "histogram",
+    autobinx: false,
+    name: "RESSIG",
+    marker: {
+      opacity: 0.75,
+      line: {
+        width: 1,
+      },
+    },
+    opacity: 0.75,
+    hovertemplate: "<b> Count: %{y} </b>",
+  };
+};
+
 const makePlotData = (residuals, measType, key, nbinsx, filterInstruments) => {
   // function that creates array of data objects for a histogram, which is then
   // directly passed to a Plotly component
@@ -117,24 +131,42 @@ const makePlotData = (residuals, measType, key, nbinsx, filterInstruments) => {
   return plotData;
 };
 
+const makeNormPlotData = (measTypes, residuals) => {
+  let plotData = []; // array of data objects for the histogram
+  measTypes.forEach((measType) => {
+    if ("residualsData" in residuals[measType]) {
+      Object.keys(residuals[measType].residualsData).forEach((key) => {
+        if (key.indexOf("RESSIG") !== -1) {
+          plotData = plotData.concat(residuals[measType].residualsData[key]);
+        }
+      });
+    }
+  });
+  return plotData;
+};
+
 const Histogram = ({ data }) => {
   // Function representing the Histogram section of the app
   // It is a Plotly component with a button menu to select the measurement type and turn off the filter by instrument
 
-  const residuals = getResiduals(data.LGC_DATA); // get the residuals data from the LGC_DATA object
-  const measTypes = Object.keys(residuals); // get all the used measurement types from the residuals data
+  // const residuals = getResiduals(data.LGC_DATA); // get the residuals data from the LGC_DATA object
+  const residuals2 = getData(data.LGC_DATA, "OBS");
+  const measTypes = Object.keys(residuals2); // get all the used measurement types from the residuals data
+
+  const normalizedResiduals = makeNormPlotData(measTypes, residuals2);
+  const normLayout = [makeNormPlotLayout(normalizedResiduals)];
 
   const createHists = (measType, filterInstr) => {
     // function that creates the histogram components for each of the residuals of the selected measurement type
     const nonResKeys = ["TGTPOS", "TGTLINE", "INSPOS", "INSLINE"]; // keys that are not residuals
 
     let histograms = [];
-    Object.keys(residuals[measType]).forEach((key) => {
+    Object.keys(residuals2[measType].residualsData).forEach((key) => {
       if (nonResKeys.includes(key)) return;
       histograms.push(
         <div className="histsec-plots-plot" key={measType + key}>
           <Plot
-            data={makePlotData(residuals[measType], measType, key, 30, filterInstr)}
+            data={makePlotData(residuals2[measType].residualsData, measType, key, 30, filterInstr)}
             layout={{ title: key, bargroupgap: 0.2, barmode: "stack" }}
           />
         </div>
@@ -187,6 +219,12 @@ const Histogram = ({ data }) => {
           />
         </div>
         <div className="histsec-plots"> {histList} </div>
+      </div>
+      <Title title="Normalized joint histogram" id="histogramNorm" />
+      <div className="histsec-plots">
+        <div className="histsec-plots-plot">
+          <Plot data={normLayout} layout={{ title: "RESIG", bargroupgap: 0.2, barmode: "stack" }} />
+        </div>
       </div>
     </div>
   );

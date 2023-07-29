@@ -51,7 +51,7 @@ const getFromDict = (data, path, iteratorVals, unitConv) => {
   }
 };
 
-const makeGridData = (cols, data) => {
+const makeGridData = (cols, data, makeResiduals = false) => {
   // this function prepars data to be processed by dataGrid
 
   // get column details for columns that are to be shown and prepare for grid
@@ -71,7 +71,19 @@ const makeGridData = (cols, data) => {
     }, {});
   });
 
-  return { data: rowData, columnDetails: columnDetails };
+  let returnData = { data: rowData, columnDetails: columnDetails };
+  if (makeResiduals) {
+    const residualsData = {};
+    const metaCols = ["TGTPOS", "TGTLINE", "INSPOS", "INSLINE"];
+    colNames.forEach((colName) => {
+      if (colName.indexOf("RES") !== -1 || metaCols.includes(colName)) {
+        residualsData[colName] = data[colName];
+      }
+      returnData.residualsData = residualsData;
+    });
+  }
+
+  return returnData;
 };
 
 const mergeRowsData = (measType, acc, obsData) => {
@@ -79,6 +91,11 @@ const mergeRowsData = (measType, acc, obsData) => {
     acc[measType] = obsData;
   } else {
     acc[measType].data = acc[measType].data.concat(obsData.data);
+    if ("residualsData" in acc[measType]) {
+      Object.keys(acc[measType].residualsData).forEach((key) => {
+        acc[measType].residualsData[key] = acc[measType].residualsData[key].concat(obsData.residualsData[key]);
+      });
+    }
   }
   return acc;
 };
@@ -214,6 +231,9 @@ const getOBSXYZStationRows = (measurement) => {
 // ======= OBSERVATION MINING FUNCTIONS ============ //
 // ================================================= //
 
+// this is used jointly with residual data to get the data for the histogram,
+// since the data is already mined for observation table and it is uneffective to do it again
+
 const getECHOObsRows = (measurement) => {
   let cols = generateECHOObsCols();
   let columns = generateColsData(cols);
@@ -231,7 +251,7 @@ const getECHOObsRows = (measurement) => {
     return acc;
   }, columns);
 
-  return makeGridData(cols, obsData);
+  return makeGridData(cols, obsData, true);
 };
 
 const getTSTNObsRows = (measurement, makeColumns) => {
@@ -253,7 +273,7 @@ const getTSTNObsRows = (measurement, makeColumns) => {
     return acc;
   }, columns);
 
-  return makeGridData(cols, obsData);
+  return makeGridData(cols, obsData, true);
 };
 
 const getOBSXYZRows = (measurement) => {
@@ -270,7 +290,7 @@ const getOBSXYZRows = (measurement) => {
     return acc;
   }, colsData);
 
-  return makeGridData(cols, obsData);
+  return makeGridData(cols, obsData, true);
 };
 
 // ================================================= //
@@ -378,3 +398,7 @@ export const get3DPoints = (data, type) => {
   // get array of 3D points coordinates - either estimated or initial based on type
   return data.points.map(type === "est" ? estCoordSelector : initCoordSelector);
 };
+
+// ================================================= //
+// =========== HISTOGRAMS DATA SELECTION =========== //
+// ================================================= //

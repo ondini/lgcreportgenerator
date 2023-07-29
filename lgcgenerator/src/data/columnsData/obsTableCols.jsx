@@ -1,11 +1,5 @@
 import InstrumentTooltip from "../../components/InstrumentTooltip";
-import {
-  angleRad2CCf,
-  angleRad2GONf,
-  distM2HMMf,
-  distM2MMf,
-  angleRad2GONPosf,
-} from "../../data/constants";
+import { angleRad2CCf, angleRad2GONf, distM2HMMf, distM2MMf, angleRad2GONPosf } from "../../data/constants";
 
 import { numFormatter, fieldGen, linkPathPlaceholder } from "./colUtils";
 
@@ -56,12 +50,12 @@ export const generateTSTNObsCols = () => {
             details={
               <>
                 <div>
-                  <b>Position data:</b> HI: {numFormatter(row.HI, 5)} SHI:{" "}
-                  {numFormatter(row.SHI, 2)} ROT3D: {row.ROT3D ? "true" : "false"}
+                  <b>Position data:</b> HI: {numFormatter(row.HI, 5)} SHI: {numFormatter(row.SHI, 2)} ROT3D:{" "}
+                  {row.ROT3D ? "true" : "false"}
                 </div>
                 <div>
-                  <b>Rom data:</b> ACST: {numFormatter(row.ACST, 5)} V0: {numFormatter(row.V0, 5)}{" "}
-                  SV0: {numFormatter(row.SV0, 1)}
+                  <b>Rom data:</b> ACST: {numFormatter(row.ACST, 5)} V0: {numFormatter(row.V0, 5)} SV0:{" "}
+                  {numFormatter(row.SV0, 1)}
                 </div>
               </>
             }
@@ -234,7 +228,7 @@ export const generateECHOObsCols = () => {
     }), // reference string normale precision
 
     // ========== OBS DATA ========== //
-    REFPT: fieldGen("REFPT", "Referenve. Pt.", {
+    INSPOS: fieldGen("INSPOS", "Reference. Pt.", {
       flex: 1,
       minWidth: 200,
       path: "fMeasuredPlane/fName",
@@ -246,12 +240,12 @@ export const generateECHOObsCols = () => {
             details={
               <>
                 <div>
-                  <b>Ref. point:</b> X (M): {numFormatter(row.X, 5)} Y (M): {numFormatter(row.Y, 5)}{" "}
-                  Z (M): {numFormatter(row.Z, 5)}
+                  <b>Ref. point:</b> X (M): {numFormatter(row.X, 5)} Y (M): {numFormatter(row.Y, 5)} Z (M):{" "}
+                  {numFormatter(row.Z, 5)}
                 </div>
                 <div>
-                  <b>Wire pars.:</b> Orient. (GON): {numFormatter(row.O, 5)} SOrient. (CC):{" "}
-                  {numFormatter(row.SO, 2)} SNormale (MM): {numFormatter(row.SN, 2)}
+                  <b>Wire pars.:</b> Orient. (GON): {numFormatter(row.O, 5)} SOrient. (CC): {numFormatter(row.SO, 2)}{" "}
+                  SNormale (MM): {numFormatter(row.SN, 2)}
                 </div>
               </>
             }
@@ -259,7 +253,7 @@ export const generateECHOObsCols = () => {
         );
       },
     }), // instrument id
-    REFLINE: fieldGen("REFLINE", "RLine", {
+    INSLINE: fieldGen("INSLINE", "RLine", {
       flex: 0.11,
       minWidth: 50,
       path: "line",
