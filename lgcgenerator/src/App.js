@@ -8,7 +8,6 @@ import {
   StationsTable,
   FrameTable,
   FrameTree,
-  FrameTreeOld
 } from "./sections";
 import Navbar from "./components/Navbar";
 import { NAVBAR_WIDTH_WIDE } from "./data/constants";
@@ -44,7 +43,6 @@ function App() {
         <Point3DTable data={GMData} />
         <ObservationsTable data={GMData} />
         <FrameTable data={GMData} />
-        {/* <FrameTreeOld data={GMData} /> */}
         <FrameTree data={GMData}/>
       </MainLayoutStyle>
     </div>

@@ -15,9 +15,9 @@ export const generatePoint3DCols = () => {
     Y: fieldGen("Y", "Y", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedValueInRoot/fVector/1" }),
     Z: fieldGen("Z", "Z", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedValueInRoot/fVector/2" }),
     H: fieldGen("H", "H", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedHeightInRoot/fValue" }),
-    SX: fieldGen("SX", "SX", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fEstimatedPrecision/0" }),
-    SY: fieldGen("SY", "SY", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fEstimatedPrecision/1" }),
-    SZ: fieldGen("SZ", "SZ", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fEstimatedPrecision/2" }),
+    SX: fieldGen("SX", "SX", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fCovarianceMatrixInRoot/0/0" }),
+    SY: fieldGen("SY", "SY", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fCovarianceMatrixInRoot/1/1" }),
+    SZ: fieldGen("SZ", "SZ", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fCovarianceMatrixInRoot/2/2" }),
     DX: fieldGen("DX", "DX", {
       numDecs: 2,
       unitConv: distM2MMf,
