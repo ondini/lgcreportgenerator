@@ -6,6 +6,7 @@ import { getData } from "../../data_processing/processing";
 import Title from "../../components/Title";
 import "./Histogram.css";
 import Switch from "@mui/material/Switch";
+import { noSrcMeasTypes } from "../../data/constants";
 
 const makeBinDescs = (data, key, nbinsx, binsx) => {
   // function that creates descriptions for each bin
@@ -22,10 +23,11 @@ const makeBinDescs = (data, key, nbinsx, binsx) => {
     const binIndex = Math.floor((value - binsx.start) / binsx.size); // index of the bin where the observation belongs
 
     binsCounts[binIndex] += 1;
+    let src = "INSPOS" in data ? data["INSPOS"][i] + ":" + data["INSLINE"][i] + " -> " : "";
     binsDescs[binIndex] =
       binsDescs[binIndex] +
       (binsCounts[binIndex] < maxBinDescCount
-        ? "<br>" + data["INSPOS"][i] + ":" + data["INSLINE"][i] + " -> " + data["TGTPOS"][i] + ":" + data["TGTLINE"][i]
+        ? "<br>" + src + data["TGTPOS"][i] + ":" + data["TGTLINE"][i]
         : binsCounts[binIndex] === maxBinDescCount
         ? "<br>  ....  "
         : "");
@@ -120,7 +122,8 @@ const makePlotData = (residuals, measType, key, nbinsx, filterInstruments) => {
     start: minVal,
   };
 
-  const traces = filterInstruments // separate data by instrument if filter is on
+  const filterInstr = noSrcMeasTypes.includes(measType) ? false : filterInstruments; // filter by instrument is not available for some measurement types
+  const traces = filterInstr // separate data by instrument if filter is on
     ? separateDataByInstrument(residuals, key, nbinsx)
     : { ";": residuals };
 
@@ -162,7 +165,7 @@ const Histogram = ({ data }) => {
 
     let histograms = [];
     Object.keys(residuals2[measType].residualsData).forEach((key) => {
-      if (nonResKeys.includes(key)) return;
+      if (nonResKeys.includes(key) || key.indexOf("RESSIG") !== -1) return;
       histograms.push(
         <div className="histsec-plots-plot" key={measType + key}>
           <Plot
@@ -223,7 +226,7 @@ const Histogram = ({ data }) => {
       <Title title="Normalized joint histogram" id="histogramNorm" />
       <div className="histsec-plots">
         <div className="histsec-plots-plot">
-          <Plot data={normLayout} layout={{ title: "RESIG", bargroupgap: 0.2, barmode: "stack" }} />
+          <Plot data={normLayout} layout={{ title: "RES/SIG", bargroupgap: 0.2, barmode: "stack" }} />
         </div>
       </div>
     </div>

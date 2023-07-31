@@ -1,7 +1,10 @@
 import { 
     generateTSTNObsCols, 
     generateECHOObsCols,
-    generateOBSXYZObsCols
+    generateOBSXYZObsCols,
+    generateRADIObsCols,
+    generateDSPTObsCols,
+    generateECWSObsCols
  } from './obsTableCols.jsx';
 
  import {
@@ -15,7 +18,10 @@ export {
     generateTSTNObsCols, 
     generateECHOObsCols,
     generateOBSXYZObsCols,
-    
+    generateRADIObsCols,
+    generateDSPTObsCols,
+    generateECWSObsCols,
+        
     generateStationsCols,
     generateFrameCols,
     generatePoint3DCols

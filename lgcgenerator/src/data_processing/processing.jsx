@@ -2,6 +2,9 @@ import {
   generateTSTNObsCols,
   generateECHOObsCols,
   generateOBSXYZObsCols,
+  generateRADIObsCols,
+  generateDSPTObsCols,
+  generateECWSObsCols,
   generateStationsCols,
   generateFrameCols,
   generatePoint3DCols,
@@ -120,10 +123,13 @@ const obsTypeSelector = (measurement, type) => {
     case "fTSTN":
       return getTSTNObsRows(measurement);
     case "fOBSXYZ":
-      return getOBSXYZRows(measurement);
-    case "fECWS":
-    case "fEDM":
+      return getOBSXYZObsRows(measurement);
     case "fRADI":
+      return getRADIObsRows(measurement);
+    case "fECWS":
+      return getECWSObsRows(measurement);
+    case "fEDM":
+      return getDSPTObsRows(measurement);
     default:
       return {};
   }
@@ -254,6 +260,46 @@ const getECHOObsRows = (measurement) => {
   return makeGridData(cols, obsData, true);
 };
 
+const getDSPTObsRows = (measurement) => {
+  let cols = generateDSPTObsCols();
+  let columns = generateColsData(cols);
+
+  let path = ["fEDM", "measDSPT"];
+
+  let obsData = measurement[path[0]].reduce((acc, curr) => {
+    // reduce over all measurements
+    for (let j = 0; j < curr[path[1]].length; j++) {
+      // get all data defined in cols
+      for (const key of Object.keys(cols)) {
+        columns[key].push(getFromDict(curr, cols[key].path, [j], cols[key].unitConv));
+      }
+    }
+    return acc;
+  }, columns);
+
+  return makeGridData(cols, obsData, true);
+};
+
+const getECWSObsRows = (measurement) => {
+  let cols = generateECWSObsCols();
+  let columns = generateColsData(cols);
+
+  let path = ["fECWS", "measECWS"];
+
+  let obsData = measurement[path[0]].reduce((acc, curr) => {
+    // reduce over all measurements
+    for (let j = 0; j < curr[path[1]].length; j++) {
+      // get all data defined in cols
+      for (const key of Object.keys(cols)) {
+        columns[key].push(getFromDict(curr, cols[key].path, [j], cols[key].unitConv));
+      }
+    }
+    return acc;
+  }, columns);
+
+  return makeGridData(cols, obsData, true);
+};
+
 const getTSTNObsRows = (measurement, makeColumns) => {
   let cols = generateTSTNObsCols();
   let columns = generateColsData(cols);
@@ -276,11 +322,28 @@ const getTSTNObsRows = (measurement, makeColumns) => {
   return makeGridData(cols, obsData, true);
 };
 
-const getOBSXYZRows = (measurement) => {
+const getOBSXYZObsRows = (measurement) => {
   let cols = generateOBSXYZObsCols();
   let colsData = generateColsData(cols);
 
   let obsData = measurement.fOBSXYZ.reduce((acc, curr) => {
+    // reduce over all measurements
+    for (const key of Object.keys(cols)) {
+      // get all data defined in cols
+      colsData[key].push(getFromDict(curr, cols[key].path, [], cols[key].unitConv));
+    }
+
+    return acc;
+  }, colsData);
+
+  return makeGridData(cols, obsData, true);
+};
+
+const getRADIObsRows = (measurement) => {
+  let cols = generateRADIObsCols();
+  let colsData = generateColsData(cols);
+
+  let obsData = measurement.fRADI.reduce((acc, curr) => {
     // reduce over all measurements
     for (const key of Object.keys(cols)) {
       // get all data defined in cols

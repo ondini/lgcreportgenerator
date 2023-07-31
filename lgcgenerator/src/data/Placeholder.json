@@ -1,1 +1,31 @@
-{ "PLACEHOLDER_JSON": "" }
+{
+  "LGC_DATA": {
+    "config": {
+      "title": "PLACEHOLDER"
+    },
+    "stat": {
+      "fDeltaComputed": 0.0
+    },
+    "tree": [
+      {
+        "ID": [1],
+        "branch": ["ROOT"],
+        "frame": {
+          "line": 0,
+          "name": "ROOT",
+          "fEstParameter": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+          "fEstPrecision": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+          "fProvParameter": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "measurements": {
+          "fTSTN": [
+            {
+              "roms": [{}]
+            }
+          ]
+        }
+      }
+    ],
+    "points": []
+  }
+}
