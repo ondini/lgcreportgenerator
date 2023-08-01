@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Plot from "react-plotly.js";
 import { useState } from "react";
-import { getResiduals } from "../../data_processing/dataProcessing";
 import { getData } from "../../data_processing/processing";
 import Title from "../../components/Title";
 import "./Histogram.css";
@@ -152,11 +151,10 @@ const Histogram = ({ data }) => {
   // Function representing the Histogram section of the app
   // It is a Plotly component with a button menu to select the measurement type and turn off the filter by instrument
 
-  // const residuals = getResiduals(data.LGC_DATA); // get the residuals data from the LGC_DATA object
-  const residuals2 = getData(data.LGC_DATA, "OBS");
-  const measTypes = Object.keys(residuals2); // get all the used measurement types from the residuals data
+  const residuals = getData(data.LGC_DATA, "OBS");
+  const measTypes = Object.keys(residuals); // get all the used measurement types from the residuals data
 
-  const normalizedResiduals = makeNormPlotData(measTypes, residuals2);
+  const normalizedResiduals = makeNormPlotData(measTypes, residuals);
   const normLayout = [makeNormPlotLayout(normalizedResiduals)];
 
   const createHists = (measType, filterInstr) => {
@@ -164,12 +162,12 @@ const Histogram = ({ data }) => {
     const nonResKeys = ["TGTPOS", "TGTLINE", "INSPOS", "INSLINE"]; // keys that are not residuals
 
     let histograms = [];
-    Object.keys(residuals2[measType].residualsData).forEach((key) => {
+    Object.keys(residuals[measType].residualsData).forEach((key) => {
       if (nonResKeys.includes(key) || key.indexOf("RESSIG") !== -1) return;
       histograms.push(
         <div className="histsec-plots-plot" key={measType + key}>
           <Plot
-            data={makePlotData(residuals2[measType].residualsData, measType, key, 30, filterInstr)}
+            data={makePlotData(residuals[measType].residualsData, measType, key, 30, filterInstr)}
             layout={{ title: key, bargroupgap: 0.2, barmode: "stack" }}
           />
         </div>

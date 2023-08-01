@@ -59,12 +59,12 @@ const generatefTSTNColumns = () => {
             details={
               <>
                 <div>
-                  <b>Position data:</b> HI: {numFormatter(row.HI, 5)} SHI:{" "}
-                  {numFormatter(row.SHI, 2)} ROT3D: {row.ROT3D ? "true" : "false"}
+                  <b>Position data:</b> HI: {numFormatter(row.HI, 5)} SHI: {numFormatter(row.SHI, 2)} ROT3D:{" "}
+                  {row.ROT3D ? "true" : "false"}
                 </div>
                 <div>
-                  <b>Rom data:</b> ACST: {numFormatter(row.ACST, 5)} V0: {numFormatter(row.V0, 5)}{" "}
-                  SV0: {numFormatter(row.SV0, 1)}
+                  <b>Rom data:</b> ACST: {numFormatter(row.ACST, 5)} V0: {numFormatter(row.V0, 5)} SV0:{" "}
+                  {numFormatter(row.SV0, 1)}
                 </div>
               </>
             }
@@ -158,12 +158,12 @@ const generatefECHOColumns = () => {
             details={
               <>
                 <div>
-                  <b>Ref. point:</b> X (M): {numFormatter(row.X, 5)} Y (M): {numFormatter(row.Y, 5)}{" "}
-                  Z (M): {numFormatter(row.Z, 5)}
+                  <b>Ref. point:</b> X (M): {numFormatter(row.X, 5)} Y (M): {numFormatter(row.Y, 5)} Z (M):{" "}
+                  {numFormatter(row.Z, 5)}
                 </div>
                 <div>
-                  <b>Wire pars.:</b> Orient. (GON): {numFormatter(row.O, 5)} SOrient. (CC):{" "}
-                  {numFormatter(row.SO, 2)} SNormale (MM): {numFormatter(row.SN, 2)}
+                  <b>Wire pars.:</b> Orient. (GON): {numFormatter(row.O, 5)} SOrient. (CC): {numFormatter(row.SO, 2)}{" "}
+                  SNormale (MM): {numFormatter(row.SN, 2)}
                 </div>
               </>
             }
@@ -301,47 +301,36 @@ const fTSTNColumnsSelector = (measurement, makeColumns) => {
           acc["OBSANGL"].push(rom.measPLR3D[j].angles[0].fValue * angleConvGON);
           acc["SANGL"].push(rom.measPLR3D[j].target.sigmaCombinedPLRAngl * angleConvCC);
           acc["CALCANGL"].push(
-            (rom.measPLR3D[j].angles[0].fValue + rom.measPLR3D[j].anglesResiduals[0].fValue) *
-              angleConvGON
+            (rom.measPLR3D[j].angles[0].fValue + rom.measPLR3D[j].anglesResiduals[0].fValue) * angleConvGON
           );
           acc["RESANGL"].push(rom.measPLR3D[j].anglesResiduals[0].fValue * angleConvCC);
           acc["RESSIGANGL"].push(
-            rom.measPLR3D[j].anglesResiduals[0].fValue /
-              rom.measPLR3D[j].target.sigmaCombinedPLRAngl
+            rom.measPLR3D[j].anglesResiduals[0].fValue / rom.measPLR3D[j].target.sigmaCombinedPLRAngl
           );
           acc["ECARTSANGL"].push(
-            rom.measPLR3D[j].distances[0].fValue *
-              rom.measPLR3D[j].anglesResiduals[0].fValue *
-              distConv
+            rom.measPLR3D[j].distances[0].fValue * rom.measPLR3D[j].anglesResiduals[0].fValue * distConv
           );
           // == ZEND == //
           acc["OBSZEND"].push(rom.measPLR3D[j].angles[1].fValue * angleConvGON);
           acc["SZEND"].push(rom.measPLR3D[j].target.sigmaCombinedPLRZenD * angleConvCC);
           acc["CALCZEND"].push(
-            (rom.measPLR3D[j].angles[1].fValue + rom.measPLR3D[j].anglesResiduals[1].fValue) *
-              angleConvGON
+            (rom.measPLR3D[j].angles[1].fValue + rom.measPLR3D[j].anglesResiduals[1].fValue) * angleConvGON
           );
           acc["RESZEND"].push(rom.measPLR3D[j].anglesResiduals[1].fValue * angleConvCC);
           acc["RESSIGZEND"].push(
-            rom.measPLR3D[j].anglesResiduals[1].fValue /
-              rom.measPLR3D[j].target.sigmaCombinedPLRZenD
+            rom.measPLR3D[j].anglesResiduals[1].fValue / rom.measPLR3D[j].target.sigmaCombinedPLRZenD
           );
           acc["ECARTSZEND"].push(
-            rom.measPLR3D[j].distances[0].fValue *
-              rom.measPLR3D[j].anglesResiduals[1].fValue *
-              distConv
+            rom.measPLR3D[j].distances[0].fValue * rom.measPLR3D[j].anglesResiduals[1].fValue * distConv
           );
           // == DIST == //
           acc["OBSDIST"].push(rom.measPLR3D[j].distances[0].fValue);
           acc["SDIST"].push(rom.measPLR3D[j].target.sigmaCombinedPLRDist * distConv);
-          acc["CALCDIST"].push(
-            rom.measPLR3D[j].distances[0].fValue + rom.measPLR3D[j].distancesResiduals[0].fValue
-          );
+          acc["CALCDIST"].push(rom.measPLR3D[j].distances[0].fValue + rom.measPLR3D[j].distancesResiduals[0].fValue);
 
           acc["RESDIST"].push(rom.measPLR3D[j].distancesResiduals[0].fValue * distConv);
           acc["RESSIGDIST"].push(
-            rom.measPLR3D[j].distancesResiduals[0].fValue /
-              rom.measPLR3D[j].target.sigmaCombinedPLRDist
+            rom.measPLR3D[j].distancesResiduals[0].fValue / rom.measPLR3D[j].target.sigmaCombinedPLRDist
           );
         }
       }
@@ -412,13 +401,9 @@ const fECHOColumnsSelector = (measurement, makeColumns) => {
       acc["TGTLINE"].push(curr[path[1]][j].line);
       acc["OBS"].push(curr[path[1]][j].distances[0].fValue);
       acc["SIGMA"].push(curr[path[1]][j].target.sigmaCombinedDist * distConv);
-      acc["CALC"].push(
-        curr[path[1]][j].distances[0].fValue + curr[path[1]][j].distancesResiduals[0].fValue
-      );
+      acc["CALC"].push(curr[path[1]][j].distances[0].fValue + curr[path[1]][j].distancesResiduals[0].fValue);
       acc["RES"].push(curr[path[1]][j].distancesResiduals[0].fValue * distConv);
-      acc["RESSIG"].push(
-        curr[path[1]][j].distancesResiduals[0].fValue / curr[path[1]][j].target.sigmaCombinedDist
-      );
+      acc["RESSIG"].push(curr[path[1]][j].distancesResiduals[0].fValue / curr[path[1]][j].target.sigmaCombinedDist);
     }
     return acc;
   }, columns);
@@ -774,4 +759,201 @@ export const getFrameTree2 = (data) => {
   });
 
   return structure;
+};
+
+/// ================== RESIDUALS ==================== //
+
+///  --- Data formatting functions --- ///
+
+export function generateNumFormatter(decimals, factor) {
+  // function to generate a function, serving as number formatter for the DataGrid
+  return (params) => {
+    const roundedValue = Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
+    return roundedValue;
+  };
+}
+
+export function numFormatter(number, decimals) {
+  // function to generate a function, serving as number formatter for the DataGrid
+  return Math.round(number * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
+}
+
+///  --- Residuals data selection  --- ///
+
+// -- selectors -- //
+const fTSTNResidualsSelector = (measurement) => {
+  // function for obtaining residuals for TSTN measurement type from JSON file
+  // ARGS: JSON file
+  // OUT: dictionary of residuals with keys: ANGL, DIST, ZEND, TGTPOS, TGTLINE, INSPOS, INSLINE
+
+  const angleConv = 63.662 * 10000; // radians to centesimal circle factor
+  const distConv = 100000; // meters to hundredths of milimeter factor
+
+  let residuals = {
+    ANGL: [], // angle residuals
+    DIST: [], // distance residuals
+    ZEND: [], // zenith residuals
+    TGTPOS: [], // target position
+    TGTLINE: [], // target line
+    INSPOS: [], // instrument position
+    INSLINE: [], // instrument line
+  }; // residuals data
+
+  residuals = measurement.fTSTN.reduce((acc, curr) => {
+    // reduce over all measurements
+    for (let i = 0; i < curr.roms.length; i++) {
+      let rom = curr.roms[i]; // current rom
+      let residualsKeys = // the paths to values are different, depending on the type of measurement (PLR3D or not)
+        "measANGL" in rom ? ["measANGL", "measDIST", "measZEND"] : ["measPLR3D", "measPLR3D", "measPLR3D"];
+      for (let j = 0; j < rom[residualsKeys[0]].length; j++) {
+        acc["ANGL"].push(rom[residualsKeys[0]][j].anglesResiduals[0].fValue * angleConv);
+        acc["DIST"].push(rom[residualsKeys[1]][j].distancesResiduals[0].fValue * distConv);
+        acc["ZEND"].push(
+          rom[residualsKeys[2]][j].anglesResiduals[residualsKeys[2] === "measPLR3D" ? 1 : 0].fValue * angleConv
+        );
+        acc["TGTPOS"].push(rom[residualsKeys[2]][j].targetPos);
+        acc["TGTLINE"].push(rom[residualsKeys[2]][j].line);
+        acc["INSPOS"].push(curr.instrumentPos);
+        acc["INSLINE"].push(curr.line);
+      }
+    }
+    return acc;
+  }, residuals);
+  return residuals;
+};
+
+const fMultResidualsSelector = (measurement, type) => {
+  // function for obtaining residuals for ECWS, ECHO or DSPT measurement type from JSON file
+  // it is all in one function, since the paths to values are the same
+  // ARGS: JSON file
+  // OUT: dictionary of residuals with keys: ECWS/ECHO/DSPT-DIST, TGTPOS, TGTID, TGTLINE, INSPOS, INSLINE
+
+  const distConv = type === "fECWS" ? 100000 : 10000; // meters to hundredths (tenths) of milimeter factor
+
+  const path =
+    type === "fECWS" ? ["fECWS", "measECWS"] : type === "fECHO" ? ["fECHO", "measECHO"] : ["fEDM", "measDSPT"];
+
+  const typeName = type === "fECWS" ? "ECWS" : type === "fECHO" ? "ECHO" : "DSPT";
+
+  let residuals = {
+    [typeName]: [], // distance residuals
+    TGTPOS: [], // target position
+    TGTLINE: [], // target line
+    INSPOS: [], // instrument position
+    INSLINE: [], // instrument line
+  }; // residuals data
+
+  residuals = measurement[path[0]].reduce((acc, curr) => {
+    for (let j = 0; j < curr[path[1]].length; j++) {
+      acc[typeName].push(curr[path[1]][j].distancesResiduals[0].fValue * distConv);
+      acc["TGTPOS"].push(curr[path[1]][j].targetPos);
+      acc["TGTLINE"].push(curr[path[1]][j].line);
+      acc["INSPOS"].push(
+        type === "fECWS"
+          ? curr.fMeasuredWSHeight.fName
+          : type === "fECHO"
+          ? curr.fMeasuredPlane.fName
+          : curr.instrumentPos
+      );
+      acc["INSLINE"].push(curr.line);
+    }
+    return acc;
+  }, residuals);
+  return residuals;
+};
+
+const fRADIResidualsSelector = (measurement) => {
+  // function for obtaining residuals for ECWS measurement type from JSON file
+  // ARGS: JSON file
+  // OUT: dictionary of residuals with keys: ECWS, TGTPOS, TGTID
+
+  const distConv = 1000; // meters to hundredths of milimeter factor
+
+  let residuals = {
+    RADI: [], // angle residuals
+    TGTPOS: [], // target position
+    TGTLINE: [], // target line
+    INSPOS: [], // instrument position
+    INSLINE: [], // instrument line
+  }; // residuals data
+  residuals = measurement.fRADI.reduce((acc, curr) => {
+    acc["RADI"].push(curr.fResidual * distConv);
+    acc["TGTPOS"].push(curr.targetPos);
+    acc["TGTPOS"].push(curr.line);
+    acc["INSPOS"].push("");
+    acc["INSLINE"].push("");
+    return acc;
+  }, residuals);
+  return residuals;
+};
+
+const fOBSXYZResidualsSelector = (measurement) => {
+  // function for obtaining residuals for OBSXYZ measurement type from JSON file
+  // ARGS: JSON file
+  // OUT: dictionary of residuals with keys: X, Y, Z, TGTPOS, TGTID
+
+  const distConv = 100000; // meters to hundredths of milimeter factor
+
+  let residuals = {
+    X: [],
+    Y: [],
+    Z: [],
+    TGTPOS: [], // target position
+    TGTLINE: [], // target line
+    INSPOS: [], // instrument position
+    INSLINE: [], // instrument line
+  }; // residuals data
+
+  residuals = measurement.fOBSXYZ.reduce((acc, curr) => {
+    acc["X"].push(curr.fXResidual * distConv);
+    acc["Y"].push(curr.fYResidual * distConv);
+    acc["Z"].push(curr.fZResidual * distConv);
+    acc["TGTPOS"].push(curr.targetPos);
+    acc["TGTPOS"].push(curr.line);
+    acc["INSPOS"].push("");
+    acc["INSLINE"].push("");
+    return acc;
+  }, residuals);
+  return residuals;
+};
+
+const residualsSelector = (measurement, type) => {
+  switch (type) {
+    case "fTSTN":
+      return fTSTNResidualsSelector(measurement);
+    case "fOBSXYZ":
+      return fOBSXYZResidualsSelector(measurement);
+    case "fECWS":
+    case "fEDM":
+    case "fECHO":
+      return fMultResidualsSelector(measurement, type);
+    case "fRADI":
+      return fRADIResidualsSelector(measurement);
+    default:
+      return {};
+  }
+};
+
+// -- main functions -- //
+const mergeResiduals = (resType, acc, residuals) => {
+  if (!(resType in acc)) {
+    acc[resType] = residuals;
+  } else {
+    Object.keys(residuals).forEach((key) => {
+      acc[resType][key] = acc[resType][key].concat(residuals[key]);
+    });
+  }
+  return acc;
+};
+
+export const getResiduals = (data) => {
+  return data.tree.reduce((acc, curr) => {
+    Object.keys(curr.measurements).forEach((key) => {
+      if (key[0] === "f") {
+        let residuals = residualsSelector(curr.measurements, key);
+        acc = mergeResiduals(key, acc, residuals);
+      }
+    });
+    return acc;
+  }, {});
 };
