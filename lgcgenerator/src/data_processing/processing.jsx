@@ -7,6 +7,7 @@ import {
   generateDSPTObsCols,
   generateECWSObsCols,
   generateECWIObsCols,
+  generateDVERObsCols,
   generateStationsCols,
   generateFrameCols,
   generatePoint3DCols,
@@ -122,10 +123,11 @@ const obsTypeSelector = (measurement, type) => {
   switch (type) {
     case "fTSTN":
       return getTSTNObsRows(measurement);
-    case "fOBSXYZ":
-      return getOBSXYZObsRows(measurement);
     case "fRADI":
       return getRADIObsRows(measurement);
+    case "fOBSXYZ":
+    case "fDVER":
+      return getNTObsRows(measurement, type);
     case "fECWI":
     case "fECWS":
     case "fECHO":
@@ -170,6 +172,8 @@ const generateObsCols = (type) => {
       return generateRADIObsCols();
     case "fORIE":
       return generateORIEObsCols();
+    case "fDVER":
+      return generateDVERObsCols();
     default:
       return {};
   }
@@ -307,6 +311,25 @@ const getTSTNObsRows = (measurement) => {
     }
     return acc;
   }, columns);
+
+  return makeGridData(cols, obsData, true);
+};
+
+const getNTObsRows = (measurement, measType) => {
+  // function that gets data for observation table specifically for No Type measurements
+
+  let cols = generateObsCols(measType);
+  let colsData = generateColsData(cols);
+
+  let obsData = measurement[measType].reduce((acc, curr) => {
+    // reduce over all measurements
+    for (const key of Object.keys(cols)) {
+      // get all data defined in cols
+      colsData[key].push(getFromDict(curr, cols[key].path, [], cols[key].unitConv));
+    }
+
+    return acc;
+  }, colsData);
 
   return makeGridData(cols, obsData, true);
 };

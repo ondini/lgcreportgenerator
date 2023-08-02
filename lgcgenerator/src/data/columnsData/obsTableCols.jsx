@@ -536,6 +536,30 @@ export const generateECHOObsCols = () => {
       numDecs: 2,
       path: "!measECHO/i/distancesResiduals/0/fValue!/!measECHO/i/target/sigmaCombinedDist!",
     }), // RES/SIGMA
+
+    // ========== INSTR DATA ========== //
+    SCALEID: fieldGen("SCALEID", "Scale", {
+      path: "measECHO/i/target/ID",
+    }), // scale id
+    // SCALELINE: fieldGen("SCALELINE", "Scale Line", {
+    //   flex: 0.5,
+    //   minWidth: 100,
+    //   path: "measECHO/i/target/ID",
+    // }), // scale line
+    OBSE: fieldGen("OBSE", "Observ. Sig.", {
+      numDecs: 2,
+      path: "measECHO/i/target/sigmaD",
+      unitConv: distM2MMf,
+    }), // observation sigma
+    PPM: fieldGen("PPM", "PPM", {
+      numDecs: 2,
+      path: "measECHO/i/target/ppmD",
+    }), // ppm
+    ICSE: fieldGen("ICSE", "Inst. Centering Sig.", {
+      numDecs: 2,
+      path: "measECHO/i/target/sigmaInstrCentering",
+      unitConv: distM2MMf,
+    }), // instrument centering sigma
   }; // residuals data
 };
 
@@ -564,7 +588,7 @@ export const generateECWSObsCols = () => {
     INSPOS: fieldGen("INSPOS", "Instr. Pos.", {
       felx: 1,
       minWidth: 250,
-      path: "fMeasuredWSHeight/fName", //// ASK
+      path: "romName",
       renderCell: ({ row }) => {
         return (
           <InstrumentTooltip
@@ -896,9 +920,68 @@ export const generateECWIObsCols = () => {
 // ============= NO TYPE COLUMNS =============== //
 // ============================================= //
 
+// ========== DVER OBS. TABLE COLUMNS ========== //
+
+export const generateDVERObsCols = () => {
+  return {
+    // ========== OBS DATA ========== //
+    TGTPOS1: fieldGen("TGTPOS1", "Ponit 1", {
+      flex: 1,
+      minWidth: 200,
+      path: "station/fName",
+      cellClassName: "name-column--cell border-right--cell",
+    }), // instrument id
+    TGTLINE1: fieldGen("TGTLINE1", "P1Line", {
+      flex: 0.11,
+      minWidth: 50,
+      path: "station/line",
+      renderCell: ({ row: { INSLINE } }) => {
+        return <a href={`surveypad://link//${linkPathPlaceholder},${INSLINE}`}>{INSLINE}</a>;
+      },
+    }), // instrument line
+    TGTPOS: fieldGen("TGTPOS", "Point 2", {
+      flex: 1,
+      minWidth: 200,
+      path: "targetPos",
+    }), // target position
+    TGTLINE: fieldGen("TGTLINE", "P2Line", {
+      flex: 0.11,
+      minWidth: 50,
+      path: "line",
+    }), // target line
+
+    // ========== DVER DATA ========== //
+    OBS: fieldGen("OBS", "Observed", {
+      numDecs: 5,
+      path: "distances/0/fValue",
+    }), // observed
+    SIG: fieldGen("SIG", "Sigma", {
+      numDecs: 2,
+      path: "fSigmaObsVal",
+      unitConv: distM2MMf,
+    }), // standard deviation
+    CALC: fieldGen("CALC", "Calculated", {
+      numDecs: 5,
+      path: "!distances/0/fValue!+!distancesResiduals/0/fValue",
+    }), // calculated
+    RES: fieldGen("RES", "Residual", {
+      numDecs: 2,
+      path: "distancesResiduals/0/fValue",
+      unitConv: distM2MMf,
+    }), // residual
+    RESSIG: fieldGen("RESSIG", "Res./Sig.", {
+      numDecs: 2,
+      path: "!distancesResiduals/0/fValue!/!fSigmaObsVal!",
+    }), // RES/SIGMA
+    DCOR: fieldGen("DCOR", "Dist. Corr.", {
+      numDecs: 5,
+      path: "fDistanceCorrection",
+    }), // dist correction
+  };
+};
+
 // ========== RADI OBS. TABLE COLUMNS ========== //
 export const generateRADIObsCols = () => {
-  ///////////////////// ASK
   return {
     // ========== OBS DATA ========== //
     TGTPOS: fieldGen("TGTPOS", "Tgt. Pos.", {
@@ -913,11 +996,11 @@ export const generateRADIObsCols = () => {
     }), // target line
 
     // ========== RADI DATA ========== //
-    GIS: fieldGen("GIS", "GIS", {
+    BEAR: fieldGen("BEAR", "Bearing", {
       numDecs: 3,
-      path: "fSigmaObsVal",
-      unitConv: distM2HMMf,
-    }), //
+      path: "fAngleCnstr",
+      unitConv: angleRad2GONPosf,
+    }), // bearing
     SIG: fieldGen("SIG", "Sigma", {
       numDecs: 3,
       path: "fSigmaObsVal",
@@ -935,12 +1018,12 @@ export const generateRADIObsCols = () => {
     OBS: fieldGen("OBS", "Observed", {
       numDecs: 3,
       path: "fSigmaObsVal",
-      unitConv: distM2HMMf,
+      unitConv: distM2MMf,
     }),
     ACTS: fieldGen("ACTS", "ACTS", {
       numDecs: 3,
-      path: "fSigmaObsVal",
-      unitConv: distM2HMMf,
+      path: "fConstAngleVal",
+      unitConv: angleRad2GONf,
     }),
   };
 };

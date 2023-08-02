@@ -15,8 +15,8 @@ import { styled } from "@mui/material/styles";
 
 import { useState } from "react";
 
-//const dataFile = "SUS-1895_26465_TT2-radial_calage-FTN.json"; 
-const dataFile = "20230721_Version_ORIE_DSPT_APRI";
+const dataFile = "SUS-1895_26465_TT2-radial_calage-FTN.json"; 
+//const dataFile = "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json";
 const GMData = require(`./jsons_tmp/${dataFile}`);
 
 const MainLayoutStyle = styled("div")(({ theme }) => ({

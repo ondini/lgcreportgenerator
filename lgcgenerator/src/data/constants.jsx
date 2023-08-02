@@ -1,9 +1,9 @@
-export const measurementTypes = ["fTSTN", "fOBSXYZ", "fECWS", "fECWI", "fECHO", "fRADI", "fEDM", "fORIE"];
+export const measurementTypes = ["fTSTN", "fOBSXYZ", "fECWS", "fECWI", "fECHO", "fRADI", "fEDM", "fORIE", "fDVER"];
 
 export const pointTypes = ["POIN", "VXY", "VXZ", "VX", "VYZ", "VY", "VZ", "CALA"];
 export const pointTypesBE = ["POIN", "VYZ", "VXZ", "VZ", "VXY", "VY", "VX", "CALA"]; // point types in Big Endian encoding order
 
-export const noSrcMeasTypes = ["fOBSXYZ", "fRADI"];
+export const noSrcMeasTypes = ["fOBSXYZ", "fRADI", "fDVER"];
 export const NAVBAR_WIDTH_WIDE = "300px";
 
 const angleRad2CC = 63.662 * 10000; // radians to centesimal circle conv. factor

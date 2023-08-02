@@ -127,18 +127,18 @@ General stuff:
   - ZEND
   - DIST
   - DHOR
-
-  - ORIE
+  - ~~ORIE~~
   - UVEC
   - UVD
-  - DSPT
+  - ~~DSPT~~
   - DLEV
+  - ~~ECHO~~
   - INCLY
-  - ECWS
-  - ECWI
-  - DVER
-  - RADI
-  - OBSXYZ
+  - ~~ECWS~~
+  - ~~ECWI~~
+  - ~~DVER~~
+  - ~~RADI~~
+  - ~~OBSXYZ~~
 
 - !! maybe lets add styling for the next user testing
 
