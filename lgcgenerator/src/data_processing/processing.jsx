@@ -123,17 +123,16 @@ const obsTypeSelector = (measurement, type) => {
   switch (type) {
     case "fTSTN":
       return getTSTNObsRows(measurement);
-    case "fRADI":
-      return getRADIObsRows(measurement);
-    case "fOBSXYZ":
-    case "fDVER":
-      return getNTObsRows(measurement, type);
     case "fECWI":
     case "fECWS":
     case "fECHO":
     case "fEDM":
     case "fORIE":
       return getXObsRows(measurement, type);
+    case "fRADI":
+    case "fOBSXYZ":
+    case "fDVER":
+      return getNTObsRows(measurement, type);
     default:
       return {};
   }
@@ -322,40 +321,6 @@ const getNTObsRows = (measurement, measType) => {
   let colsData = generateColsData(cols);
 
   let obsData = measurement[measType].reduce((acc, curr) => {
-    // reduce over all measurements
-    for (const key of Object.keys(cols)) {
-      // get all data defined in cols
-      colsData[key].push(getFromDict(curr, cols[key].path, [], cols[key].unitConv));
-    }
-
-    return acc;
-  }, colsData);
-
-  return makeGridData(cols, obsData, true);
-};
-
-const getOBSXYZObsRows = (measurement) => {
-  let cols = generateOBSXYZObsCols();
-  let colsData = generateColsData(cols);
-
-  let obsData = measurement.fOBSXYZ.reduce((acc, curr) => {
-    // reduce over all measurements
-    for (const key of Object.keys(cols)) {
-      // get all data defined in cols
-      colsData[key].push(getFromDict(curr, cols[key].path, [], cols[key].unitConv));
-    }
-
-    return acc;
-  }, colsData);
-
-  return makeGridData(cols, obsData, true);
-};
-
-const getRADIObsRows = (measurement) => {
-  let cols = generateRADIObsCols();
-  let colsData = generateColsData(cols);
-
-  let obsData = measurement.fRADI.reduce((acc, curr) => {
     // reduce over all measurements
     for (const key of Object.keys(cols)) {
       // get all data defined in cols
