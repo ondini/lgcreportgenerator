@@ -1,10 +1,12 @@
 import { 
     generateTSTNObsCols, 
+    generateORIEObsCols,
     generateECHOObsCols,
     generateOBSXYZObsCols,
     generateRADIObsCols,
     generateDSPTObsCols,
-    generateECWSObsCols
+    generateECWSObsCols,
+    generateECWIObsCols
  } from './obsTableCols.jsx';
 
  import {
@@ -21,6 +23,8 @@ export {
     generateRADIObsCols,
     generateDSPTObsCols,
     generateECWSObsCols,
+    generateORIEObsCols,
+    generateECWIObsCols,
         
     generateStationsCols,
     generateFrameCols,

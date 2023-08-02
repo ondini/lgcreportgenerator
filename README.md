@@ -6,6 +6,8 @@ Javascript source code for LGC Report generator, using React.js. The input is JS
 
 ### Usage instructions
 
+Notes -> supported measurement types are defined in constants -> each of them must have defined obs. columns for obs table + residuals and stationscolumns getters. Note that obs. columns need also a function compatible with the path structure in processing file.
+
 #### Single file compilation
 
 Firstly, install rewired and webpack plugins as
@@ -119,6 +121,25 @@ General stuff:
 - ~~! add table resume de mesures~~
 - ! put units everywhere it is possible
 - ! remove f from fTSTN everywhere possible on frontend
+- ! add support for more types
+
+  - ANGL
+  - ZEND
+  - DIST
+  - DHOR
+
+  - ORIE
+  - UVEC
+  - UVD
+  - DSPT
+  - DLEV
+  - INCLY
+  - ECWS
+  - ECWI
+  - DVER
+  - RADI
+  - OBSXYZ
+
 - !! maybe lets add styling for the next user testing
 
 3D part
@@ -131,3 +152,5 @@ General stuff:
 - !!! color code per type (DIST, TSTN, PLR3D), if we have fully constrained put the solid color, if not put the dashed (maybe circle if sitance, horizontal angle triangle, etc. )
 - !!! DX DY DZ, put it in the general 3D plot, add magnification factor since it might be not visible
 - !!! Should all graphic stuff be in QGis or in LGC Report?
+
+- ASK users if they want translated names of columns or the ids from input file (TCSE vs target centering sigma)

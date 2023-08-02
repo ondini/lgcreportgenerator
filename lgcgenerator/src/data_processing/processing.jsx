@@ -2,9 +2,11 @@ import {
   generateTSTNObsCols,
   generateECHOObsCols,
   generateOBSXYZObsCols,
+  generateORIEObsCols,
   generateRADIObsCols,
   generateDSPTObsCols,
   generateECWSObsCols,
+  generateECWIObsCols,
   generateStationsCols,
   generateFrameCols,
   generatePoint3DCols,
@@ -118,18 +120,18 @@ const generateColsData = (cols) => {
 // --- MEASUREMENT TYPE SELECTORS FOR VARIOUS TABLES --- //
 const obsTypeSelector = (measurement, type) => {
   switch (type) {
-    case "fECHO":
-      return getECHOObsRows(measurement);
     case "fTSTN":
       return getTSTNObsRows(measurement);
     case "fOBSXYZ":
       return getOBSXYZObsRows(measurement);
     case "fRADI":
       return getRADIObsRows(measurement);
+    case "fECWI":
     case "fECWS":
-      return getECWSObsRows(measurement);
+    case "fECHO":
     case "fEDM":
-      return getDSPTObsRows(measurement);
+    case "fORIE":
+      return getXObsRows(measurement, type);
     default:
       return {};
   }
@@ -145,6 +147,29 @@ const statTypeSelector = (measurement, type) => {
     case "fECWS":
     case "fEDM":
     case "fRADI":
+    default:
+      return {};
+  }
+};
+
+const generateObsCols = (type) => {
+  switch (type) {
+    case "fTSTN":
+      return generateTSTNObsCols();
+    case "fOBSXYZ":
+      return generateOBSXYZObsCols();
+    case "fECHO":
+      return generateECHOObsCols();
+    case "fECWS":
+      return generateECWSObsCols();
+    case "fECWI":
+      return generateECWIObsCols();
+    case "fEDM":
+      return generateDSPTObsCols();
+    case "fRADI":
+      return generateRADIObsCols();
+    case "fORIE":
+      return generateORIEObsCols();
     default:
       return {};
   }
@@ -240,12 +265,14 @@ const getOBSXYZStationRows = (measurement) => {
 // this is used jointly with residual data to get the data for the histogram,
 // since the data is already mined for observation table and it is uneffective to do it again
 
-const getECHOObsRows = (measurement) => {
-  let cols = generateECHOObsCols();
+const getXObsRows = (measurement, measType) => {
+  // function that gets data for observation table for measType,
+  // this is joint function for ORI, ECHO, ECWS, EDM
+
+  let cols = generateObsCols(measType);
   let columns = generateColsData(cols);
 
-  let path = ["fECHO", "measECHO"];
-
+  const path = [measType, cols.TGTPOS.path.split("/")[0]];
   let obsData = measurement[path[0]].reduce((acc, curr) => {
     // reduce over all measurements
     for (let j = 0; j < curr[path[1]].length; j++) {
@@ -260,47 +287,9 @@ const getECHOObsRows = (measurement) => {
   return makeGridData(cols, obsData, true);
 };
 
-const getDSPTObsRows = (measurement) => {
-  let cols = generateDSPTObsCols();
-  let columns = generateColsData(cols);
-
-  let path = ["fEDM", "measDSPT"];
-
-  let obsData = measurement[path[0]].reduce((acc, curr) => {
-    // reduce over all measurements
-    for (let j = 0; j < curr[path[1]].length; j++) {
-      // get all data defined in cols
-      for (const key of Object.keys(cols)) {
-        columns[key].push(getFromDict(curr, cols[key].path, [j], cols[key].unitConv));
-      }
-    }
-    return acc;
-  }, columns);
-
-  return makeGridData(cols, obsData, true);
-};
-
-const getECWSObsRows = (measurement) => {
-  let cols = generateECWSObsCols();
-  let columns = generateColsData(cols);
-
-  let path = ["fECWS", "measECWS"];
-
-  let obsData = measurement[path[0]].reduce((acc, curr) => {
-    // reduce over all measurements
-    for (let j = 0; j < curr[path[1]].length; j++) {
-      // get all data defined in cols
-      for (const key of Object.keys(cols)) {
-        columns[key].push(getFromDict(curr, cols[key].path, [j], cols[key].unitConv));
-      }
-    }
-    return acc;
-  }, columns);
-
-  return makeGridData(cols, obsData, true);
-};
-
-const getTSTNObsRows = (measurement, makeColumns) => {
+const getTSTNObsRows = (measurement) => {
+  // function that gets data for observation table specifically for TSTN
+  // due to it special structure with roms
   let cols = generateTSTNObsCols();
   let columns = generateColsData(cols);
 
