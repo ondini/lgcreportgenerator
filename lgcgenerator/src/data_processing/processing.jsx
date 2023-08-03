@@ -1,4 +1,5 @@
 import {
+  generateTSTNPaths,
   generateTSTNObsCols,
   generateECHOObsCols,
   generateOBSXYZObsCols,
@@ -155,8 +156,6 @@ const statTypeSelector = (measurement, type) => {
 
 const generateObsCols = (type) => {
   switch (type) {
-    case "fTSTN":
-      return generateTSTNObsCols();
     case "fOBSXYZ":
       return generateOBSXYZObsCols();
     case "fECHO":
@@ -290,30 +289,6 @@ const getXObsRows = (measurement, measType) => {
   return makeGridData(cols, obsData, true);
 };
 
-const getTSTNObsRows = (measurement) => {
-  // function that gets data for observation table specifically for TSTN
-  // due to it special structure with roms
-  let cols = generateTSTNObsCols();
-  let columns = generateColsData(cols);
-
-  let obsData = measurement.fTSTN.reduce((acc, curr) => {
-    // reduce over all measurements
-    for (let i = 0; i < curr.roms.length; i++) {
-      let rom = curr.roms[i]; // current rom
-      if ("measPLR3D" in rom) {
-        for (let j = 0; j < rom.measPLR3D.length; j++) {
-          for (const key of Object.keys(cols)) {
-            columns[key].push(getFromDict(curr, cols[key].path, [i, j], cols[key].unitConv));
-          }
-        }
-      }
-    }
-    return acc;
-  }, columns);
-
-  return makeGridData(cols, obsData, true);
-};
-
 const getNTObsRows = (measurement, measType) => {
   // function that gets data for observation table specifically for No Type measurements
 
@@ -329,6 +304,50 @@ const getNTObsRows = (measurement, measType) => {
 
     return acc;
   }, colsData);
+
+  return makeGridData(cols, obsData, true);
+};
+
+const getTSTNObsRows = (measurement) => {
+  // function that gets data for observation table specifically for TSTN
+  // due to it special structure with roms and subtypes
+  let cols = generateTSTNObsCols();
+  let columns = generateColsData(cols);
+  let allColPaths = generateTSTNPaths();
+
+  let keys = ["measPLR3D", "measANGL", "measZEND", "measDIST", "measDHOR"];
+
+  const getTSTNRowVal = (allColPaths, curr, cols, iterationIndices, measName, key) => {
+    // function that gets value for each row in TSTN
+    if (measName == "measPLR3D") {
+      return getFromDict(curr, cols[key].path, iterationIndices, cols[key].unitConv);
+    } else if (key in allColPaths[measName]) {
+      return getFromDict(curr, allColPaths[measName][key].path, iterationIndices, cols[key].unitConv);
+    } else {
+      return undefined;
+    }
+  };
+
+  let obsData = measurement.fTSTN.reduce((acc, curr) => {
+    // reduce over all measurements
+    for (let i = 0; i < curr.roms.length; i++) {
+      let rom = curr.roms[i]; // current rom
+      keys.forEach((measName) => {
+        // reduce over all subtypes
+        if (measName in rom) {
+          // if subtype exists
+          for (let j = 0; j < rom[measName].length; j++) {
+            // reduce over all observations
+            for (const key of Object.keys(cols)) {
+              // check all data defined in cols
+              columns[key].push(getTSTNRowVal(allColPaths, curr, cols, [i, j], measName, key));
+            }
+          }
+        }
+      });
+    }
+    return acc;
+  }, columns);
 
   return makeGridData(cols, obsData, true);
 };

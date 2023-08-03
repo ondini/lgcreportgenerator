@@ -1,4 +1,5 @@
 import { 
+    generateTSTNPaths,
     generateTSTNObsCols, 
     generateORIEObsCols,
     generateECHOObsCols,
@@ -17,7 +18,8 @@ import {
  } from './otherColumns.jsx';
 
 
-export {  
+export { 
+    generateTSTNPaths,
     generateTSTNObsCols, 
     generateECHOObsCols,
     generateOBSXYZObsCols,

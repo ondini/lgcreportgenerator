@@ -11,7 +11,7 @@ import { numFormatter, fieldGen, linkPathPlaceholder } from "./colUtils";
 // ========== POLAR TYPE COLUMNS =============== //
 // ============================================= //
 
-// ========== TSTN OBS. TABLE COLUMNS ========== //
+// ========== PL3D OBS. TABLE COLUMNS ========== //
 export const generateTSTNObsCols = () => {
   return {
     // ========== TOOLTIP DATA ========== //
@@ -262,6 +262,135 @@ export const generateTSTNObsCols = () => {
       unitConv: distM2MMf,
     }), // target
   }; // residuals data
+};
+
+export const generateANGLEPaths = () => {
+  return {
+    // ========== TOOLTIP ========== //
+    HI: { path: "instrumentHeightAdjustable/fEstimatedValue" },
+    SHI: { path: "instrumentHeightAdjustable/fEstimatedPrecision" },
+    ROT3D: { path: "rot3D" },
+    ACST: { path: "roms/i/acst" },
+    V0: { path: "roms/i/v0/fEstimatedValue" },
+    SV0: { path: "roms/i/v0/fEstimatedPrecision" },
+    // ========== OBS DATA ========== //
+    INSID: { path: "instrument/ID" }, // instrument id
+    INSPOS: { path: "instrumentPos" }, // instrument position
+    INSLINE: { path: "line" }, // instrument line
+    TGTPOS: { path: "roms/i/measANGL/i/targetPos" }, // target position
+    TGTLINE: { path: "roms/i/measANGL/i/line" }, // target line
+    // ========== ANGLE DATA ========== //
+    OBSANGL: { path: "roms/i/measANGL/i/angles/0/fValue" },
+    SANGL: { path: "roms/i/measANGL/i/target/sigmaCombinedAngle" },
+    CALCANGL: { path: "!roms/i/measANGL/i/angles/0/fValue!+!roms/i/measANGL/i/anglesResiduals/0/fValue!" },
+    RESANGL: { path: "roms/i/measANGL/i/anglesResiduals/0/fValue" },
+    RESSIGANGL: {
+      path: "!roms/i/measANGL/i/anglesResiduals/0/fValue!/!roms/i/measANGL/i/target/sigmaCombinedAngle!",
+    },
+    // ECARTSANGL: { path: "!roms/i/measANGL/i/distances/0/fValue!*!roms/i/measANGL/i/anglesResiduals/0/fValue!" },
+    TGTID: { path: "roms/i/measANGL/i/target/ID" },
+    OBSEANGL: { path: "roms/i/measANGL/i/target/sigmaAngl" },
+    TCSE: { path: "roms/i/measANGL/i/target/sigmaTargetCentering" },
+  };
+};
+
+export const generateZENDPaths = () => {
+  return {
+    // ========== TOOLTIP ========== //
+    HI: { path: "instrumentHeightAdjustable/fEstimatedValue" },
+    SHI: { path: "instrumentHeightAdjustable/fEstimatedPrecision" },
+    ROT3D: { path: "rot3D" },
+    ACST: { path: "roms/i/acst" },
+    V0: { path: "roms/i/v0/fEstimatedValue" },
+    SV0: { path: "roms/i/v0/fEstimatedPrecision" },
+    // ========== OBS DATA ========== //
+    INSID: { path: "instrument/ID" }, // instrument id
+    INSPOS: { path: "instrumentPos" }, // instrument position
+    INSLINE: { path: "line" }, // instrument line
+    TGTPOS: { path: "roms/i/measZEND/i/targetPos" }, // target position
+    TGTLINE: { path: "roms/i/measZEND/i/line" }, // target line
+    // ========== ANGLE DATA ========== //
+    OBSANGL: { path: "roms/i/measZEND/i/angles/1/fValue" },
+    SANGL: { path: "roms/i/measZEND/i/target/sigmaCombinedAngle" },
+    CALCANGL: { path: "!roms/i/measZEND/i/angles/1/fValue!+!roms/i/measZEND/i/anglesResiduals/1/fValue!" },
+    RESANGL: { path: "roms/i/measZEND/i/anglesResiduals/1/fValue" },
+    RESSIGANGL: {
+      path: "!roms/i/measZEND/i/anglesResiduals/1/fValue!/!roms/i/measZEND/i/target/sigmaCombinedAngle!",
+    },
+    // ECARTSANGL: { path: "!roms/i/measZEND/i/distances/0/fValue!*!roms/i/measZEND/i/anglesResiduals/1/fValue!" },
+    TGTID: { path: "roms/i/measZEND/i/target/ID" },
+    OBSEANGL: { path: "roms/i/measZEND/i/target/sigmaZenD" },
+    TCSE: { path: "roms/i/measZEND/i/target/sigmaTargetCentering" },
+  };
+};
+
+export const generateDISTPaths = () => {
+  return {
+    // ========== TOOLTIP ========== //
+    HI: { path: "instrumentHeightAdjustable/fEstimatedValue" },
+    SHI: { path: "instrumentHeightAdjustable/fEstimatedPrecision" },
+    ROT3D: { path: "rot3D" },
+    ACST: { path: "roms/i/acst" },
+    V0: { path: "roms/i/v0/fEstimatedValue" },
+    SV0: { path: "roms/i/v0/fEstimatedPrecision" },
+    // ========== OBS DATA ========== //
+    INSID: { path: "instrument/ID" }, // instrument id
+    INSPOS: { path: "instrumentPos" }, // instrument position
+    INSLINE: { path: "line" }, // instrument line
+    TGTPOS: { path: "roms/i/measANGL/i/targetPos" }, // target position
+    TGTLINE: { path: "roms/i/measANGL/i/line" }, // target line
+    // ========== ANGLE DATA ========== //
+    OBSANGL: { path: "roms/i/measANGL/i/angles/0/fValue" },
+    SANGL: { path: "roms/i/measANGL/i/target/sigmaCombinedAngle" },
+    CALCANGL: { path: "!roms/i/measANGL/i/angles/0/fValue!+!roms/i/measANGL/i/anglesResiduals/0/fValue!" },
+    RESANGL: { path: "roms/i/measANGL/i/anglesResiduals/0/fValue" },
+    RESSIGANGL: {
+      path: "!roms/i/measANGL/i/anglesResiduals/0/fValue!/!roms/i/measANGL/i/target/sigmaCombinedAngle!",
+    },
+    ECARTSANGL: { path: "!roms/i/measANGL/i/distances/0/fValue!*!roms/i/measANGL/i/anglesResiduals/0/fValue!" },
+    TGTID: { path: "roms/i/measPLR3D/i/target/ID" },
+    OBSEANGL: { path: "roms/i/measPLR3D/i/target/sigmaAngl" },
+    TCSE: { path: "roms/i/measPLR3D/i/target/sigmaTargetCentering" },
+  };
+};
+
+export const generateDHORPaths = () => {
+  return {
+    // ========== TOOLTIP ========== //
+    HI: { path: "instrumentHeightAdjustable/fEstimatedValue" },
+    SHI: { path: "instrumentHeightAdjustable/fEstimatedPrecision" },
+    ROT3D: { path: "rot3D" },
+    ACST: { path: "roms/i/acst" },
+    V0: { path: "roms/i/v0/fEstimatedValue" },
+    SV0: { path: "roms/i/v0/fEstimatedPrecision" },
+    // ========== OBS DATA ========== //
+    INSID: { path: "instrument/ID" }, // instrument id
+    INSPOS: { path: "instrumentPos" }, // instrument position
+    INSLINE: { path: "line" }, // instrument line
+    TGTPOS: { path: "roms/i/measANGL/i/targetPos" }, // target position
+    TGTLINE: { path: "roms/i/measANGL/i/line" }, // target line
+    // ========== ANGLE DATA ========== //
+    OBSANGL: { path: "roms/i/measANGL/i/angles/0/fValue" },
+    SANGL: { path: "roms/i/measANGL/i/target/sigmaCombinedAngle" },
+    CALCANGL: { path: "!roms/i/measANGL/i/angles/0/fValue!+!roms/i/measANGL/i/anglesResiduals/0/fValue!" },
+    RESANGL: { path: "roms/i/measANGL/i/anglesResiduals/0/fValue" },
+    RESSIGANGL: {
+      path: "!roms/i/measANGL/i/anglesResiduals/0/fValue!/!roms/i/measANGL/i/target/sigmaCombinedAngle!",
+    },
+    ECARTSANGL: { path: "!roms/i/measANGL/i/distances/0/fValue!*!roms/i/measANGL/i/anglesResiduals/0/fValue!" },
+    TGTID: { path: "roms/i/measPLR3D/i/target/ID" },
+    OBSEANGL: { path: "roms/i/measPLR3D/i/target/sigmaAngl" },
+    TCSE: { path: "roms/i/measPLR3D/i/target/sigmaTargetCentering" },
+  };
+};
+
+export const generateTSTNPaths = () => {
+  return {
+    measANGLE: generateANGLEPaths(),
+    measZEND: generateZENDPaths(),
+    measDIST: generateDISTPaths(),
+    measDHOR: generateDHORPaths(),
+  };
 };
 
 // =========== ORI OBS. TABLE COLUMNS ========== //
