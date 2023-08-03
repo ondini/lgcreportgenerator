@@ -113,6 +113,7 @@ export const generateTSTNObsCols = () => {
     RESANGL: fieldGen("RESANGL", "Res. Angl.", {
       numDecs: 1,
       path: "roms/i/measPLR3D/i/anglesResiduals/0/fValue",
+      unitConv: angleRad2CCf,
     }), // angle residual
     RESSIGANGL: fieldGen("RESSIGANGL", "Res./Sig. Angl.", {
       numDecs: 2,
@@ -120,10 +121,15 @@ export const generateTSTNObsCols = () => {
     }), // angle RES/SIGMA
     ECARTSANGL: fieldGen("ECARTSANGL", "Ecarts Angl.", {
       numDecs: 2,
-      cellClassName: "border-right--cell",
       path: "!roms/i/measPLR3D/i/distances/0/fValue!*!roms/i/measPLR3D/i/anglesResiduals/0/fValue!",
       unitConv: distM2MMf,
     }), // angle ECARTS
+    OBSEANGL: fieldGen("OBSEANGL", "Observ. Sig. Angl.", {
+      numDecs: 1,
+      path: "roms/i/measPLR3D/i/target/sigmaAngl",
+      cellClassName: "border-right--cell",
+      unitConv: angleRad2CCf,
+    }), // angle OBS SIGMA
 
     // ========== ZEND ========== //
     OBSZEND: fieldGen("OBSZEND", "Obs. Zend.", {
@@ -156,10 +162,15 @@ export const generateTSTNObsCols = () => {
     }), // zenith RES/SIGMA
     ECARTSZEND: fieldGen("ECARTSZEND", "Ecarts Zend.", {
       numDecs: 2,
-      cellClassName: "border-right--cell",
       path: "!roms/i/measPLR3D/i/distances/0/fValue!*!roms/i/measPLR3D/i/anglesResiduals/1/fValue!",
       unitConv: distM2MMf,
     }), // zenith ECARTS
+    OBSEZEND: fieldGen("OBSEZEND", "Observ. Sig. Zend.", {
+      numDecs: 1,
+      path: "roms/i/measPLR3D/i/target/sigmaZenD",
+      cellClassName: "border-right--cell",
+      unitConv: angleRad2CCf,
+    }), // angle OBS ZEND
 
     // ========== DIST ========== //
     OBSDIST: fieldGen("OBSDIST", "Obs. Dist.", {
@@ -188,6 +199,68 @@ export const generateTSTNObsCols = () => {
       numDecs: 2,
       path: "!roms/i/measPLR3D/i/distancesResiduals/0/fValue!/!roms/i/measPLR3D/i/target/sigmaCombinedPLRDist!",
     }), // distance RES/SIGMA
+    OBSEDIST: fieldGen("OBSEDIST", "Observ. Sig. Dist.", {
+      numDecs: 2,
+      path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRAngl", ///////////////////////
+      unitConv: angleRad2CCf,
+      cellClassName: "border-right--cell",
+    }), // angle OBS DIST
+
+    // ========== DIST EXTENSION ========== //
+
+    // SENSI: fieldGen("SENSI", "Sensitivity", {
+    //   numDecs: 2,
+    //   path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRDist",
+    // }), // Sensitivity
+    CONST: fieldGen("CONST", "Constant", {
+      numDecs: 2,
+      path: "roms/i/measPLR3D/i/target/distCorrectionValue",
+    }), // distance Constant
+    SCONST: fieldGen("SCONST", "Sig. Const.", {
+      numDecs: 5,
+      path: "roms/i/measPLR3D/i/target/sigmaDCorr",
+    }), // distance Consatnt Sigma
+    SCONSTFIX: fieldGen("SCONSTFIX", "S. Cons.", {
+      show: false,
+      path: "roms/i/measPLR3D/i/target/distCorrectionUnknown",
+    }), // distance Consatnt FIXED
+    PPM: fieldGen("PPM", "Dist. PPM", {
+      numDecs: 2,
+      path: "roms/i/measPLR3D/i/target/ppmDist",
+      cellClassName: "border-right--cell",
+    }), // distance Consatnt Sigma
+
+    // ========== TGT ========== //
+    TGTID: fieldGen("TGTID", "Tgt. Pos.", {
+      flex: 0.8,
+      minWidth: 100,
+      path: "roms/i/measPLR3D/i/target/ID",
+    }), // target instr ID
+    // TGTIDLINE: fieldGen("TGTIDLINE", "Tgt. Line.", {
+    //   flex: 1,
+    //   minWidth: 150,
+    //   path: "measDSPT/i/target/line",
+    // }), // target instr ID
+    HTGT: fieldGen("HTGT", "Tgt. height", {
+      flex: 0.11,
+      minWidth: 50,
+      numDecs: 5,
+      path: "roms/i/measPLR3D/i/target/targetHt",
+    }), // target height
+    THSE: fieldGen("THSE", "Tgt. height. Sig", {
+      flex: 0.11,
+      minWidth: 50,
+      numDecs: 2,
+      path: "roms/i/measPLR3D/i/target/sigmaTargetHt",
+      unitConv: distM2MMf,
+    }), // target
+    TCSE: fieldGen("TCSE", "Tgt. centering Sig.", {
+      flex: 0.11,
+      minWidth: 50,
+      numDecs: 2,
+      path: "roms/i/measPLR3D/i/target/sigmaTargetCentering",
+      unitConv: distM2MMf,
+    }), // target
   }; // residuals data
 };
 
@@ -247,7 +320,7 @@ export const generateORIEObsCols = () => {
       minWidth: 200,
       path: "measORIE/i/target/ID",
     }), // target
-    OBSE: fieldGen("OBSE", "Observed", {
+    OBSE: fieldGen("OBSE", "Observ. Sig.", {
       flex: 0.8,
       minWidth: 100,
       numDecs: 5,
@@ -368,11 +441,9 @@ export const generateDSPTObsCols = () => {
       unitConv: angleRad2CCf,
       cellClassName: "border-right--cell",
     }), // zenith standard deviation
-    SCONSTFIX: fieldGen("SCONST", "S. Cons.", {
-      numDecs: 1,
+    SCONSTFIX: fieldGen("SCONSTFIX", "S. Cons. Fix", {
+      show: false,
       path: "measDSPT/i/target/distCorrectionUnknown",
-      unitConv: angleRad2CCf,
-      cellClassName: "border-right--cell",
     }), // zenith standard deviation
 
     // ========== TGT ========== //
@@ -381,18 +452,18 @@ export const generateDSPTObsCols = () => {
       minWidth: 150,
       path: "measDSPT/i/target/ID",
     }), // target instr ID
-    TGTIDLINE: fieldGen("TGTIDLINE", "Tgt. Line.", {
-      flex: 1,
-      minWidth: 150,
-      path: "measDSPT/i/target/line",
-    }), // target instr ID
+    // TGTIDLINE: fieldGen("TGTIDLINE", "Tgt. Line.", {
+    //   flex: 1,
+    //   minWidth: 150,
+    //   path: "measDSPT/i/target/line",
+    // }), // target instr ID
     HTGT: fieldGen("HTGT", "Tgt. height", {
       flex: 0.11,
       minWidth: 50,
       numDecs: 5,
       path: "measDSPT/i/target/targetHt",
     }), // target height
-    OBSE: fieldGen("OBSE", "Tgt. observed", {
+    OBSE: fieldGen("OBSE", "Observ. Sig.", {
       flex: 0.11,
       minWidth: 50,
       numDecs: 5,

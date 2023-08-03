@@ -8,6 +8,8 @@ Javascript source code for LGC Report generator, using React.js. The input is JS
 
 Notes -> supported measurement types are defined in constants -> each of them must have defined obs. columns for obs table + residuals and stationscolumns getters. Note that obs. columns need also a function compatible with the path structure in processing file.
 
+-> Columns for instrument line are ready, but they are not accessible in the object.
+
 #### Single file compilation
 
 Firstly, install rewired and webpack plugins as
