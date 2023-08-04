@@ -18,7 +18,6 @@ const ListStyled = styled("div")({
   flexDirection: "column",
   height: "100%",
   width: "100%",
-  padding: "1rem 2rem",
   justifyContent: "space-between",
 });
 

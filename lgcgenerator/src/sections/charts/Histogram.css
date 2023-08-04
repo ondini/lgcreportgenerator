@@ -44,3 +44,13 @@
   padding: 5px;
   margin-left: 5px;
 }
+
+@media screen and (max-width: 2500px) {
+  .histsec-plots {
+    flex-direction: column;
+  }
+  .histsec-plots-plot {
+    margin-left: 0px;
+    margin-top: 10px;
+  }
+}

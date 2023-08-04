@@ -1,9 +1,15 @@
 .app {
   text-align: center;
-  padding: 2rem 10rem;
+  padding: 2rem 5rem;
 }
 
 .main-layout {
   margin-left: 500px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+@media screen and (max-width: 2500px) {
+  .app {
+    padding: 2rem;
+  }
 }
