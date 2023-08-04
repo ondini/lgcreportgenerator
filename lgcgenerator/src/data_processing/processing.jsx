@@ -319,6 +319,7 @@ const getTSTNObsRows = (measurement) => {
 
   const getTSTNRowVal = (allColPaths, curr, cols, iterationIndices, measName, key) => {
     // function that gets value for each row in TSTN
+    // console.log(measName, key);
     if (measName == "measPLR3D") {
       return getFromDict(curr, cols[key].path, iterationIndices, cols[key].unitConv);
     } else if (key in allColPaths[measName]) {

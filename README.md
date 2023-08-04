@@ -125,10 +125,11 @@ General stuff:
 - ! remove f from fTSTN everywhere possible on frontend
 - ! add support for more types
 
-  - ANGL
-  - ZEND
-  - DIST
-  - DHOR
+  - ~~PL3D~~
+  - ~~ANGL~~
+  - ~~ZEND~~
+  - ~~DIST~~
+  - ~~DHOR~~
   - ~~ORIE~~
   - UVEC
   - UVD

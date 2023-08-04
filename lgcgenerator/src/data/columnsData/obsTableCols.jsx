@@ -309,17 +309,17 @@ export const generateZENDPaths = () => {
     INSLINE: { path: "line" }, // instrument line
     TGTPOS: { path: "roms/i/measZEND/i/targetPos" }, // target position
     TGTLINE: { path: "roms/i/measZEND/i/line" }, // target line
-    // ========== ANGLE DATA ========== //
-    OBSANGL: { path: "roms/i/measZEND/i/angles/1/fValue" },
-    SANGL: { path: "roms/i/measZEND/i/target/sigmaCombinedAngle" },
-    CALCANGL: { path: "!roms/i/measZEND/i/angles/1/fValue!+!roms/i/measZEND/i/anglesResiduals/1/fValue!" },
-    RESANGL: { path: "roms/i/measZEND/i/anglesResiduals/1/fValue" },
-    RESSIGANGL: {
-      path: "!roms/i/measZEND/i/anglesResiduals/1/fValue!/!roms/i/measZEND/i/target/sigmaCombinedAngle!",
+    // ========== ZEND DATA ========== //
+    OBSZEND: { path: "roms/i/measZEND/i/angles/0/fValue" },
+    SZEND: { path: "roms/i/measZEND/i/target/sigmaCombinedAngle" },
+    CALCZEND: { path: "!roms/i/measZEND/i/angles/0/fValue!+!roms/i/measZEND/i/anglesResiduals/0/fValue!" },
+    RESZEND: { path: "roms/i/measZEND/i/anglesResiduals/0/fValue" },
+    RESSIGZEND: {
+      path: "!roms/i/measZEND/i/anglesResiduals/0/fValue!/!roms/i/measZEND/i/target/sigmaCombinedAngle!",
     },
-    // ECARTSANGL: { path: "!roms/i/measZEND/i/distances/0/fValue!*!roms/i/measZEND/i/anglesResiduals/1/fValue!" },
+    // ECARTSZEND: { path: "!roms/i/measZEND/i/distances/0/fValue!*!roms/i/measZEND/i/anglesResiduals/1/fValue!" },
     TGTID: { path: "roms/i/measZEND/i/target/ID" },
-    OBSEANGL: { path: "roms/i/measZEND/i/target/sigmaZenD" },
+    OBSEZEND: { path: "roms/i/measZEND/i/target/sigmaZenD" },
     TCSE: { path: "roms/i/measZEND/i/target/sigmaTargetCentering" },
   };
 };
@@ -337,20 +337,27 @@ export const generateDISTPaths = () => {
     INSID: { path: "instrument/ID" }, // instrument id
     INSPOS: { path: "instrumentPos" }, // instrument position
     INSLINE: { path: "line" }, // instrument line
-    TGTPOS: { path: "roms/i/measANGL/i/targetPos" }, // target position
-    TGTLINE: { path: "roms/i/measANGL/i/line" }, // target line
-    // ========== ANGLE DATA ========== //
-    OBSANGL: { path: "roms/i/measANGL/i/angles/0/fValue" },
-    SANGL: { path: "roms/i/measANGL/i/target/sigmaCombinedAngle" },
-    CALCANGL: { path: "!roms/i/measANGL/i/angles/0/fValue!+!roms/i/measANGL/i/anglesResiduals/0/fValue!" },
-    RESANGL: { path: "roms/i/measANGL/i/anglesResiduals/0/fValue" },
-    RESSIGANGL: {
-      path: "!roms/i/measANGL/i/anglesResiduals/0/fValue!/!roms/i/measANGL/i/target/sigmaCombinedAngle!",
+    TGTPOS: { path: "roms/i/measDIST/i/targetPos" }, // target position
+    TGTLINE: { path: "roms/i/measDIST/i/line" }, // target line
+    // ========== DIST DATA ========== //
+    OBSDIST: { path: "roms/i/measDIST/i/distances/0/fValue" },
+    SDIST: { path: "roms/i/measDIST/i/target/sigmaCombinedDist" },
+    CALCDIST: { path: "!roms/i/measDIST/i/distances/0/fValue!+!roms/i/measDIST/i/distancesResiduals/0/fValue!" },
+    RESDIST: { path: "roms/i/measDIST/i/distancesResiduals/0/fValue" },
+    RESSIGDIST: {
+      path: "!roms/i/measDIST/i/distancesResiduals/0/fValue!/!roms/i/measDIST/i/target/sigmaCombinedDist!",
     },
-    ECARTSANGL: { path: "!roms/i/measANGL/i/distances/0/fValue!*!roms/i/measANGL/i/anglesResiduals/0/fValue!" },
-    TGTID: { path: "roms/i/measPLR3D/i/target/ID" },
-    OBSEANGL: { path: "roms/i/measPLR3D/i/target/sigmaAngl" },
-    TCSE: { path: "roms/i/measPLR3D/i/target/sigmaTargetCentering" },
+    // SENSI: { path: "roms/i/measDIST/i/distances/0/fSensitivity" },
+    CONST: { path: "roms/i/measDIST/i/target/distCorrectionValue" }, // distance Consatnt
+    SCONST: { path: "roms/i/measDIST/i/target/sigmaDCorr" },
+    SCONSTFIX: { path: "roms/i/measDIST/i/target/distCorrectionUnknown" },
+    // ========== TGT DATA ========== //
+    PPM: { path: "roms/i/measDIST/i/target/ppmDist" },
+    TGTID: { path: "roms/i/measDIST/i/target/ID" },
+    HTGT: { path: "roms/i/measDIST/i/target/targetHt" },
+    THSE: { path: "roms/i/measDIST/i/target/sigmaTargetHt" },
+    OBSEDIST: { path: "roms/i/measDIST/i/target/sigmaDist" },
+    TCSE: { path: "roms/i/measDIST/i/target/sigmaTargetCentering" },
   };
 };
 
@@ -367,26 +374,32 @@ export const generateDHORPaths = () => {
     INSID: { path: "instrument/ID" }, // instrument id
     INSPOS: { path: "instrumentPos" }, // instrument position
     INSLINE: { path: "line" }, // instrument line
-    TGTPOS: { path: "roms/i/measANGL/i/targetPos" }, // target position
-    TGTLINE: { path: "roms/i/measANGL/i/line" }, // target line
-    // ========== ANGLE DATA ========== //
-    OBSANGL: { path: "roms/i/measANGL/i/angles/0/fValue" },
-    SANGL: { path: "roms/i/measANGL/i/target/sigmaCombinedAngle" },
-    CALCANGL: { path: "!roms/i/measANGL/i/angles/0/fValue!+!roms/i/measANGL/i/anglesResiduals/0/fValue!" },
-    RESANGL: { path: "roms/i/measANGL/i/anglesResiduals/0/fValue" },
-    RESSIGANGL: {
-      path: "!roms/i/measANGL/i/anglesResiduals/0/fValue!/!roms/i/measANGL/i/target/sigmaCombinedAngle!",
+    TGTPOS: { path: "roms/i/measDHOR/i/targetPos" }, // target position
+    TGTLINE: { path: "roms/i/measDHOR/i/line" }, // target line
+    // ========== DHOR DATA ========== //
+    OBSDIST: { path: "roms/i/measDHOR/i/distances/0/fValue" },
+    SDIST: { path: "roms/i/measDHOR/i/target/sigmaCombinedDist" },
+    CALCDIST: { path: "!roms/i/measDHOR/i/distances/0/fValue!+!roms/i/measDHOR/i/distancesResiduals/0/fValue!" },
+    RESDIST: { path: "roms/i/measDHOR/i/distancesResiduals/0/fValue" },
+    RESSIGDIST: {
+      path: "!roms/i/measDHOR/i/distancesResiduals/0/fValue!/!roms/i/measDHOR/i/target/sigmaCombinedDist!",
     },
-    ECARTSANGL: { path: "!roms/i/measANGL/i/distances/0/fValue!*!roms/i/measANGL/i/anglesResiduals/0/fValue!" },
-    TGTID: { path: "roms/i/measPLR3D/i/target/ID" },
-    OBSEANGL: { path: "roms/i/measPLR3D/i/target/sigmaAngl" },
-    TCSE: { path: "roms/i/measPLR3D/i/target/sigmaTargetCentering" },
+    CONST: { path: "roms/i/measDHOR/i/target/distCorrectionValue" }, // distance Consatnt
+    SCONST: { path: "roms/i/measDHOR/i/target/sigmaDCorr" },
+    SCONSTFIX: { path: "roms/i/measDHOR/i/target/distCorrectionUnknown" },
+    // ========== TGT DATA ========== //
+    PPM: { path: "roms/i/measDHOR/i/target/ppmDist" },
+    TGTID: { path: "roms/i/measDHOR/i/target/ID" },
+    HTGT: { path: "roms/i/measDHOR/i/target/targetHt" },
+    THSE: { path: "roms/i/measDHOR/i/target/sigmaTargetHt" },
+    OBSEDIST: { path: "roms/i/measDHOR/i/target/sigmaDist" },
+    TCSE: { path: "roms/i/measDHOR/i/target/sigmaTargetCentering" },
   };
 };
 
 export const generateTSTNPaths = () => {
   return {
-    measANGLE: generateANGLEPaths(),
+    measANGL: generateANGLEPaths(),
     measZEND: generateZENDPaths(),
     measDIST: generateDISTPaths(),
     measDHOR: generateDHORPaths(),
