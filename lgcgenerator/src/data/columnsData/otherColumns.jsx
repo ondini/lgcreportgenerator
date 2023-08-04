@@ -42,40 +42,22 @@ export const generatePoint3DCols = () => {
 
 export const generateStationsCols = () => {
   return {
-    TYPE: fieldGen("TYPE", "Type", { flex: 0.5, minWidth: 50 }),
+    // ================== TOOLTIP INFO ==================
+
+    // ================== STATION INFO ==================
+    TYPE: fieldGen("TYPE", "Type", { flex: 0.5, minWidth: 50, keyword: "fObsText" }), // temporary, is replaced individually
     STN_POS: fieldGen("STN_POS", "Station position", {
       flex: 1,
       minWidth: 200,
       cellClassName: "name-column--cell border-right--cell",
+      keyword: "fObsText",
     }),
-    STN_LINE: fieldGen("STN_LINE", "Station line"),
-    RES_MAX: fieldGen("RES_MAX", "Res. Max.", { numDecs: 2 }),
-    RES_MIN: fieldGen("RES_MIN", "Res. Min.", { numDecs: 2 }),
-    RES_AVG: fieldGen("RES_AVG", "Res. Avg.", { numDecs: 2 }),
-    ECART_TYPE: fieldGen("ECART_TYPE", "Ecart-type", { numDecs: 2 }),
+    // STN_LINE: fieldGen("STN_LINE", "Station line"),
+    RES_MAX: fieldGen("RES_MAX", "Res. Max.", { numDecs: 2, keyword: "fResMax" }),
+    RES_MIN: fieldGen("RES_MIN", "Res. Min.", { numDecs: 2, keyword: "fResMin" }),
+    RES_AVG: fieldGen("RES_AVG", "Res. Avg.", { numDecs: 2, keyword: "fMean" }),
+    ECART_TYPE: fieldGen("ECART_TYPE", "Ecart-type", { numDecs: 2, keyword: "fStdev" }),
   };
-};
-
-export const generatePLR3DAnglStationsCols = () => {
-  let cols = generateStationsCols();
-  cols.STN_POS.path = "";
-  cols.STN_LINE.path = "measTST/i/stationLine";
-  cols.RES_MAX.path = "measTST/i/residuals/max";
-  cols.RES_MIN.path = "measTST/i/residuals/min";
-  cols.RES_AVG.path = "measTST/i/residuals/avg";
-  cols.ECART_TYPE.path = "measTST/i/residuals/ecartType";
-  return cols;
-};
-
-export const generateTSTNStationsCols = () => {
-  let cols = generateStationsCols();
-  cols.STN_POS.path = "measTST/i/stationPos";
-  cols.STN_LINE.path = "measTST/i/stationLine";
-  cols.RES_MAX.path = "measTST/i/residuals/max";
-  cols.RES_MIN.path = "measTST/i/residuals/min";
-  cols.RES_AVG.path = "measTST/i/residuals/avg";
-  cols.ECART_TYPE.path = "measTST/i/residuals/ecartType";
-  return cols;
 };
 
 // =======================================================

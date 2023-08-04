@@ -225,7 +225,6 @@ const getTSTNStationRows = (measurement) => {
         if ("measPLR3D" in rom) {
           acc["TYPE"].push("PLR3D:" + key);
           acc["STN_POS"].push(rom.plr3dSummary_[path].fObsText);
-          acc["STN_LINE"].push(curr.line);
           acc["RES_MAX"].push(rom.plr3dSummary_[path].fResMax);
           acc["RES_MIN"].push(rom.plr3dSummary_[path].fResMin);
           acc["RES_AVG"].push(rom.plr3dSummary_[path].fMean);
@@ -250,7 +249,6 @@ const getOBSXYZStationRows = (measurement) => {
   ].forEach(([key, path]) => {
     columns["TYPE"].push("OBSXYZ:" + key);
     columns["STN_POS"].push(measurement.obsxyzSummary_[path].fObsText);
-    columns["STN_LINE"].push(measurement.obsxyzSummary_[path].fNumberOfObs); /// NOT LINE!!
     columns["RES_MAX"].push(measurement.obsxyzSummary_[path].fResMax);
     columns["RES_MIN"].push(measurement.obsxyzSummary_[path].fResMin);
     columns["RES_AVG"].push(measurement.obsxyzSummary_[path].fMean);
@@ -258,6 +256,60 @@ const getOBSXYZStationRows = (measurement) => {
   });
 
   return makeGridData(cols, columns);
+};
+
+const getDVERStationRows = (measurement, key) => {
+  // RADI is the same
+  let cols = generateStationsCols();
+  let columns = generateColsData(cols);
+
+  columns["TYPE"].push("DVER");
+  columns["STN_POS"].push(measurement.dverSummary_.fObsText);
+  columns["RES_MAX"].push(measurement.dverSummary_.fResMax);
+  columns["RES_MIN"].push(measurement.dverSummary_.fResMin);
+  columns["RES_AVG"].push(measurement.dverSummary_.fMean);
+  columns["ECART_TYPE"].push(measurement.dverSummary_.fStdev);
+
+  return makeGridData(cols, columns);
+};
+
+const getXStationRows = (measurement, path) => {
+  // same for ECHO echoSummary_, EDM dsptSummary_, ORIE orieSummary_,
+  let cols = generateStationsCols();
+  let columns = generateColsData(cols);
+
+  let obsData = measurement.path[0].reduce((acc, curr) => {
+    for (const key of Object.keys(cols)) {
+      if (key !== "TYPE") {
+        acc[key].push(curr[path[0]][path[1]]);
+      }
+    }
+    columns["TYPE"].push(path[0]);
+  }, columns);
+
+  return makeGridData(cols, obsData);
+};
+
+const getECWIStationRows = (measurement) => {
+  let cols = generateStationsCols();
+  let columns = generateColsData(cols);
+
+  let obsData = measurement.fECWI.reduce((acc, curr) => {
+    [
+      ["X", "XObsSum"],
+      ["Z", "ZObsSum"],
+    ].forEach(([key, path]) => {
+      columns["TYPE"].push("ECWI:" + key);
+      columns["STN_POS"].push(curr.ecwiSummary_[path].fObsText);
+      columns["RES_MAX"].push(curr.ecwiSummary_[path].fResMax);
+      columns["RES_MIN"].push(curr.ecwiSummary_[path].fResMin);
+      columns["RES_AVG"].push(curr.ecwiSummary_[path].fMean);
+      columns["ECART_TYPE"].push(curr.ecwiSummary_[path].fStdev);
+    });
+    return acc;
+  }, columns);
+
+  return makeGridData(cols, obsData);
 };
 
 // ================================================= //
