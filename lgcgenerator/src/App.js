@@ -15,7 +15,7 @@ import { styled } from "@mui/material/styles";
 
 import { useState } from "react";
 
-const dataFile = "21517v2_mx_TSTN.json"; 
+const dataFile = "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json"; 
 //const dataFile = "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json";
 const GMData = require(`./jsons_tmp/${dataFile}`);
 
@@ -39,7 +39,7 @@ function App() {
         <Header data={GMData} fName={dataFile} />
         <Plot3D data={GMData} />
         <Histogram data={GMData} />
-        {/* <StationsTable data={GMData} /> */}
+        <StationsTable data={GMData} />
         <Point3DTable data={GMData} />
         <ObservationsTable data={GMData} />
         <FrameTable data={GMData} />

@@ -7,6 +7,7 @@ const sidebarItems = [
   { title: "Header", url: "#header" },
   { title: "3DPlot", url: "#plotPt3D" },
   { title: "Histograms", url: "#histograms" },
+  { title: "Stations Tab.", url: "#stations" },
   { title: "3D Points Tab.", url: "#tablePt3D" },
   { title: "Observations Tab.", url: "#observations" },
   { title: "Frames Tab.", url: "#frames" },
