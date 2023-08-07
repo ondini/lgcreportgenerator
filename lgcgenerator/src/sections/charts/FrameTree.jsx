@@ -27,7 +27,7 @@ const FrameTree = ({ data }) => {
         >
           <Tree
             data={myTreeData}
-            collapsible={false}
+            collapsible={true}
             pathFunc={"straight"}
             separation={{ nonSiblings: 1, siblings: 0.5 }}
             depthFactor={350}

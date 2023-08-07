@@ -5,5 +5,4 @@ export { default as Plot3D } from "./charts/Plot3D.jsx";
 export { default as ObservationsTable } from "./tables/ObservationsTable.jsx";
 export { default as StationsTable } from "./tables/StationsTable.jsx";
 export { default as FrameTable } from "./tables/FrameTable.jsx";
-export { default as FrameTreeOld } from "./charts/FrameTreeOld.jsx";
 export { default as FrameTree } from "./charts/FrameTree.jsx";

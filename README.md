@@ -8,9 +8,11 @@ Javascript source code for LGC Report generator, using React.js. The input is JS
 
 Notes -> supported measurement types are defined in constants -> each of them must have defined obs. columns for obs table + residuals and stationscolumns getters. Note that obs. columns need also a function compatible with the path structure in processing file.
 
--> Columns for instrument line are ready, but they are not accessible in the object.
+-> Columns for instrument line are ready, but they are not accessible in the object, so needs to be added later.
 
 #### Single file compilation
+
+In this part is explained, how to change (and how was changed) the react project from classical create-react-app template to template, which builds all the project into a single index.html.
 
 Firstly, install rewired and webpack plugins as
 
@@ -73,6 +75,10 @@ Histograms:
 - !! apriori sigma for the observation
 - !!! gaussian curve -> the data are in res file, center of gaussian is result, and the span is in ECART-TYPE
 
+Stations Table:
+
+- ~~! Add support for measurement types~~
+
 3d Point Table:
 
 - ! take Sigma data from diagonal !!!
@@ -87,7 +93,7 @@ Histograms:
 
 Observation Table:
 
-- ! to adding more types of observations, they mainly need ANGL ZEND DIST LEVELING(DLEV, DVER) ECHO PLR3D
+- ! Add formatting - whene there is no value, make the field gray
 - ! display only some columns by default, the others will be turned on with switcehs (they need to agree on what is displayed, most of it should be available though)
 - ! height and header data -> Tooltip ok, but with the link to LGC input file
 - ! highlights -> RES/SIG over 3 should be highlighted
@@ -98,11 +104,6 @@ Observation Table:
 - ! add column saying the frame where it was defined
 - !!! filter icon on the header (search field) (maybe add another header with filet icons)
 
-Frames:
-
-- ! one table with all frames with their parameters
-- ! tree diagram of frames with transformation information on edges
-
 Instrument positions overview:
 
 - !! filtering by units ?
@@ -110,6 +111,8 @@ Instrument positions overview:
 
 Frames:
 
+- ~~! one table with all frames with their parameters~~
+- ~~! tree diagram of frames with transformation information on edges~~
 - ! tree plot collapsible
 - ! tree plot line to jump to frame definition (link) from node
 - ! table fixedTranfParams should be visible in table - color tx ty etc, + make sigmas no_value if it is fixed + legend for colors

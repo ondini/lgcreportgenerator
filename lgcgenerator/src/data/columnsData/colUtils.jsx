@@ -4,8 +4,6 @@ import { pointTypes } from "../constants";
 // ============= COLUMNS UTILITY FUNCTIONS ===============
 // =======================================================
 
-export const linkPathPlaceholder = "linkPathPlaceholder";
-
 export function generateNumFormatter(decimals, factor) {
   // function for generating other function which serves as number formatter for the DataGrid
   return (params) => {

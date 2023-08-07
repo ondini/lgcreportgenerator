@@ -6,6 +6,8 @@ export const pointTypesBE = ["POIN", "VYZ", "VXZ", "VZ", "VXY", "VY", "VX", "CAL
 export const noSrcMeasTypes = ["fOBSXYZ", "fRADI", "fDVER"]; // measurement types that do not have a source instrument
 export const NAVBAR_WIDTH_WIDE = "200px";
 
+export const linkPathPlaceholder = "linkPathPlaceholder";
+
 const angleRad2CC = 63.662 * 10000; // radians to centesimal circle conv. factor
 const angleRad2GON = 63.662; // radians to gon conv. factor
 const distM2HMM = 100000; // meters to hundredths of milimeter conv. factor

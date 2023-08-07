@@ -6,6 +6,7 @@ import Title from "../../components/Title";
 import "./Histogram.css";
 import Switch from "@mui/material/Switch";
 import { noSrcMeasTypes } from "../../data/constants";
+import { linkPathPlaceholder } from "../../data/constants";
 
 const makeBinDescs = (data, key, nbinsx, binsx) => {
   // function that creates descriptions for each bin
@@ -36,7 +37,6 @@ const makeBinDescs = (data, key, nbinsx, binsx) => {
   while (binsCounts[i] === 0) {
     i++;
   }
-
   return binsDescs.slice(i);
 };
 
@@ -147,6 +147,22 @@ const makeNormPlotData = (measTypes, residuals) => {
   return plotData;
 };
 
+const handleHistogramClick = (event) => {
+  if (event.event.ctrlKey) {
+    let firstObs = event.points[0].customdata.split("<br>")[1].split(":");
+    const tgtLine = firstObs[firstObs.length === 3 ? 2 : 1];
+
+    console.log(tgtLine);
+    window.location.href = `surveypad://link//${linkPathPlaceholder},${tgtLine}`;
+
+    // const link = document.createElement("a");
+    // link.href = `surveypad://link//${linkPathPlaceholder},${tgtLine}`;
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
+  }
+};
+
 const Histogram = ({ data }) => {
   // Function representing the Histogram section of the app
   // It is a Plotly component with a button menu to select the measurement type and turn off the filter by instrument
@@ -169,6 +185,7 @@ const Histogram = ({ data }) => {
           <Plot
             data={makePlotData(residuals[measType].residualsData, measType, key, 30, filterInstr)}
             layout={{ title: key, bargroupgap: 0.2, barmode: "stack" }}
+            onClick={handleHistogramClick}
           />
         </div>
       );

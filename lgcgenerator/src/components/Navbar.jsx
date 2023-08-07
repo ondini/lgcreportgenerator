@@ -1,5 +1,6 @@
 import { List, ListItemButton, ListItemText, Drawer, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import mainLogo from "../data/imgs/GM.png";
 
 import { NAVBAR_WIDTH_WIDE } from "../data/constants";
 
@@ -19,11 +20,16 @@ const ListStyled = styled("div")({
   flexDirection: "column",
   height: "100%",
   width: "100%",
-  justifyContent: "space-between",
+  justifyContent: "flex-start",
 });
 
 const sidebarWideContent = (
   <ListStyled>
+    <Box sx={{ p: 4 }}>
+      <a href="#top">
+        <img src={mainLogo} alt="GM logo" width={"100%"} />
+      </a>
+    </Box>
     <List sx={{ p: 1 }}>
       {sidebarItems.map((item, index) => (
         <NavItem key={item.title} item={item} />
@@ -56,7 +62,7 @@ const Navbar = ({ mobileOpen, handleDrawerToggle }) => {
   return (
     <Box component="nav" aria-label="nav links">
       {/* MOBILE DRAWER */}
-      <Drawer
+      {/* <Drawer
         variant="temporary"
         open={mobileOpen}
         onClose={handleDrawerToggle}
@@ -72,7 +78,7 @@ const Navbar = ({ mobileOpen, handleDrawerToggle }) => {
         }}
       >
         {sidebarWideContent}
-      </Drawer>
+      </Drawer> */}
 
       {/* DESKTOP DRAWER WIDE */}
       <Drawer
