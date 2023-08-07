@@ -28,6 +28,13 @@ export function fieldGen(field, headerName, args = {}) {
     show: true,
     sortable: true,
     unitConv: (x) => x,
+    renderCell: (params) => {
+      let cellStyle = { padding: '0.5rem' };
+      if (typeof(params.value) != 'string' && (params.value === undefined || isNaN(params.value)) ) {
+        cellStyle = { backgroundColor: '#e6e6e6', width: '100%', height: '100%' };
+      }
+      return <span style={cellStyle}>{params.value}</span>;
+    },
   };
 
   Object.keys(args).forEach((key) => {

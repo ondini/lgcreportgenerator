@@ -15,7 +15,7 @@ import { styled } from "@mui/material/styles";
 
 import { useState } from "react";
 
-const dataFile = "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json"; 
+const dataFile = "Example.json";
 //const dataFile = "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json";
 const GMData = require(`./jsons_tmp/${dataFile}`);
 
@@ -43,7 +43,7 @@ function App() {
         <Point3DTable data={GMData} />
         <ObservationsTable data={GMData} />
         <FrameTable data={GMData} />
-        <FrameTree data={GMData}/>
+        <FrameTree data={GMData} />
       </MainLayoutStyle>
     </div>
   );
