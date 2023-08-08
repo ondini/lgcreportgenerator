@@ -67,7 +67,7 @@ const makePlotLayout = (residuals, key, nbinsx, binsx, name) => {
   // usable by Plotly, possibly as one of many traces in a plot
 
   let resBinData = makeBinDescs(residuals, key, nbinsx, binsx);
-
+  console.log(resBinData);
   return {
     x: residuals[key],
     customdata: resBinData, // customdata is used to display the obs. information in the hovertemplate
