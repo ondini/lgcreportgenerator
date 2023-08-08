@@ -414,8 +414,11 @@ const getTSTNObsRows = (measurement) => {
             // reduce over all observations
             for (const key of Object.keys(cols)) {
               // check all data defined in cols
+              if (key !== "TYPE"){
               columns[key].push(getTSTNRowVal(allColPaths, curr, cols, [i, j], measName, key));
+              }
             }
+            columns["TYPE"].push(measName.slice(4));
           }
         }
       });

@@ -31,6 +31,8 @@ const FrameTree = ({ data }) => {
             pathFunc={"straight"}
             separation={{ nonSiblings: 1, siblings: 0.5 }}
             depthFactor={350}
+            translate={{ x: 400, y: 600 }}
+            zoom={0.2}
           />
         </div>
       </div>

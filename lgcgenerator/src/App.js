@@ -15,9 +15,9 @@ import { styled } from "@mui/material/styles";
 
 import { useState } from "react";
 
-const dataFile = "Placeholder.json"; // "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json";
+const dataFile = "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json"; // "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json";
 //const dataFile = "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json";
-const GMData = require("./data/Placeholder.json"); // `./jsons_tmp/${dataFile}`);
+const GMData = require(`./jsons_tmp/${dataFile}`);
 
 const MainLayoutStyle = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {

@@ -40,7 +40,7 @@ export const generateTSTNObsCols = () => {
     // ========== OBS DATA ========== //
     INSID: fieldGen("INSID", "Instr. ID", {
       flex: 1,
-      minWidth: 100,
+      minWidth: 130,
       cellClassName: "name-column--cell border-right--cell",
       path: "instrument/ID",
     }), // instrument id
@@ -90,6 +90,7 @@ export const generateTSTNObsCols = () => {
         return <a href={`surveypad://link//${linkPathPlaceholder},${TGTLINE}`}>{TGTLINE}</a>;
       },
     }), // target line
+    TYPE: fieldGen("TYPE", "Type", { cellClassName: "border-right--cell" }), // type of measurement
 
     // ========== ANGL ========== //
     OBSANGL: fieldGen("OBSANGL", "Obs. Angle", {
