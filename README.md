@@ -68,7 +68,7 @@ Header
 
 Histograms:
 
-- CTRL + CLICK on cell -> go to the first observations in input file (is useful mainly if there is only one obs in the cell)
+- ~~CTRL + CLICK on cell -> go to the first observations in input file (is useful mainly if there is only one obs in the cell)~~
 - ~~! Normalize all residuals values by SIGMA (=RES/SIG col), and plot it in separate histogram~~
 - ! Changing number of bins
 - ! observation type and line number on normalized join histogram hover

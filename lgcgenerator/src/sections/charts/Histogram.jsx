@@ -67,7 +67,6 @@ const makePlotLayout = (residuals, key, nbinsx, binsx, name) => {
   // usable by Plotly, possibly as one of many traces in a plot
 
   let resBinData = makeBinDescs(residuals, key, nbinsx, binsx);
-  console.log(resBinData);
   return {
     x: residuals[key],
     customdata: resBinData, // customdata is used to display the obs. information in the hovertemplate
@@ -152,7 +151,7 @@ const handleHistogramClick = (event) => {
     let firstObs = event.points[0].customdata.split("<br>")[1].split(":");
     const tgtLine = firstObs[firstObs.length === 3 ? 2 : 1];
 
-    console.log(tgtLine);
+    // console.log(tgtLine);
     window.location.href = `surveypad://link//${linkPathPlaceholder},${tgtLine}`;
 
     // const link = document.createElement("a");

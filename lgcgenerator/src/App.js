@@ -15,7 +15,7 @@ import { styled } from "@mui/material/styles";
 
 import { useState } from "react";
 
-const dataFile = "21517v2_mx_TSTN.json";
+const dataFile = "Example.json";
 //const dataFile = "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json";
 const GMData = require(`./jsons_tmp/${dataFile}`);
 
