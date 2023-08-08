@@ -1,6 +1,7 @@
 import { List, ListItemButton, ListItemText, Drawer, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import mainLogo from "../data/imgs/GM.png";
+import LogoSection from "../data/imgs/Logo";
 
 import { NAVBAR_WIDTH_WIDE } from "../data/constants";
 
@@ -27,7 +28,10 @@ const sidebarWideContent = (
   <ListStyled>
     <Box sx={{ p: 4 }}>
       <a href="#top">
-        <img src={mainLogo} alt="GM logo" width={"100%"} />
+        {/* <img src={mainLogo} alt="GM logo" width={"100%"} /> */}
+        <LogoSection
+      sx={{ p: 2, mt: 2, mr: 1}}
+    />
       </a>
     </Box>
     <List sx={{ p: 1 }}>

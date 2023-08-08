@@ -2,7 +2,20 @@ import { Box } from "@mui/material";
 import "./Header.css";
 import { measurementTypes } from "../data/constants";
 import { numFormatter } from "../data/columnsData/colUtils";
+
 const Header = ({ data, fName }) => {
+  const date_options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: 'short',
+  };
+  const date = new Date(data.startProcessingTimestamp);
+
+
   return (
     <header className="header" id="header">
       <div className="headerRow">
@@ -15,7 +28,7 @@ const Header = ({ data, fName }) => {
           <p class="fieldName">Source file name: </p>
           <p class="fieldContent"> {fName} </p>
           <p class="fieldContent">
-            Computed on {"X"} with processing time of {"X"}
+            Computed on {date.toLocaleString('en-US', date_options)} with processing time of {numFormatter(data.processingElapsedSeconds, 4)}s.
           </p>
         </div>
         <div className="info">
@@ -44,38 +57,50 @@ const Header = ({ data, fName }) => {
         <div className="info">
           <p class="title">Dataset</p>
           <p> Number of frames: {data.LGC_DATA.tree.length}</p>
-          <p> Unknown frames intorducted: {} </p>
+          <p> Unknown frames introduced: {} </p>
           {data.LGC_DATA.points && (
             <>
               <p> Number of points: {data.LGC_DATA.points.length} </p>
-              <p> Unknown points intorducted: {}</p>
+              <p> Unknown points introduced: {}</p>
             </>
           )}
           {/* -- compute fixed state false in points.{" "} */}
           {data.LGC_DATA.angles && (
             <>
               <p> Number of angles: {data.LGC_DATA.angles.length} </p>
-              <p> Unknown angles intorducted: {}</p>
+              <p> Unknown angles introduced: {}</p>
             </>
           )}
           {data.LGC_DATA.distances && (
             <>
               <p> Number of distances: {data.LGC_DATA.distances.length} </p>
-              <p> Unknown distances intorducted: {}</p>
+              <p> Unknown distances introduced: {}</p>
             </>
           )}
-          {data.LGC_DATA.planes.length && (
+          {data.LGC_DATA.planes.length>0 && (
             <>
               <p> Number of planes: {data.LGC_DATA.planes.length} </p>
-              <p> Unknown planes intorducted: {}</p>
+              <p> Unknown planes introduced: {}</p>
             </>
           )}
-          {/* -- compute fixed state false in all fixed fields plues reference */}
-          point fixed. Numbers of POINT types:
-          <p> {data.LGC_DATA.fPointInfo.fNumCala} </p>
-          Number of Measurement types:
-          {data.LGC_DATA.fMeasInfo.fNumANGL}
+          {/* -- compute fixed state false in all fixed fields plues reference point fixed.*/}
           {/* <p> Number of lines: {data.LGC_DATA.lines.length} </p> --- TODO FOR WHEN lines are supported by LGC */}
+        </div>
+        <div className="info">
+          <p class="title">Point type numbers:</p>
+          {
+            Object.keys(data.LGC_DATA.fPointInfo).map((pointType) => {
+              return data.LGC_DATA.fPointInfo[pointType] > 0 ? <p>{pointType.slice(1)}: {data.LGC_DATA.fPointInfo[pointType]}</p> : null;
+            })
+          }
+        </div>
+        <div className="info">
+          <p class="title">Measurement type numbers:</p>
+          {
+            Object.keys(data.LGC_DATA.fMeasInfo).map((measType) => {
+              return data.LGC_DATA.fMeasInfo[measType] > 0 ? <p>{measType.slice(1)}: {data.LGC_DATA.fMeasInfo[measType]}</p> : null;
+            })
+          }
         </div>
       </div>
     </header>
