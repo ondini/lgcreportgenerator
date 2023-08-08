@@ -20,6 +20,7 @@ const generateTableStyle = () => {
     "& .MuiDataGrid-cell": {
       // borderBottom: "dashed  1px",
       // borderColor: theme.palette.border.main,
+      padding: "0rem",
     },
     "& .border-right--cell": {
       borderRight: "solid  1px #e0e0e0",
