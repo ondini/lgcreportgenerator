@@ -9,6 +9,8 @@ import {
     generateECWSObsCols,
     generateECWIObsCols,
     generateDVERObsCols,
+    generateDLEVObsCols,
+    generateINCLYObsCols
  } from './obsTableCols.jsx';
 
  import {
@@ -29,7 +31,9 @@ export {
     generateORIEObsCols,
     generateECWIObsCols,
     generateDVERObsCols,
-        
+    generateDLEVObsCols,
+    generateINCLYObsCols,
+    
     generateStationsCols,
     generateFrameCols,
     generatePoint3DCols

@@ -16,6 +16,16 @@ export function numFormatter(number, decimals) {
   return Math.round(number * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
 }
 
+function addTrailingZeros(num, numDecs) {
+  let str = String(num);
+
+  let decs = str.split(".");
+  if (decs.length == 1) {
+    str += ".";
+  }
+  return str.padEnd(numDecs + decs[0].length + 1, "0");
+}
+
 export function fieldGen(field, headerName, args = {}) {
   // function generating template for DataGrid column definition
   let defaultArgs = {
@@ -27,21 +37,24 @@ export function fieldGen(field, headerName, args = {}) {
     sortable: true,
     unitConv: (x) => x,
     renderCell: (params) => {
+      // console.log(params);
       let cellStyle = { padding: "0.5rem" };
+      let value = params.value === undefined || isNaN(params.value) ? params.value : params.formattedValue;
       if (typeof params.value != "string" && (params.value === undefined || isNaN(params.value))) {
         cellStyle = { backgroundColor: "#f0ebeb", width: "100%", height: "100%" };
+      } else if (typeof params.value != "string" && !isNaN(params.value) && params.value != undefined) {
+        cellStyle = { ...cellStyle, textAlign: "right" };
+        value = addTrailingZeros(params.formattedValue, params.colDef.numDecs);
       }
-      return (
-        <span style={cellStyle}>
-          {params.value === undefined || isNaN(params.value) ? params.value : params.formattedValue}
-        </span>
-      );
+      return <span style={cellStyle}>{value}</span>;
     },
   };
 
   Object.keys(args).forEach((key) => {
     if (key === "numDecs") {
       defaultArgs.valueFormatter = generateNumFormatter(args[key], 1);
+      defaultArgs.align = "right";
+      defaultArgs.type = "number";
     }
     defaultArgs[key] = args[key];
   });

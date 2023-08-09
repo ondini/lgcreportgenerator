@@ -2,47 +2,48 @@ import { Box } from "@mui/material";
 import "./Header.css";
 import { measurementTypes } from "../data/constants";
 import { numFormatter } from "../data/columnsData/colUtils";
+import { linkPathPlaceholder } from "../data/constants";
 
 const Header = ({ data, fName }) => {
   const date_options = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    timeZoneName: 'short',
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZoneName: "short",
   };
   const date = new Date(data.startProcessingTimestamp);
-
 
   return (
     <header className="header" id="header">
       <div className="headerRow">
         <div className="info">
           <h1> LGC Report</h1>
-          <p class="version">LGC2 {data.LGCVersion} </p>
-          <p class="copyright">LGC2 {data.fCopyright} </p>
-          <p class="fieldName">File name: </p>
-          <p class="title">{data.LGC_DATA.config.title} </p>
-          <p class="fieldName">Source file name: </p>
-          <p class="fieldContent"> {fName} </p>
-          <p class="fieldContent">
-            Computed on {date.toLocaleString('en-US', date_options)} with processing time of {numFormatter(data.processingElapsedSeconds, 4)}s.
+          <p className="version">LGC2 {data.LGCVersion} </p>
+          <p className="copyright">LGC2 {data.fCopyright} </p>
+          <p className="fieldName">File name: </p>
+          <p className="title">{data.LGC_DATA.config.title} </p>
+          <p className="fieldName">Source file name: </p>
+          <p className="fieldContent"> {`${linkPathPlaceholder}`} </p>
+          <p className="fieldContent">
+            Computed on {date.toLocaleString("en-US", date_options)} with processing time of{" "}
+            {numFormatter(data.processingElapsedSeconds, 4)}s.
           </p>
         </div>
         <div className="info">
-          <p class="fieldName">Supported meas. types</p>
+          <p className="fieldName">Supported meas. types</p>
           <ul>
             {measurementTypes.map((measType) => {
-              return <p>{measType.slice(1)}</p>;
+              return <p key={measType}>{measType.slice(1)}</p>;
             })}
           </ul>
         </div>
       </div>
       <div className="headerRow">
         <div className="info">
-          <p class="title">Statistics</p>
+          <p className="title">Statistics</p>
           <p> Number of observations: {data.LGC_DATA.fUEOIndices.OIndex} </p>
           <p> Number of unkowns: {data.LGC_DATA.fUEOIndices.UIndex} </p>
           <p> Number of constraints: {data.LGC_DATA.fUEOIndices.CIndex} </p>
@@ -55,7 +56,7 @@ const Header = ({ data, fName }) => {
           <p>Number of iterations: {data.LGC_DATA.fLSRelatedInfo.fNumberOfLSIterations}</p>
         </div>
         <div className="info">
-          <p class="title">Dataset</p>
+          <p className="title">Dataset</p>
           <p> Number of frames: {data.LGC_DATA.tree.length}</p>
           <p> Unknown frames introduced: {} </p>
           {data.LGC_DATA.points && (
@@ -77,7 +78,7 @@ const Header = ({ data, fName }) => {
               <p> Unknown distances introduced: {}</p>
             </>
           )}
-          {data.LGC_DATA.planes.length>0 && (
+          {data.LGC_DATA.planes.length > 0 && (
             <>
               <p> Number of planes: {data.LGC_DATA.planes.length} </p>
               <p> Unknown planes introduced: {}</p>
@@ -87,20 +88,24 @@ const Header = ({ data, fName }) => {
           {/* <p> Number of lines: {data.LGC_DATA.lines.length} </p> --- TODO FOR WHEN lines are supported by LGC */}
         </div>
         <div className="info">
-          <p class="title">Point type numbers:</p>
-          {
-            Object.keys(data.LGC_DATA.fPointInfo).map((pointType) => {
-              return data.LGC_DATA.fPointInfo[pointType] > 0 ? <p>{pointType.slice(1)}: {data.LGC_DATA.fPointInfo[pointType]}</p> : null;
-            })
-          }
+          <p className="title">Point type numbers:</p>
+          {Object.keys(data.LGC_DATA.fPointInfo).map((pointType) => {
+            return data.LGC_DATA.fPointInfo[pointType] > 0 ? (
+              <p key={pointType}>
+                {pointType.slice(1)}: {data.LGC_DATA.fPointInfo[pointType]}
+              </p>
+            ) : null;
+          })}
         </div>
         <div className="info">
-          <p class="title">Measurement type numbers:</p>
-          {
-            Object.keys(data.LGC_DATA.fMeasInfo).map((measType) => {
-              return data.LGC_DATA.fMeasInfo[measType] > 0 ? <p>{measType.slice(1)}: {data.LGC_DATA.fMeasInfo[measType]}</p> : null;
-            })
-          }
+          <p className="title">Measurement type numbers:</p>
+          {Object.keys(data.LGC_DATA.fMeasInfo).map((measType) => {
+            return data.LGC_DATA.fMeasInfo[measType] > 0 ? (
+              <p key={measType}>
+                {measType.slice(1)}: {data.LGC_DATA.fMeasInfo[measType]}
+              </p>
+            ) : null;
+          })}
         </div>
       </div>
     </header>

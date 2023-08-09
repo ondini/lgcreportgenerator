@@ -3,6 +3,9 @@ import { getData } from "../../data_processing/processing";
 import Title from "../../components/Title";
 
 const mergeMeasTypesData = (data) => {
+  if (Object.keys(data).length === 0) {
+    return [[], []];
+  }
   let mergedData = [];
   Object.keys(data).forEach((measType) => {
     mergedData = mergedData.concat(data[measType].data);
@@ -13,7 +16,7 @@ const mergeMeasTypesData = (data) => {
 export default function StationsTable({ data }) {
   const observations = getData(data.LGC_DATA, "STAT");
   // const measTypes = Object.keys(observations); // get all the used measurement types from the residuals data
-
+  console.log(observations);
   let [rows, columns] = mergeMeasTypesData(observations);
 
   return (

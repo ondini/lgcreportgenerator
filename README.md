@@ -64,7 +64,7 @@ you will obtain self standing **index.html** file in the build/ folder.
 
 Header
 
-- ! add the contents of the collapsible header part, and call the section metadata
+- ~~! add the contents of the collapsible header part, and call the section metadata~~
 
 Histograms:
 
@@ -83,7 +83,7 @@ Stations Table:
 
 - ! take Sigma data from diagonal !!!
 - ! we need 0 padding for columns (trailing zeros)
-- ! we need esport to csv perhaps
+- ! we need export to csv perhaps
 - ! mark columns by categories (vertical line)
 - ~~! take sigmas from fCovarianceMatrixInRoot~~
 - !! hidden columns with the value in subframe (add hidden 6 columns to 3D pts table (3x coords + 3x uncertainties from diagonal!))
@@ -93,11 +93,11 @@ Stations Table:
 
 Observation Table:
 
-- ! Add formatting - whene there is no value, make the field gray
+- ~~! Add formatting - when there is no value, make the field gray~~
 - ! display only some columns by default, the others will be turned on with switcehs (they need to agree on what is displayed, most of it should be available though)
 - ! height and header data -> Tooltip ok, but with the link to LGC input file
 - ! highlights -> RES/SIG over 3 should be highlighted
-- ! alltogether PLRD3 and ANGLE/ZEND/DIST
+- ~~! alltogether PLRD3 and ANGLE/ZEND/DIST~~
 - ! copy from cells problem (cannot copy it from clickable tooltip)
 - ! build a list of togglable stations+line, that they can toggle (for all tables with stations)
 - ! residuals and sigma columns should be sorted by the absolute value - add column with abs values(Res/Sig)
@@ -121,7 +121,7 @@ Frames:
 General stuff:
 
 - ~~! navigation bar~~
-- ! filter nuerical values
+- ! filter numerical values
 - ! formatting!
 - ~~! add table resume de mesures~~
 - ! put units everywhere it is possible

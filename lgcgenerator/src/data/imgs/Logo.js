@@ -8,8 +8,6 @@ const Logo = () => {
         xmlns="http://www.w3.org/2000/svg"
         version="1.1"
         viewBox="0 0 1325 1038"
-        width={NAVBAR_WIDTH_WIDE * 0.8}
-        height={(1038 * 1325) / NAVBAR_WIDTH_WIDE / 0.8}
         style={{
           shapeRendering: "geometricPrecision",
           textTendering: "geometricPrecision",

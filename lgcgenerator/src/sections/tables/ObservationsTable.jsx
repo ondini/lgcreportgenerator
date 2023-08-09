@@ -80,7 +80,9 @@ export default function ObservationsTable({ data }) {
   let [key, setKey] = useState(measTypes[0]); // state of the currently active measurement type
 
   useEffect(() => {
-    setTable(createTable(key));
+    if (key) {
+      setTable(createTable(key));
+    }
   }, [key]);
 
   let measTypeButtons = measTypes.map((key) => {

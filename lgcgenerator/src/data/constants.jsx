@@ -1,4 +1,16 @@
-export const measurementTypes = ["fTSTN", "fOBSXYZ", "fECWS", "fECWI", "fECHO", "fRADI", "fEDM", "fORIE", "fDVER"];
+export const measurementTypes = [
+  "fTSTN",
+  "fOBSXYZ",
+  "fECWS",
+  "fECWI",
+  "fECHO",
+  "fRADI",
+  "fEDM",
+  "fORIE",
+  "fDVER",
+  "fLEVEL",
+  "fINCLY",
+];
 
 export const pointTypes = ["POIN", "VXY", "VXZ", "VX", "VYZ", "VY", "VZ", "CALA"];
 export const pointTypesBE = ["POIN", "VYZ", "VXZ", "VZ", "VXY", "VY", "VX", "CALA"]; // point types in Big Endian encoding order

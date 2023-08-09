@@ -177,18 +177,20 @@ const Histogram = ({ data }) => {
     const nonResKeys = ["TGTPOS", "TGTLINE", "INSPOS", "INSLINE"]; // keys that are not residuals
 
     let histograms = [];
-    Object.keys(residuals[measType].residualsData).forEach((key) => {
-      if (nonResKeys.includes(key) || key.indexOf("RESSIG") !== -1) return;
-      histograms.push(
-        <div className="histsec-plots-plot" key={measType + key}>
-          <Plot
-            data={makePlotData(residuals[measType].residualsData, measType, key, 30, filterInstr)}
-            layout={{ title: key, bargroupgap: 0.2, barmode: "stack" }}
-            onClick={handleHistogramClick}
-          />
-        </div>
-      );
-    });
+    if (measType) {
+      Object.keys(residuals[measType].residualsData).forEach((key) => {
+        if (nonResKeys.includes(key) || key.indexOf("RESSIG") !== -1) return;
+        histograms.push(
+          <div className="histsec-plots-plot" key={measType + key}>
+            <Plot
+              data={makePlotData(residuals[measType].residualsData, measType, key, 30, filterInstr)}
+              layout={{ title: key, bargroupgap: 0.2, barmode: "stack" }}
+              onClick={handleHistogramClick}
+            />
+          </div>
+        );
+      });
+    }
     return histograms;
   };
 

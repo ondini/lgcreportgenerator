@@ -12,6 +12,8 @@ import {
   generateStationsCols,
   generateFrameCols,
   generatePoint3DCols,
+  generateDLEVObsCols,
+  generateINCLYObsCols,
 } from "../data/columnsData";
 import { measurementTypes, pointTypes } from "../data/constants";
 
@@ -51,6 +53,10 @@ const getFromDict = (data, path, iteratorVals, unitConv) => {
         key = iteratorVals[itIndex++];
       } else if (["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"].includes(key)) {
         key = parseInt(key);
+      }
+      if (!(key in res)) {
+        // console.log("Error: path not found: " + path);
+        return undefined;
       }
       res = res[key];
     });
@@ -129,6 +135,8 @@ const obsTypeSelector = (measurement, type) => {
     case "fECHO":
     case "fEDM":
     case "fORIE":
+    case "fLEVEL":
+    case "fINCLY":
       return getXObsRows(measurement, type);
     case "fRADI":
     case "fOBSXYZ":
@@ -170,6 +178,14 @@ const statTypeSelector = (measurement, type) => {
       return getNTStationRows(measurement, ["fRADI", "radiSummary_"]);
     case "fDVER":
       return getNTStationRows(measurement, ["fDVER", "dverSummary_"]);
+    case "fINCLY":
+      return getXStationRows(measurement, ["fINCLY", "inclySummary_"]);
+    case "fLEVEL":
+      let dlevRows = getXStationRows(measurement, ["fLEVEL", "dlevSummary_"]);
+      let dhorRows = getXStationRows(measurement, ["fLEVEL", "dhorSummary_"]);
+      console.log(dlevRows, dhorRows);
+      console.log(dlevRows.data.concat(dhorRows.data));
+      return { data: dlevRows.data.concat(dhorRows.data), columnDetails: dlevRows.columnDetails };
     default:
       return {};
   }
@@ -193,6 +209,10 @@ const generateObsCols = (type) => {
       return generateORIEObsCols();
     case "fDVER":
       return generateDVERObsCols();
+    case "fLEVEL":
+      return generateDLEVObsCols();
+    case "fINCLY":
+      return generateINCLYObsCols();
     default:
       return {};
   }
@@ -304,12 +324,14 @@ const getXStationRows = (measurement, path) => {
   const [obsType, sumPath] = path;
 
   let obsData = measurement[obsType].reduce((acc, curr) => {
-    for (const key of Object.keys(cols)) {
-      if (key !== "TYPE") {
-        acc[key].push(curr[sumPath][cols[key].keyword]);
+    if (curr[sumPath].fIsInitialised) {
+      for (const key of Object.keys(cols)) {
+        if (key !== "TYPE") {
+          acc[key].push(curr[sumPath][cols[key].keyword]);
+        }
       }
+      acc["TYPE"].push(sumPath.slice(0, -8).toUpperCase());
     }
-    acc["TYPE"].push(obsType.slice(1));
     return acc;
   }, columns);
 
@@ -414,8 +436,8 @@ const getTSTNObsRows = (measurement) => {
             // reduce over all observations
             for (const key of Object.keys(cols)) {
               // check all data defined in cols
-              if (key !== "TYPE"){
-              columns[key].push(getTSTNRowVal(allColPaths, curr, cols, [i, j], measName, key));
+              if (key !== "TYPE") {
+                columns[key].push(getTSTNRowVal(allColPaths, curr, cols, [i, j], measName, key));
               }
             }
             columns["TYPE"].push(measName.slice(4));

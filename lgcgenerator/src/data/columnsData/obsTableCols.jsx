@@ -638,6 +638,182 @@ export const generateDSPTObsCols = () => {
 // =========== LEVEL TYPE COLUMNS ============== //
 // ============================================= //
 
+// ========== DLEV OBS. TABLE COLUMNS ========== //
+export const generateDLEVObsCols = () => {
+  return {
+    // ========== TOOLTIP DATA ========== //
+    REFPOS: fieldGen("REFPOS", "REFPOS", {
+      show: false,
+      path: "fRefPt/fName",
+    }), // reference string orientation
+    REFLINE: fieldGen("REFLINE", "REFLINE", {
+      show: false,
+      path: "fRefPt/line",
+    }), // reference string orientation
+    X: fieldGen("X", "X", {
+      show: false,
+      path: "fRefPt/fEstimatedValueInRoot/fVector/0",
+    }), // reference point x coordinate
+    Y: fieldGen("Y", "Y", {
+      show: false,
+      path: "fRefPt/fEstimatedValueInRoot/fVector/1",
+    }), // reference point y coordinate
+    Z: fieldGen("Z", "Z", {
+      show: false,
+      path: "fRefPt/fEstimatedValueInRoot/fVector/2",
+    }), // reference point z coordinate
+    HDIST: fieldGen("HDIST", "HDIST", {
+      show: false,
+      path: "fMeasuredPlane/fEstValRefPointDist",
+      unitConv: distM2MMf,
+    }), // reference string x coordinate
+    SHDIST: fieldGen("SHDIST", "SHDIST", {
+      show: false,
+      path: "fMeasuredPlane/fEstPrecisionRefPtDist",
+      unitConv: distM2MMf,
+    }), // reference string y coordinate
+
+    // ========== OBS DATA ========== //
+    INSPOS: fieldGen("INSPOS", "Reference. Pt.", {
+      flex: 1,
+      minWidth: 200,
+      path: "instrument/ID",
+      cellClassName: "name-column--cell border-right--cell",
+      renderCell: ({ row }) => {
+        return (
+          <InstrumentTooltip
+            title={row.INSPOS}
+            details={
+              <>
+                <div>
+                  <b>Ref. point:</b> X (M): {numFormatter(row.X, 5)} Y (M): {numFormatter(row.Y, 5)} Z (M):{" "}
+                  {numFormatter(row.Z, 5)}
+                </div>
+                <div>
+                  <b>Wire pars.:</b> Orient. (GON): {numFormatter(row.O, 5)} SOrient. (CC): {numFormatter(row.SO, 2)}{" "}
+                  SNormale (MM): {numFormatter(row.SN, 2)}
+                </div>
+              </>
+            }
+          />
+        );
+      },
+    }), // instrument id
+    INSLINE: fieldGen("INSLINE", "RLine", {
+      flex: 0.11,
+      minWidth: 50,
+      path: "line",
+    }), // instrument line
+    TGTPOS: fieldGen("TGTPOS", "Tgt. Pos.", {
+      flex: 1,
+      minWidth: 200,
+      path: "measDLEV/i/targetPos",
+    }), // target position
+    TGTLINE: fieldGen("TGTLINE", "TLine", {
+      flex: 0.11,
+      minWidth: 50,
+      path: "measDLEV/i/line",
+    }), // target line
+
+    // ========== DLEV DATA ========== //
+    OBS: fieldGen("OBS", "Observed", {
+      flex: 0.8,
+      minWidth: 100,
+      numDecs: 5,
+      path: "measDLEV/i/distances/0/fValue",
+    }), // observations
+    SIGMA: fieldGen("SIGMA", "Sigma", {
+      numDecs: 2,
+      path: "measDLEV/i/target/sigmaCombinedDist",
+      unitConv: distM2MMf,
+    }), // standard deviation
+    CALC: fieldGen("CALC", "Calculated", {
+      flex: 0.8,
+      minWidth: 100,
+      numDecs: 5,
+      path: "!measDLEV/i/distances/0/fValue!+!measDLEV/i/distancesResiduals/0/fValue!",
+    }), // calculated
+    RES: fieldGen("RES", "Residual", {
+      numDecs: 1,
+      path: "measDLEV/i/distancesResiduals/0/fValue",
+      unitConv: distM2MMf,
+    }), // residual
+    RESSIG: fieldGen("RESSIG", "Res./Sig.", {
+      numDecs: 2,
+      path: "!measDLEV/i/distancesResiduals/0/fValue!/!measDLEV/i/target/sigmaCombinedDist!",
+    }), // RES/SIGMA
+    COLL: fieldGen("COLL", "Collimation", {
+      numDecs: 2,
+      path: "instrument/collAngleAdjustable/fEstimatedValue",
+    }), //
+    SCOLL: fieldGen("SCOLL", "SCOLL", {
+      numDecs: 2,
+      path: "instrument/collAngleAdjustable/fEstimatedPrecision",
+    }), //
+    SCOLLFIXED: fieldGen("SCOLLFIXED", "SCOLLFIXED", {
+      show: false,
+      path: "instrument/collAngleAdjustable/ifFixed",
+      cellClassName: "border-right--cell",
+    }), //
+
+    // ========== DHOR DATA ========== //
+    DHOR: fieldGen("DHOR", "DHOR", {
+      numDecs: 2,
+      path: "measDLEV/i/dhor/distances/0/fValue",
+    }), // DHOR
+    SDHOR: fieldGen("SDHOR", "SDHOR", {
+      numDecs: 2,
+      path: "measDLEV/i/dhor/target/sigmaD",
+    }), // SDHOR
+    CALCDHOR: fieldGen("CALCDHOR", "CALCDHOR", {
+      numDecs: 2,
+      path: "!measDLEV/i/dhor/distances/0/fValue!+!measDLEV/i/dhor/distancesResiduals/0/fValue!",
+    }), // CALCDHOR
+    RESDHOR: fieldGen("RESDHOR", "RESDHOR", {
+      numDecs: 2,
+      path: "measDLEV/i/dhor/distancesResiduals/0/fValue",
+    }), // RESDHOR
+    RESSIGDHOR: fieldGen("RESSIGDHOR", "RESSIGDHOR", {
+      numDecs: 2,
+      path: "!measDLEV/i/dhor/distancesResiduals/0/fValue!/!measDLEV/i/dhor/target/sigmaD!",
+      cellClassName: "border-right--cell",
+    }), // RESSIGDHOR
+
+    // ========== TGT DATA ========== //
+    CONST: fieldGen("CONST", "Constant", {
+      numDecs: 2,
+      path: "measDLEV/i/target/distCorrectionValue",
+    }), // distance Constant
+    SCONST: fieldGen("SCONST", "Sig. Const.", {
+      numDecs: 5,
+      path: "measDLEV/i/target/sigmaDCorr",
+    }), // distance Consatnt Sigma
+    OBSE: fieldGen("OBSE", "Observ. Sig.", {
+      flex: 0.11,
+      minWidth: 50,
+      numDecs: 5,
+      path: "measDLEV/i/target/sigmaD",
+    }), // target line
+    PPM: fieldGen("PPM", "Dist. PPM", {
+      numDecs: 2,
+      path: "measDLEV/i/target/ppmD",
+    }), // distance Consatnt Sigma
+    HTGT: fieldGen("HTGT", "Tgt. height", {
+      flex: 0.11,
+      minWidth: 50,
+      numDecs: 5,
+      path: "measDLEV/i/target/staffHt",
+    }), // target height
+    THSE: fieldGen("THSE", "Tgt. height. Sig", {
+      flex: 0.11,
+      minWidth: 50,
+      numDecs: 2,
+      path: "measDLEV/i/target/sigmaStaffHt",
+      unitConv: distM2MMf,
+    }), // target
+  }; // residuals data
+};
+
 // ============================================= //
 // =========== SCALE TYPE COLUMNS ============== //
 // ============================================= //
@@ -781,6 +957,135 @@ export const generateECHOObsCols = () => {
 // ============================================= //
 // ============ INCL TYPE COLUMNS ============== //
 // ============================================= //
+
+// ========== INCLY OBS. TABLE COLUMNS ========== //
+export const generateINCLYObsCols = () => {
+  return {
+    // ========== TOOLTIP DATA ========== //
+    // HI: fieldGen("HI", "Surface Height", {
+    //   show: false,
+    //   path: "fMeasuredWSHeight/fEstimatedValue",
+    // }), // instrument height
+    // SHI: fieldGen("SHI", "SHI", {
+    //   show: false,
+    //   path: "instrumentHeightAdjustable/fEstimatedPrecision",
+    // }), // instrument height precision
+    // ROT3D: fieldGen("ROT3D", "ROT3D", { show: false, path: "rot3D" }), //
+    // ACST: fieldGen("ACST", "ACST", { show: false, path: "roms/i/acst" }), //
+    // V0: fieldGen("V0", "V0", {
+    //   show: false,
+    //   path: "roms/i/v0/fEstimatedValue",
+    //   unitConv: angleRad2GONf,
+    // }), //
+    // SV0: fieldGen("SV0", "SV0", {
+    //   show: false,
+    //   path: "roms/i/v0/fEstimatedPrecision",
+    //   unitConv: angleRad2CCf,
+    // }), //
+    // ========== OBS DATA ========== //
+    // INSID: fieldGen("INSID", "Instr. ID", {
+    //   flex: 1,
+    //   minWidth: 130,
+    //   cellClassName: "name-column--cell border-right--cell",
+    //   path: "instrument/ID",
+    // }), // instrument id
+
+    TGTPOS: fieldGen("TGTPOS", "Tgt. Pos.", {
+      flex: 1,
+      minWidth: 150,
+      path: "measINCLY/i/targetPos",
+    }), // target position
+    TGTLINE: fieldGen("TGTLINE", "TLine", {
+      flex: 0.11,
+      minWidth: 50,
+      path: "measINCLY/i/line",
+      renderCell: ({ row: { TGTLINE } }) => {
+        return <a href={`surveypad://link//${linkPathPlaceholder},${TGTLINE}`}>{TGTLINE}</a>;
+      },
+    }), // target line
+
+    // ========== DSPT ========== //
+    OBS: fieldGen("OBS", "Observed", {
+      flex: 0.8,
+      minWidth: 100,
+      numDecs: 5,
+      path: "measINCLY/i/angles/0/fValue",
+      unitConv: angleRad2GONf,
+    }), // angle observations
+    SIG: fieldGen("SIG", "Sigma", {
+      numDecs: 2,
+      path: "measINCLY/i/target/sigmaCombinedAngle",
+      unitConv: angleRad2CCf,
+    }), // standard deviation
+    CALC: fieldGen("CALC", "Calculated", {
+      flex: 0.8,
+      minWidth: 100,
+      numDecs: 5,
+      path: "!measINCLY/i/angles/0/fValue!+!measINCLY/i/anglesResiduals/0/fValue!",
+      unitConv: angleRad2GONf,
+    }), // calculated angle
+    RES: fieldGen("RES", "Residual", {
+      numDecs: 2,
+      path: "measINCLY/i/anglesResiduals/0/fValue",
+      unitConv: angleRad2CCf,
+    }), // angle residual
+    RESSIG: fieldGen("RESSIG", "Res./Sig.", {
+      numDecs: 2,
+      path: "!measINCLY/i/anglesResiduals/0/fValue!/!measINCLY/i/target/sigmaCombinedAngle!",
+    }), // angle RES/SIGMA
+    INSPOS: fieldGen("INSPOS", "Incl. ID", {
+      flex: 0.11,
+      minWidth: 50,
+      numDecs: 5,
+      path: "instrument/ID",
+    }), // target ID
+    INSLINE: fieldGen("INSLINE", "ILine", {
+      flex: 0.11,
+      minWidth: 50,
+      path: "line",
+      renderCell: ({ row: { INSLINE } }) => {
+        return <a href={`surveypad://link//${linkPathPlaceholder},${INSLINE}`}>{INSLINE}</a>;
+      },
+    }), // instrument line
+    OBSE: fieldGen("OBSE", "Observ. Sig.", {
+      flex: 0.11,
+      minWidth: 50,
+      numDecs: 5,
+      path: "measINCLY/i/target/sigmaAngl",
+    }), // target line
+    AC: fieldGen("AC", "AC", {
+      flex: 0.11,
+      minWidth: 50,
+      numDecs: 5,
+      path: "measINCLY/i/target/angleCorrectionValue",
+    }), // target line
+    ACSE: fieldGen("ACSE", "AC Sig.", {
+      flex: 0.11,
+      minWidth: 50,
+      numDecs: 5,
+      path: "measINCLY/i/target/sigmaCorrectionValue",
+    }), // target line
+    RF: fieldGen("RF", "RF", {
+      flex: 0.11,
+      minWidth: 50,
+      numDecs: 5,
+      path: "measINCLY/i/target/refAngleCorrectionValue",
+    }), // target line
+    RFSE: fieldGen("RFSE", "RF Sig.", {
+      flex: 0.11,
+      minWidth: 50,
+      numDecs: 5,
+      path: "measINCLY/i/target/refSigmaCorrectionValue",
+    }), // target line
+
+    // HLSRLINE: fieldGen("HLSRLINE", "HLSR Line", {
+    //   flex: 0.11,
+    //   minWidth: 50,
+    //   numDecs: 5,
+    //   path: "measECWS/i/target/line",
+    // }), // target ID
+  }; // residuals data
+};
 
 // ============================================= //
 // ============ HLSR TYPE COLUMNS ============== //
