@@ -138,9 +138,9 @@ General stuff:
   - UVEC
   - UVD
   - ~~DSPT~~
-  - DLEV
+  - ~~DLEV~~
   - ~~ECHO~~
-  - INCLY
+  - ~~INCLY~~
   - ~~ECWS~~
   - ~~ECWI~~
   - ~~DVER~~

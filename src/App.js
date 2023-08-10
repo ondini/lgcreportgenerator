@@ -8,14 +8,16 @@ import {
   MeasurementsTable,
   FrameTable,
   FrameTree,
+  Point3DTable2,
 } from "./sections";
 import Navbar from "./components/Navbar";
 import { NAVBAR_WIDTH_WIDE } from "./data/constants";
 import { styled } from "@mui/material/styles";
 
 import { useState } from "react";
+import { getData } from "./data_processing/processing";
 
-const dataFile ="INCL.json"; // "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json";
+const dataFile ="PSR2AD-NTOF_CALA-PSR-AD.json"; // "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json";
 const GMData = require(`./jsons_tmp/${dataFile}`);
 
 const MainLayoutStyle = styled("div")(({ theme }) => ({
@@ -31,16 +33,19 @@ function App() {
     setMobileOpen(!mobileOpen);
   };
 
+  const observations = getData(GMData.LGC_DATA, "OBS");
+
   return (
     <div className="app">
       <Navbar mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
       <MainLayoutStyle>
         <Header data={GMData} fName={dataFile} />
-        <Plot3D data={GMData} />
+        {/* <Plot3D data={GMData} /> */}
         <Point3DTable data={GMData} />
+        <Point3DTable2 data={GMData} />
         <MeasurementsTable data={GMData} />
-        <Histogram data={GMData} />
-        <ObservationsTable data={GMData} />
+        <Histogram residuals={observations} />
+        <ObservationsTable observations={observations} />
         <FrameTable data={GMData} />
         <FrameTree data={GMData} />
       </MainLayoutStyle>

@@ -35,7 +35,15 @@ export function fieldGen(field, headerName, args = {}) {
     minWidth: 60,
     show: true,
     sortable: true,
+    units: "",
     unitConv: (x) => x,
+    renderHeader: (params) => (
+      <>
+        <strong>{params.colDef.headerName}</strong>
+        <span>{params.colDef.units == "" ? "" : "(" + params.colDef.units + ")"}</span>
+      </>
+    ),
+
     renderCell: (params) => {
       // console.log(params);
       let cellStyle = { padding: "0.5rem" };
@@ -51,10 +59,62 @@ export function fieldGen(field, headerName, args = {}) {
   };
 
   Object.keys(args).forEach((key) => {
+    defaultArgs[key] = args[key];
+  });
+
+  return defaultArgs;
+}
+
+export function fieldGene(field, headerName, args = {}) {
+  // function generating template for DataGrid column definition
+  let defaultArgs = {
+    accessorKey: field,
+    header: headerName,
+    flex: 0.5,
+    size: 100,
+    show: true,
+    sortable: true,
+    units: "",
+
+    unitConv: (x) => x,
+
+    Header: ({ column }) => {
+      return (
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          {" "}
+          <strong>{column.columnDef.header}</strong>
+          <span>{column.columnDef.units == "" ? "-" : "(" + column.columnDef.units + ")"}</span>
+        </div>
+      );
+    },
+
+    Cell: (params) => {
+      // console.log(params);
+      // console.log(params);
+      let cellStyle = { padding: "0.5rem" };
+      let value = params.renderedCellValue === undefined ? "aaa" : params.renderedCellValue;
+      if (params.renderedCellValue === undefined || isNaN(params.renderedCellValue)) {
+        cellStyle = { backgroundColor: "#f0ebeb", width: "100%" };
+      } else if (typeof params.renderedCellValue != "string") {
+        cellStyle = { ...cellStyle, textAlign: "right" };
+        // console.log(params.column.columnDef.numDecs);
+        value = addTrailingZeros(
+          numFormatter(params.renderedCellValue, params.column.columnDef.numDecs),
+          params.column.columnDef.numDecs
+        );
+      }
+      return <span style={cellStyle}>{value}</span>;
+    },
+  };
+
+  Object.keys(args).forEach((key) => {
     if (key === "numDecs") {
-      defaultArgs.valueFormatter = generateNumFormatter(args[key], 1);
-      defaultArgs.align = "right";
-      defaultArgs.type = "number";
+      defaultArgs["muiTableHeadCellProps"] = {
+        align: "center",
+      };
+      defaultArgs["muiTableBodyCellProps"] = {
+        align: "right",
+      };
     }
     defaultArgs[key] = args[key];
   });

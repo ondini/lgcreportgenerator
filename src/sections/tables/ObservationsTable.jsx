@@ -53,8 +53,7 @@ const generateTableStyle = () => {
 //   };
 // };
 
-export default function ObservationsTable({ data }) {
-  const observations = getData(data.LGC_DATA, "OBS"); // get the residuals data from the LGC_DATA object
+export default function ObservationsTable({ observations }) {
   const measTypes = Object.keys(observations); // get all the used measurement types from the residuals data
   const createTable = (measType) => {
     // function that creates the histogram components for each of the residuals of the selected measurement type

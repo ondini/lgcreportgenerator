@@ -162,11 +162,10 @@ const handleHistogramClick = (event) => {
   }
 };
 
-const Histogram = ({ data }) => {
+const Histogram = ({ residuals }) => {
   // Function representing the Histogram section of the app
   // It is a Plotly component with a button menu to select the measurement type and turn off the filter by instrument
 
-  const residuals = getData(data.LGC_DATA, "OBS");
   const measTypes = Object.keys(residuals); // get all the used measurement types from the residuals data
 
   const normalizedResiduals = makeNormPlotData(measTypes, residuals);

@@ -4,6 +4,8 @@ import { angleRad2CCf, angleRad2GONf, distM2HMMf, distM2MMf, angleRad2GONPosf } 
 import { numFormatter, fieldGen } from "./colUtils";
 import { linkPathPlaceholder } from "../../data/constants";
 
+import { GridColDef } from "@mui/x-data-grid";
+
 // =======================================================
 // ============= OBSERVATIONS TABLE COLUMNS ==============
 // =======================================================
@@ -30,11 +32,13 @@ export const generateTSTNObsCols = () => {
       show: false,
       path: "roms/i/v0/fEstimatedValue",
       unitConv: angleRad2GONf,
+      units: "GON",
     }), //
     SV0: fieldGen("SV0", "SV0", {
       show: false,
       path: "roms/i/v0/fEstimatedPrecision",
       unitConv: angleRad2CCf,
+      units: "CC",
     }), //
 
     // ========== OBS DATA ========== //

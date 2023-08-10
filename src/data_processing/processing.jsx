@@ -12,6 +12,7 @@ import {
   generateStationsCols,
   generateFrameCols,
   generatePoint3DCols,
+  generatePoint3DCols2,
   generateDLEVObsCols,
   generateINCLYObsCols,
 } from "../data/columnsData";
@@ -55,7 +56,7 @@ const getFromDict = (data, path, iteratorVals, unitConv) => {
         key = parseInt(key);
       }
       if (!(key in res)) {
-        // console.log("Error: path not found: " + path);
+        console.log("Error: path not found: " + path);
         return undefined;
       }
       res = res[key];
@@ -181,11 +182,11 @@ const statTypeSelector = (measurement, type) => {
     case "fINCLY":
       return getXStationRows(measurement, ["fINCLY", "inclySummary_"]);
     case "fLEVEL":
-      let dlevRows = getXStationRows(measurement, ["fLEVEL", "dlevSummary_"]);
-      let dhorRows = getXStationRows(measurement, ["fLEVEL", "dhorSummary_"]);
-      console.log(dlevRows, dhorRows);
-      console.log(dlevRows.data.concat(dhorRows.data));
-      return { data: dlevRows.data.concat(dhorRows.data), columnDetails: dlevRows.columnDetails };
+      return getXStationRows(measurement, ["fLEVEL", "dlevSummary_"]);
+    // as only dlev is populated, dhorSummary is ignored also in SP result file, so I am ignoring it here, too
+    // let dlevRows = getXStationRows(measurement, ["fLEVEL", "dlevSummary_"]);
+    // let dhorRows = getXStationRows(measurement, ["fLEVEL", "dhorSummary_"]);
+    // return { data: dlevRows.data.concat(dhorRows.data), columnDetails: dlevRows.columnDetails };
     default:
       return {};
   }
@@ -529,6 +530,23 @@ export const getFrameTreeEdges = (data) => {
 // 3D points for table
 export const get3DPointEstData = (data, colNames) => {
   let cols = generatePoint3DCols();
+  let columns = generateColsData(cols);
+
+  var obsData = data.points.reduce((acc, curr) => {
+    // reduce over all frames
+    for (const key of Object.keys(cols)) {
+      // get all data defined in cols
+      columns[key].push(getFromDict(curr, cols[key].path, [], cols[key].unitConv));
+    }
+    return acc;
+  }, columns);
+
+  return makeGridData(cols, obsData);
+};
+
+// 3D points for table
+export const get3DPointEstData2 = (data, colNames) => {
+  let cols = generatePoint3DCols2();
   let columns = generateColsData(cols);
 
   var obsData = data.points.reduce((acc, curr) => {

@@ -1,5 +1,7 @@
-import { fieldGen, getVarTypeFromFixed } from "./colUtils";
+import { fieldGen, getVarTypeFromFixed, fieldGene } from "./colUtils";
 import { distM2MMf } from "../constants";
+
+import "./otherColumns.css";
 
 // =======================================================
 // =============== POINT3D TABLE COLUMNS =================
@@ -22,6 +24,7 @@ export const generatePoint3DCols = () => {
       numDecs: 2,
       unitConv: distM2MMf,
       path: "!fEstimatedValueInRoot/fVector/0!-!fProvisionalValueInRoot/fVector/0!",
+      units: "MM",
     }),
     DY: fieldGen("DY", "DY", {
       numDecs: 2,
@@ -29,6 +32,37 @@ export const generatePoint3DCols = () => {
       path: "!fEstimatedValueInRoot/fVector/1!-!fProvisionalValueInRoot/fVector/1!",
     }),
     DZ: fieldGen("DZ", "DZ", {
+      numDecs: 2,
+      unitConv: distM2MMf,
+      path: "!fEstimatedValueInRoot/fVector/2!-!fProvisionalValueInRoot/fVector/2!",
+    }),
+  };
+};
+
+export const generatePoint3DCols2 = () => {
+  return {
+    id: fieldGene("id", "Name", { flex: 1.3, minWidth: 130, path: "fName" }),
+    TYPE: fieldGene("TYPE", "Type", { path: "fixedState", unitConv: getVarTypeFromFixed, show: false }),
+    FRAME: fieldGene("FRAME", "Frame", { flex: 0.4, minWidth: 50, path: "fFramePosition_Name" }),
+    X: fieldGene("X", "X", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedValueInRoot/fVector/0" }),
+    Y: fieldGene("Y", "Y", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedValueInRoot/fVector/1" }),
+    Z: fieldGene("Z", "Z", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedValueInRoot/fVector/2" }),
+    H: fieldGene("H", "H", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedHeightInRoot/fValue" }),
+    SX: fieldGene("SX", "SX", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fCovarianceMatrixInRoot/0/0" }),
+    SY: fieldGene("SY", "SY", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fCovarianceMatrixInRoot/1/1" }),
+    SZ: fieldGene("SZ", "SZ", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fCovarianceMatrixInRoot/2/2" }),
+    DX: fieldGene("DX", "DX", {
+      numDecs: 2,
+      unitConv: distM2MMf,
+      path: "!fEstimatedValueInRoot/fVector/0!-!fProvisionalValueInRoot/fVector/0!",
+      units: "MM",
+    }),
+    DY: fieldGene("DY", "DY", {
+      numDecs: 2,
+      unitConv: distM2MMf,
+      path: "!fEstimatedValueInRoot/fVector/1!-!fProvisionalValueInRoot/fVector/1!",
+    }),
+    DZ: fieldGene("DZ", "DZ", {
       numDecs: 2,
       unitConv: distM2MMf,
       path: "!fEstimatedValueInRoot/fVector/2!-!fProvisionalValueInRoot/fVector/2!",
