@@ -9,10 +9,10 @@ const sidebarItems = [
   { title: "Header", url: "#header" },
   { title: "3DPlot", url: "#plotPt3D" },
   { title: "Histograms", url: "#histograms" },
-  { title: "Stations Tab.", url: "#stations" },
-  { title: "3D Points Tab.", url: "#tablePt3D" },
-  { title: "Observations Tab.", url: "#observations" },
-  { title: "Frames Tab.", url: "#frames" },
+  { title: "Measurement statistics", url: "#measurements" },
+  { title: "3D Points Table", url: "#tablePt3D" },
+  { title: "Observations Table", url: "#observations" },
+  { title: "Frames Table", url: "#frames" },
   { title: "Frames Tree", url: "#framesTree" },
 ];
 
@@ -29,9 +29,7 @@ const sidebarWideContent = (
     <Box sx={{ p: 4 }}>
       <a href="#top">
         {/* <img src={mainLogo} alt="GM logo" width={"100%"} /> */}
-        <LogoSection
-      sx={{ p: 2, mt: 2, mr: 1}}
-    />
+        <LogoSection sx={{ p: 2, mt: 2, mr: 1 }} />
       </a>
     </Box>
     <List sx={{ p: 1 }}>

@@ -5,7 +5,7 @@ import {
   Histogram,
   Point3DTable,
   ObservationsTable,
-  StationsTable,
+  MeasurementsTable,
   FrameTable,
   FrameTree,
 } from "./sections";
@@ -37,9 +37,9 @@ function App() {
       <MainLayoutStyle>
         <Header data={GMData} fName={dataFile} />
         <Plot3D data={GMData} />
-        <Histogram data={GMData} />
-        <StationsTable data={GMData} />
         <Point3DTable data={GMData} />
+        <MeasurementsTable data={GMData} />
+        <Histogram data={GMData} />
         <ObservationsTable data={GMData} />
         <FrameTable data={GMData} />
         <FrameTree data={GMData} />

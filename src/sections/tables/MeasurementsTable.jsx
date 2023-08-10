@@ -13,7 +13,7 @@ const mergeMeasTypesData = (data) => {
   return [mergedData, data[Object.keys(data)[0]].columnDetails];
 };
 
-export default function StationsTable({ data }) {
+export default function MeasurementsTable({ data }) {
   const observations = getData(data.LGC_DATA, "STAT");
   // const measTypes = Object.keys(observations); // get all the used measurement types from the residuals data
   console.log(observations);
@@ -21,7 +21,7 @@ export default function StationsTable({ data }) {
 
   return (
     <div style={{ height: "900px", marginBottom: "4rem" }}>
-      <Title title={"Station positions overview"} id="stations" />
+      <Title title={"Measurement statistics"} id="measurements" />
       <DataGrid
         getRowId={(row) => {
           return Math.floor(Math.random() * 100000000000);

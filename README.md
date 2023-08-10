@@ -78,6 +78,7 @@ Histograms:
 Stations Table:
 
 - ~~! Add support for measurement types~~
+- ~~! Rename ~~
 
 3d Point Table:
 
@@ -146,6 +147,7 @@ General stuff:
   - ~~RADI~~
   - ~~OBSXYZ~~
 
+- ~~!! reorder~~
 - !! maybe lets add styling for the next user testing
 
 3D part
