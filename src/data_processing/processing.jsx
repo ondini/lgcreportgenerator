@@ -1,20 +1,11 @@
 import {
   generateTSTNPaths,
   generateTSTNObsCols,
-  generateECHOObsCols,
-  generateOBSXYZObsCols,
-  generateORIEObsCols,
-  generateRADIObsCols,
-  generateDSPTObsCols,
-  generateECWSObsCols,
-  generateECWIObsCols,
-  generateDVERObsCols,
   generateStationsCols,
   generateFrameCols,
   generatePoint3DCols,
   generatePoint3DCols2,
-  generateDLEVObsCols,
-  generateINCLYObsCols,
+  generateObsCols,
 } from "../data/columnsData";
 import { measurementTypes, pointTypes } from "../data/constants";
 
@@ -131,6 +122,8 @@ const obsTypeSelector = (measurement, type) => {
   switch (type) {
     case "fTSTN":
       return getTSTNObsRows(measurement);
+    case "fCAM":
+      return getCAMDRows(measurement);
     case "fECWI":
     case "fECWS":
     case "fECHO":
@@ -144,7 +137,7 @@ const obsTypeSelector = (measurement, type) => {
     case "fDVER":
       return getNTObsRows(measurement, type);
     default:
-      return {};
+      return { data: [], columnDetails: [] };
   }
 };
 
@@ -158,6 +151,17 @@ const statTypeSelector = (measurement, type) => {
   const fECWIPaths = [
     ["X", "ecwiSummary_", "XObsSum"],
     ["Z", "ecwiSummary_", "ZObsSum"],
+  ];
+
+  const UVDPaths = [
+    ["X", "uvdSummary_", "xVectorCompObsSum"],
+    ["Y", "uvdSummary_", "yVectorCompObsSum"],
+    ["DIST", "uvdSummary_", "distObsSum"],
+  ];
+
+  const UVECPaths = [
+    ["X", "uvecSummary_", "xVectorCompObsSum"],
+    ["Y", "uvecSummary_", "yVectorCompObsSum"],
   ];
 
   switch (type) {
@@ -187,33 +191,11 @@ const statTypeSelector = (measurement, type) => {
     // let dlevRows = getXStationRows(measurement, ["fLEVEL", "dlevSummary_"]);
     // let dhorRows = getXStationRows(measurement, ["fLEVEL", "dhorSummary_"]);
     // return { data: dlevRows.data.concat(dhorRows.data), columnDetails: dlevRows.columnDetails };
-    default:
-      return {};
-  }
-};
-
-const generateObsCols = (type) => {
-  switch (type) {
-    case "fOBSXYZ":
-      return generateOBSXYZObsCols();
-    case "fECHO":
-      return generateECHOObsCols();
-    case "fECWS":
-      return generateECWSObsCols();
-    case "fECWI":
-      return generateECWIObsCols();
-    case "fEDM":
-      return generateDSPTObsCols();
-    case "fRADI":
-      return generateRADIObsCols();
-    case "fORIE":
-      return generateORIEObsCols();
-    case "fDVER":
-      return generateDVERObsCols();
-    case "fLEVEL":
-      return generateDLEVObsCols();
-    case "fINCLY":
-      return generateINCLYObsCols();
+    case "fCAM":
+      let uvecRows = getCAMStationRows(measurement, UVECPaths);
+      let uvdRows = getCAMStationRows(measurement, UVDPaths);
+      console.log(uvecRows, uvdRows);
+      return { data: uvecRows.data.concat(uvdRows.data), columnDetails: uvecRows.columnDetails };
     default:
       return {};
   }
@@ -299,17 +281,46 @@ const getTSTNStationRows = (measurement) => {
   return makeGridData(cols, obsData);
 };
 
+const getCAMStationRows = (measurement, paths) => {
+  // function that gets data for observation table for CAM meas. type
+  let cols = generateStationsCols();
+  let columns = generateColsData(cols);
+
+  paths.forEach(([obsName, sumPath, sumType]) => {
+    // obsName is the name of the observation, X, Y ..
+    // sumPath is the path to the observation summary, uvdSummary_ ...
+    // sumType is summary type name, yVectorCompObsSum ...
+
+    measurement.fCAM.forEach((curr) => {
+      if (sumType in curr[sumPath]) {
+        columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase() + ":" + obsName);
+        for (const key of Object.keys(cols)) {
+          if (key !== "TYPE") {
+            columns[key].push(curr[sumPath][sumType][cols[key].keyword]);
+          }
+        }
+      }
+    });
+  });
+
+  return makeGridData(cols, columns);
+};
+
 const getNestedStationRows = (measurement, paths) => {
   // function that gets data for observation table for measType,
   // OBSXYZ, ECWI
   let cols = generateStationsCols();
   let columns = generateColsData(cols);
 
-  paths.forEach(([obsName, pathObsType, pathObsName]) => {
-    columns["TYPE"].push(pathObsType.slice(0, -8).toUpperCase() + ":" + obsName);
+  paths.forEach(([obsName, sumPath, sumType]) => {
+    // obsName is the name of the observation, X, Y ..
+    // sumPath is the path to the observation summary, uvdSummary_
+    // sumType is summary type name, yVectorCompObsSum ...
+
+    columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase() + ":" + obsName);
     for (const key of Object.keys(cols)) {
       if (key !== "TYPE") {
-        columns[key].push(measurement[pathObsType][pathObsName][cols[key].keyword]);
+        columns[key].push(measurement[sumPath][sumType][cols[key].keyword]);
       }
     }
   });
@@ -322,7 +333,7 @@ const getXStationRows = (measurement, path) => {
   let cols = generateStationsCols();
   let columns = generateColsData(cols);
 
-  const [obsType, sumPath] = path;
+  const [obsType, sumPath] = path; // obsTyoe is e.g. fECHO.. , sumPath is echoSummary_
 
   let obsData = measurement[obsType].reduce((acc, curr) => {
     if (curr[sumPath].fIsInitialised) {
@@ -404,6 +415,44 @@ const getNTObsRows = (measurement, measType) => {
   return makeGridData(cols, obsData, true);
 };
 
+const getCAMDRows = (measurement) => {
+  // function that gets data for observation table for measType,
+  // this is joint function for ORI, ECHO, ECWS, EDM
+
+  let cols = generateObsCols("UVD");
+  let cols2 = generateObsCols("UVEC");
+  let columns = generateColsData(cols);
+
+  let obsData = measurement.fCAM.reduce((acc, curr) => {
+    // reduce over all measurements
+    for (let j = 0; j < curr.measUVD.length; j++) {
+      // get all data defined in cols
+      for (const key of Object.keys(cols)) {
+        if (key !== "TYPE") {
+          columns[key].push(getFromDict(curr, cols[key].path, [j], cols[key].unitConv));
+        }
+      }
+      columns["TYPE"].push("UVD");
+    }
+
+    for (let j = 0; j < curr.measUVEC.length; j++) {
+      for (const key of Object.keys(cols)) {
+        if (key !== "TYPE") {
+          if (key in cols2) {
+            columns[key].push(getFromDict(curr, cols2[key].path, [j], cols[key].unitConv));
+          } else {
+            columns[key].push(undefined);
+          }
+        }
+      }
+      columns["TYPE"].push("UVEC");
+    }
+    return acc;
+  }, columns);
+
+  return makeGridData(cols, obsData, true);
+};
+
 const getTSTNObsRows = (measurement) => {
   // function that gets data for observation table specifically for TSTN
   // due to it special structure with roms and subtypes
@@ -415,7 +464,6 @@ const getTSTNObsRows = (measurement) => {
 
   const getTSTNRowVal = (allColPaths, curr, cols, iterationIndices, measName, key) => {
     // function that gets value for each row in TSTN
-    // console.log(measName, key);
     if (measName == "measPLR3D") {
       return getFromDict(curr, cols[key].path, iterationIndices, cols[key].unitConv);
     } else if (key in allColPaths[measName]) {

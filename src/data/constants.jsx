@@ -10,6 +10,7 @@ export const measurementTypes = [
   "fDVER",
   "fLEVEL",
   "fINCLY",
+  "fCAM",
 ];
 
 export const pointTypes = ["POIN", "VXY", "VXZ", "VX", "VYZ", "VY", "VZ", "CALA"];

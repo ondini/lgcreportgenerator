@@ -45,7 +45,6 @@ export function fieldGen(field, headerName, args = {}) {
     ),
 
     renderCell: (params) => {
-      // console.log(params);
       let cellStyle = { padding: "0.5rem" };
       let value = params.value === undefined || isNaN(params.value) ? params.value : params.formattedValue;
       if (typeof params.value != "string" && (params.value === undefined || isNaN(params.value))) {
@@ -75,7 +74,9 @@ export function fieldGene(field, headerName, args = {}) {
     show: true,
     sortable: true,
     units: "",
-
+    muiTableHeadCellProps: {
+      align: "center",
+    },
     unitConv: (x) => x,
 
     Header: ({ column }) => {
@@ -89,15 +90,12 @@ export function fieldGene(field, headerName, args = {}) {
     },
 
     Cell: (params) => {
-      // console.log(params);
-      // console.log(params);
-      let cellStyle = { padding: "0.5rem" };
+      let cellStyle = {};
       let value = params.renderedCellValue === undefined ? "aaa" : params.renderedCellValue;
       if (params.renderedCellValue === undefined || isNaN(params.renderedCellValue)) {
         cellStyle = { backgroundColor: "#f0ebeb", width: "100%" };
       } else if (typeof params.renderedCellValue != "string") {
         cellStyle = { ...cellStyle, textAlign: "right" };
-        // console.log(params.column.columnDef.numDecs);
         value = addTrailingZeros(
           numFormatter(params.renderedCellValue, params.column.columnDef.numDecs),
           params.column.columnDef.numDecs
@@ -109,9 +107,6 @@ export function fieldGene(field, headerName, args = {}) {
 
   Object.keys(args).forEach((key) => {
     if (key === "numDecs") {
-      defaultArgs["muiTableHeadCellProps"] = {
-        align: "center",
-      };
       defaultArgs["muiTableBodyCellProps"] = {
         align: "right",
       };

@@ -15,8 +15,9 @@ const mergeMeasTypesData = (data) => {
 
 export default function MeasurementsTable({ data }) {
   const observations = getData(data.LGC_DATA, "STAT");
-  // const measTypes = Object.keys(observations); // get all the used measurement types from the residuals data
+
   console.log(observations);
+
   let [rows, columns] = mergeMeasTypesData(observations);
 
   return (

@@ -151,7 +151,6 @@ const handleHistogramClick = (event) => {
     let firstObs = event.points[0].customdata.split("<br>")[1].split(":");
     const tgtLine = firstObs[firstObs.length === 3 ? 2 : 1];
 
-    // console.log(tgtLine);
     window.location.href = `surveypad://link//${linkPathPlaceholder},${tgtLine}`;
 
     // const link = document.createElement("a");

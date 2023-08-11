@@ -25,25 +25,25 @@ const Plot3D = ({ data }) => {
   return (
     <div>
       <Title title="3D Plot" id="plotPt3D" />
-      <Plot
-        data={[
-          {
-            type: "scatter3d",
-            mode: "markers",
-            x: datas.x,
-            y: datas.y,
-            z: datas.z,
-          },
-          {
-            type: "scatter3d",
-            mode: "lines",
-            x: datas.x,
-            y: datas.y,
-            z: datas.z,
-          },
-        ]}
-        layout={layout}
-      />
+      <div
+        style={{
+          border: "1px solid #e0e0e0",
+          borderRadius: "5px",
+        }}
+      >
+        <Plot
+          data={[
+            {
+              type: "scatter3d",
+              mode: "markers",
+              x: datas.x,
+              y: datas.y,
+              z: datas.z,
+            },
+          ]}
+          layout={layout}
+        />
+      </div>
     </div>
   );
 };

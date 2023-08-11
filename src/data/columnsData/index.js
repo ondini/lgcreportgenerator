@@ -10,7 +10,9 @@ import {
     generateECWIObsCols,
     generateDVERObsCols,
     generateDLEVObsCols,
-    generateINCLYObsCols
+    generateINCLYObsCols,
+    generateUVDObsCols,
+    generateUVECObsCols
  } from './obsTableCols.jsx';
 
  import {
@@ -24,19 +26,41 @@ import {
 export { 
     generateTSTNPaths,
     generateTSTNObsCols, 
-    generateECHOObsCols,
-    generateOBSXYZObsCols,
-    generateRADIObsCols,
-    generateDSPTObsCols,
-    generateECWSObsCols,
-    generateORIEObsCols,
-    generateECWIObsCols,
-    generateDVERObsCols,
-    generateDLEVObsCols,
-    generateINCLYObsCols,
+
     
     generateStationsCols,
     generateFrameCols,
     generatePoint3DCols,
     generatePoint3DCols2
 };
+
+export const generateObsCols = (type) => {
+    switch (type) {
+      case "fOBSXYZ":
+        return generateOBSXYZObsCols();
+      case "fECHO":
+        return generateECHOObsCols();
+      case "fECWS":
+        return generateECWSObsCols();
+      case "fECWI":
+        return generateECWIObsCols();
+      case "fEDM":
+        return generateDSPTObsCols();
+      case "fRADI":
+        return generateRADIObsCols();
+      case "fORIE":
+        return generateORIEObsCols();
+      case "fDVER":
+        return generateDVERObsCols();
+      case "fLEVEL":
+        return generateDLEVObsCols();
+      case "fINCLY":
+        return generateINCLYObsCols();
+      case "UVD":
+        return generateUVDObsCols();
+      case "UVEC":
+        return generateUVECObsCols();
+      default:
+        return {};
+    }
+  };

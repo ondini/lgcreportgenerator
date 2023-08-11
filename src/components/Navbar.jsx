@@ -7,13 +7,13 @@ import { NAVBAR_WIDTH_WIDE } from "../data/constants";
 
 const sidebarItems = [
   { title: "Header", url: "#header" },
-  { title: "3D Plot", url: "#plotPt3D" },
   { title: "3D Points Table", url: "#tablePt3D" },
   { title: "Measurement statistics", url: "#measurements" },
   { title: "Histograms", url: "#histograms" },
   { title: "Observations Table", url: "#observations" },
   { title: "Frames Table", url: "#frames" },
   { title: "Frames Tree", url: "#framesTree" },
+  { title: "3D Plot", url: "#plotPt3D" },
 ];
 
 const ListStyled = styled("div")({
