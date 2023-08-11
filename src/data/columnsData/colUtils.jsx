@@ -1,4 +1,4 @@
-import { pointTypes } from "../constants";
+import { pointTypes, DP } from "../constants";
 
 // =======================================================
 // ============= COLUMNS UTILITY FUNCTIONS ===============
@@ -58,10 +58,35 @@ export function fieldGen(field, headerName, args = {}) {
   };
 
   Object.keys(args).forEach((key) => {
+    if (key === "numDecs") {
+      defaultArgs.valueFormatter = generateNumFormatter(args[key], 1);
+      defaultArgs.align = "right";
+      defaultArgs.type = "number";
+    } else if (key === "units" && args[key] != "") {
+      defaultArgs.valueFormatter = generateNumFormatter(decGen(args[key]), 1);
+      defaultArgs.align = "right";
+      defaultArgs.type = "number";
+    }
     defaultArgs[key] = args[key];
   });
 
   return defaultArgs;
+}
+
+function decGen(unit) {
+  const prec = DP.defaultPrecision < 0 ? 0 : DP.defaultPrecision > 7 ? 7 : DP.defaultPrecision;
+  switch (unit) {
+    case "M":
+    case "GON":
+      return prec;
+    case "MM":
+    case "-": // for res/sig
+    case "MM/CM":
+    case "MM/KM":
+      return prec - 3 > 0 ? prec - 3 : 0;
+    case "CC":
+      return prec - 4 > 0 ? prec - 4 : 0;
+  }
 }
 
 export function fieldGene(field, headerName, args = {}) {
@@ -84,7 +109,7 @@ export function fieldGene(field, headerName, args = {}) {
         <div style={{ display: "flex", flexDirection: "column" }}>
           {" "}
           <strong>{column.columnDef.header}</strong>
-          <span>{column.columnDef.units == "" ? "-" : "(" + column.columnDef.units + ")"}</span>
+          <span>{column.columnDef.units == "" ? "-" : " (" + column.columnDef.units + ")"}</span>
         </div>
       );
     },

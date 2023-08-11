@@ -127,7 +127,7 @@ General stuff:
 - ~~! add table resume de mesures~~
 - ! put units everywhere it is possible
 - ! remove f from fTSTN everywhere possible on frontend
-- ! add support for more types
+- ~~! add support for more types~~
 
   - ~~PL3D~~
   - ~~ANGL~~
@@ -135,8 +135,8 @@ General stuff:
   - ~~DIST~~
   - ~~DHOR~~
   - ~~ORIE~~
-  - UVEC
-  - UVD
+  - ~~UVEC~~
+  - ~~UVD~~
   - ~~DSPT~~
   - ~~DLEV~~
   - ~~ECHO~~

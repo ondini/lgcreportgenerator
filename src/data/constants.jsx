@@ -14,11 +14,11 @@ export const measurementTypes = [
 ];
 
 export const pointTypes = ["POIN", "VXY", "VXZ", "VX", "VYZ", "VY", "VZ", "CALA"];
-export const pointTypesBE = ["POIN", "VYZ", "VXZ", "VZ", "VXY", "VY", "VX", "CALA"]; // point types in Big Endian encoding order
 
 export const noSrcMeasTypes = ["fOBSXYZ", "fRADI", "fDVER"]; // measurement types that do not have a source instrument
 export const NAVBAR_WIDTH_WIDE = "200px";
 
+export const DP = { defaultPrecision: 6 }; // done this way, so that it is replacable after compilation
 export const linkPathPlaceholder = "linkPathPlaceholder";
 
 const angleRad2CC = 63.662 * 10000; // radians to centesimal circle conv. factor

@@ -15,9 +15,6 @@ const mergeMeasTypesData = (data) => {
 
 export default function MeasurementsTable({ data }) {
   const observations = getData(data.LGC_DATA, "STAT");
-
-  console.log(observations);
-
   let [rows, columns] = mergeMeasTypesData(observations);
 
   return (

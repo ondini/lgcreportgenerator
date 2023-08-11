@@ -19,25 +19,27 @@ export const generateTSTNObsCols = () => {
     HI: fieldGen("HI", "HI", {
       show: false,
       path: "instrumentHeightAdjustable/fEstimatedValue",
+      units: "M",
     }), // instrument height
     SHI: fieldGen("SHI", "SHI", {
       show: false,
       path: "instrumentHeightAdjustable/fEstimatedPrecision",
+      units: "MM",
     }), // instrument height precision
-    ROT3D: fieldGen("ROT3D", "ROT3D", { show: false, path: "rot3D" }), //
-    ACST: fieldGen("ACST", "ACST", { show: false, path: "roms/i/acst" }), //
+    ROT3D: fieldGen("ROT3D", "ROT3D", { show: false, path: "rot3D" }), // rotation 3D
+    ACST: fieldGen("ACST", "ACST", { show: false, path: "roms/i/acst", units: "GON" }), // angle constant
     V0: fieldGen("V0", "V0", {
       show: false,
       path: "roms/i/v0/fEstimatedValue",
       unitConv: angleRad2GONf,
       units: "GON",
-    }), //
+    }), // v0
     SV0: fieldGen("SV0", "SV0", {
       show: false,
       path: "roms/i/v0/fEstimatedPrecision",
       unitConv: angleRad2CCf,
       units: "CC",
-    }), //
+    }), // Sigma. V0
 
     // ========== OBS DATA ========== //
     INSID: fieldGen("INSID", "Instr. ID", {
@@ -98,38 +100,38 @@ export const generateTSTNObsCols = () => {
     OBSANGL: fieldGen("OBSANGL", "Obs. Angle", {
       flex: 0.8,
       minWidth: 100,
-      numDecs: 5,
+      units: "GON",
       path: "roms/i/measPLR3D/i/angles/0/fValue",
       unitConv: angleRad2GONf,
     }), // angle observations
     SANGL: fieldGen("SANGL", "S. Ang.", {
-      numDecs: 1,
+      units: "CC",
       path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRAngl",
       unitConv: angleRad2CCf,
     }), // angle standard deviation
     CALCANGL: fieldGen("CALCANGL", "Calc. Angl.", {
       flex: 0.8,
       minWidth: 100,
-      numDecs: 5,
+      units: "GON",
       path: "!roms/i/measPLR3D/i/angles/0/fValue!+!roms/i/measPLR3D/i/anglesResiduals/0/fValue!",
       unitConv: angleRad2GONf,
     }), // calculated angle
     RESANGL: fieldGen("RESANGL", "Res. Angl.", {
-      numDecs: 1,
+      units: "CC",
       path: "roms/i/measPLR3D/i/anglesResiduals/0/fValue",
       unitConv: angleRad2CCf,
     }), // angle residual
     RESSIGANGL: fieldGen("RESSIGANGL", "Res./Sig. Angl.", {
-      numDecs: 2,
+      units: "-",
       path: "!roms/i/measPLR3D/i/anglesResiduals/0/fValue!/!roms/i/measPLR3D/i/target/sigmaCombinedPLRAngl!",
     }), // angle RES/SIGMA
     ECARTSANGL: fieldGen("ECARTSANGL", "Ecarts Angl.", {
-      numDecs: 2,
+      units: "MM",
       path: "!roms/i/measPLR3D/i/distances/0/fValue!*!roms/i/measPLR3D/i/anglesResiduals/0/fValue!",
       unitConv: distM2MMf,
     }), // angle ECARTS
     OBSEANGL: fieldGen("OBSEANGL", "Observ. Sig. Angl.", {
-      numDecs: 1,
+      units: "CC",
       path: "roms/i/measPLR3D/i/target/sigmaAngl",
       cellClassName: "border-right--cell",
       unitConv: angleRad2CCf,
@@ -139,38 +141,38 @@ export const generateTSTNObsCols = () => {
     OBSZEND: fieldGen("OBSZEND", "Obs. Zend.", {
       flex: 0.8,
       minWidth: 100,
-      numDecs: 5,
+      units: "GON",
       path: "roms/i/measPLR3D/i/angles/1/fValue",
       unitConv: angleRad2GONf,
     }), // zenith observations
     SZEND: fieldGen("SZEND", "S. Zend.", {
-      numDecs: 1,
+      units: "CC",
       path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRZenD",
       unitConv: angleRad2CCf,
     }), // zenith standard deviation
     CALCZEND: fieldGen("CALCZEND", "Calc. Zend.", {
       flex: 0.8,
       minWidth: 100,
-      numDecs: 5,
+      units: "GON",
       path: "!roms/i/measPLR3D/i/angles/1/fValue!+!roms/i/measPLR3D/i/anglesResiduals/1/fValue!",
       unitConv: angleRad2GONf,
     }), // calculated zenith
     RESZEND: fieldGen("RESZEND", "Res. Zend.", {
-      numDecs: 1,
+      units: "CC",
       path: "roms/i/measPLR3D/i/anglesResiduals/1/fValue",
       unitConv: angleRad2CCf,
     }), // zenith residual
     RESSIGZEND: fieldGen("RESSIGZEND", "Res./Sig. Zend.", {
-      numDecs: 2,
+      units: "-",
       path: "!roms/i/measPLR3D/i/anglesResiduals/1/fValue!/!roms/i/measPLR3D/i/target/sigmaCombinedPLRZenD!",
     }), // zenith RES/SIGMA
     ECARTSZEND: fieldGen("ECARTSZEND", "Ecarts Zend.", {
-      numDecs: 2,
+      units: "MM",
       path: "!roms/i/measPLR3D/i/distances/0/fValue!*!roms/i/measPLR3D/i/anglesResiduals/1/fValue!",
       unitConv: distM2MMf,
     }), // zenith ECARTS
     OBSEZEND: fieldGen("OBSEZEND", "Observ. Sig. Zend.", {
-      numDecs: 1,
+      units: "CC",
       path: "roms/i/measPLR3D/i/target/sigmaZenD",
       cellClassName: "border-right--cell",
       unitConv: angleRad2CCf,
@@ -180,33 +182,33 @@ export const generateTSTNObsCols = () => {
     OBSDIST: fieldGen("OBSDIST", "Obs. Dist.", {
       flex: 0.8,
       minWidth: 100,
-      numDecs: 5,
+      units: "M",
       path: "roms/i/measPLR3D/i/distances/0/fValue",
     }), // distance observations
     SDIST: fieldGen("SDIST", "S. Dist.", {
-      numDecs: 1,
+      units: "MM",
       path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRDist",
       unitConv: distM2MMf,
     }), // distance standard deviation
     CALCDIST: fieldGen("CALCDIST", "Calc. Dist.", {
       flex: 0.8,
       minWidth: 100,
-      numDecs: 5,
+      units: "M",
       path: "!roms/i/measPLR3D/i/distances/0/fValue!+!roms/i/measPLR3D/i/distancesResiduals/0/fValue!",
     }), // calculated distance
     RESDIST: fieldGen("RESDIST", "Res. Dist.", {
-      numDecs: 1,
+      units: "MM",
       path: "roms/i/measPLR3D/i/distancesResiduals/0/fValue",
       unitConv: distM2MMf,
     }), // distance residual
     RESSIGDIST: fieldGen("RESSIGDIST", "Res./Sig. Dist.", {
-      numDecs: 2,
+      units: "-",
       path: "!roms/i/measPLR3D/i/distancesResiduals/0/fValue!/!roms/i/measPLR3D/i/target/sigmaCombinedPLRDist!",
     }), // distance RES/SIGMA
     OBSEDIST: fieldGen("OBSEDIST", "Observ. Sig. Dist.", {
-      numDecs: 2,
-      path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRAngl", ///////////////////////
-      unitConv: angleRad2CCf,
+      units: "MM",
+      path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRAngl",
+      unitConv: distM2MMf,
       cellClassName: "border-right--cell",
     }), // angle OBS DIST
 
@@ -217,20 +219,22 @@ export const generateTSTNObsCols = () => {
     //   path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRDist",
     // }), // Sensitivity
     CONST: fieldGen("CONST", "Constant", {
-      numDecs: 2,
+      units: "M",
       path: "roms/i/measPLR3D/i/target/distCorrectionValue",
     }), // distance Constant
     SCONST: fieldGen("SCONST", "Sig. Const.", {
-      numDecs: 5,
+      units: "MM",
       path: "roms/i/measPLR3D/i/target/sigmaDCorr",
+      unitConv: distM2MMf,
     }), // distance Consatnt Sigma
     SCONSTFIX: fieldGen("SCONSTFIX", "S. Cons.", {
       show: false,
       path: "roms/i/measPLR3D/i/target/distCorrectionUnknown",
     }), // distance Consatnt FIXED
     PPM: fieldGen("PPM", "Dist. PPM", {
-      numDecs: 2,
+      units: "MM/KM",
       path: "roms/i/measPLR3D/i/target/ppmDist",
+      unitConv: distM2MMf,
       cellClassName: "border-right--cell",
     }), // distance Consatnt Sigma
 
@@ -248,20 +252,20 @@ export const generateTSTNObsCols = () => {
     HTGT: fieldGen("HTGT", "Tgt. height", {
       flex: 0.11,
       minWidth: 50,
-      numDecs: 5,
+      units: "M",
       path: "roms/i/measPLR3D/i/target/targetHt",
     }), // target height
     THSE: fieldGen("THSE", "Tgt. height. Sig", {
       flex: 0.11,
       minWidth: 50,
-      numDecs: 2,
+      units: "MM",
       path: "roms/i/measPLR3D/i/target/sigmaTargetHt",
       unitConv: distM2MMf,
     }), // target
     TCSE: fieldGen("TCSE", "Tgt. centering Sig.", {
       flex: 0.11,
       minWidth: 50,
-      numDecs: 2,
+      units: "MM",
       path: "roms/i/measPLR3D/i/target/sigmaTargetCentering",
       unitConv: distM2MMf,
     }), // target

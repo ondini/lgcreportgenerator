@@ -187,14 +187,13 @@ const statTypeSelector = (measurement, type) => {
       return getXStationRows(measurement, ["fINCLY", "inclySummary_"]);
     case "fLEVEL":
       return getXStationRows(measurement, ["fLEVEL", "dlevSummary_"]);
-    // as only dlev is populated, dhorSummary is ignored also in SP result file, so I am ignoring it here, too
+    // as only dlev is populated and dhorSummary is ignored also in SP result file, I am ignoring it here, too
     // let dlevRows = getXStationRows(measurement, ["fLEVEL", "dlevSummary_"]);
     // let dhorRows = getXStationRows(measurement, ["fLEVEL", "dhorSummary_"]);
     // return { data: dlevRows.data.concat(dhorRows.data), columnDetails: dlevRows.columnDetails };
     case "fCAM":
       let uvecRows = getCAMStationRows(measurement, UVECPaths);
       let uvdRows = getCAMStationRows(measurement, UVDPaths);
-      console.log(uvecRows, uvdRows);
       return { data: uvecRows.data.concat(uvdRows.data), columnDetails: uvecRows.columnDetails };
     default:
       return {};
