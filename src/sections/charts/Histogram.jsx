@@ -196,13 +196,15 @@ const Histogram = ({ residuals }) => {
   let [nBins, setNBins] = useState(30); // state of the number of bins
   let [histList, setHistList] = useState(
     // state of the histogram components
-    createHists(measTypes[0], filterInstr)
+    createHists(measTypes[0], filterInstr, nBins)
   );
   let [key, setKey] = useState(measTypes[0]); // state of the currently active measurement type
 
+  let [nBinsInput, setNBinsInput] = useState(nBins); // state of the number of bins input
+
   useEffect(() => {
     // update and re-render the histogram components when the filter or measurement type changes
-    setHistList(createHists(key, filterInstr));
+    setHistList(createHists(key, filterInstr, nBins));
   }, [filterInstr, key, nBins]);
 
   let measTypeButtons = measTypes.map((key) => {
@@ -236,6 +238,33 @@ const Histogram = ({ residuals }) => {
             }}
             checked={filterInstr}
           />
+          <h4>Number of bins</h4>
+          <TextField
+            id="outlined-number"
+            label="Number"
+            type="number"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(v) => {
+              setNBinsInput(v.target.value);
+            }}
+            margin="normal"
+            defaultValue={nBins}
+            sx={{ marginLeft: "1rem", minWidth: "100px" }}
+          />
+          <Button
+            variant="contained"
+            disableElevation
+            sx={{ marginLeft: "1rem" }}
+            onClick={() => {
+              setNBinsInput(nBinsInput < 1 ? 1 : nBinsInput > 200 ? 200 : nBinsInput);
+              setNBins(nBinsInput);
+              console.log(nBinsInput, nBins);
+            }}
+          >
+            Submit
+          </Button>
         </div>
         <div className="histsec-plots"> {histList} </div>
       </div>

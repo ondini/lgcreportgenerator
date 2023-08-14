@@ -55,6 +55,7 @@ const generateTableStyle = () => {
 
 export default function ObservationsTable({ observations }) {
   const measTypes = Object.keys(observations); // get all the used measurement types from the residuals data
+  console.log(observations);
   const createTable = (measType) => {
     // function that creates the histogram components for each of the residuals of the selected measurement type
     // const init = generateTableInitState(observations[measType].hideCols);
@@ -66,7 +67,7 @@ export default function ObservationsTable({ observations }) {
           }}
           rows={observations[measType].data}
           columns={observations[measType].columnDetails}
-          hideFooter
+          pagination
           disableRowSelectionOnClick
           slots={{ toolbar: GridToolbar }}
         />

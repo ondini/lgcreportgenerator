@@ -84,17 +84,12 @@ export const generateTSTNObsCols = () => {
       flex: 1,
       minWidth: 150,
       path: "roms/i/measPLR3D/i/targetPos",
+      link: "TGTLINE",
     }), // target position
-    TGTLINE: fieldGen("TGTLINE", "TLine", {
-      flex: 0.11,
-      minWidth: 50,
-      cellClassName: "border-right--cell",
-      path: "roms/i/measPLR3D/i/line",
-      renderCell: ({ row: { TGTLINE } }) => {
-        return <a href={`surveypad://link//${linkPathPlaceholder},${TGTLINE}`}>{TGTLINE}</a>;
-      },
-    }), // target line
+    TGTLINE: fieldGen("TGTLINE", "TLine", { show: false, path: "roms/i/measPLR3D/i/line" }), // target line
     TYPE: fieldGen("TYPE", "Type", { cellClassName: "border-right--cell" }), // type of measurement
+
+    OBSLINE: fieldGen("OBSLINE", "OLine", { show: false, path: "roms/i/measPLR3D/i/line" }), // target line
 
     // ========== ANGL ========== //
     OBSANGL: fieldGen("OBSANGL", "Obs. Angle", {

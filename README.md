@@ -70,7 +70,7 @@ Histograms:
 
 - ~~CTRL + CLICK on cell -> go to the first observations in input file (is useful mainly if there is only one obs in the cell)~~
 - ~~! Normalize all residuals values by SIGMA (=RES/SIG col), and plot it in separate histogram~~
-- ! Changing number of bins
+- ~~! Changing number of bins~~
 - ! observation type and line number on normalized join histogram hover
 - !! apriori sigma for the observation
 - !!! gaussian curve -> the data are in res file, center of gaussian is result, and the span is in ECART-TYPE
@@ -90,7 +90,6 @@ Stations Table:
 - !! hidden columns with the value in subframe (add hidden 6 columns to 3D pts table (3x coords + 3x uncertainties from diagonal!))
 - !!! leave empty cells if there is nothing - discuss with Guillaume since it depends if it is defined in FRAME (only CALA in root)
 - !!! copy from report to excel !
-- !!!!! circle with direction
 
 Observation Table:
 
@@ -149,6 +148,23 @@ General stuff:
 
 - ~~!! reorder~~
 - !! maybe lets add styling for the next user testing
+
+Notes:
+
+- Both work for constant (fixed) - word fixed is better
+  - TX calculated - it can be `FIXED` there
+  - even if the value is fixed, that value should be shown
+  - in TSTN as well?
+- the target link is not critical
+- in the links they prefer CTRL
+- links!!! All the links (like RADI)
+- remove fTSTN
+- missing observations !!!
+- add the column with index (row number) + how many lines are displayed?
+- make sure X and Y are linked on 3d Plot, not Z
+- in CSV more data than they see in the columns
+- when sorting columns, some rows in table dissapear?
+- something list was in the wrong order
 
 3D part
 

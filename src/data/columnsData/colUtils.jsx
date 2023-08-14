@@ -1,4 +1,5 @@
 import { pointTypes, DP } from "../constants";
+import { linkPathPlaceholder } from "../constants";
 
 // =======================================================
 // ============= COLUMNS UTILITY FUNCTIONS ===============
@@ -69,6 +70,15 @@ export function fieldGen(field, headerName, args = {}) {
         } else {
           cellStyle = { ...cellStyle, color: "#c2c2c2" };
         }
+      }
+
+      if (params.colDef.link) {
+        const TGTLINE = params.row[params.colDef.link];
+        return (
+          <a style={cellStyle} href={`surveypad://link//${linkPathPlaceholder},${TGTLINE}`}>
+            {params.value}
+          </a>
+        );
       }
       return <span style={cellStyle}>{value}</span>;
     },
