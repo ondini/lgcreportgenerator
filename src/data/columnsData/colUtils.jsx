@@ -51,7 +51,24 @@ export function fieldGen(field, headerName, args = {}) {
         cellStyle = { backgroundColor: "#f0ebeb", width: "100%", height: "100%" };
       } else if (typeof params.value != "string" && !isNaN(params.value) && params.value != undefined) {
         cellStyle = { ...cellStyle, textAlign: "right" };
-        value = addTrailingZeros(params.formattedValue, params.colDef.numDecs);
+        value = addTrailingZeros(params.formattedValue, decGen(params.colDef.units));
+      }
+      let fixed = false;
+      if (params.colDef.fixator) {
+        fixed =
+          params.colDef.fixator[0] === "-"
+            ? params.row[params.colDef.fixator.slice(1)] === false
+            : params.colDef.fixator[0] === "x"
+            ? params.row[params.colDef.fixator.slice(1)]
+            : params.row[params.colDef.fixator];
+      }
+      if (fixed) {
+        if (params.colDef.fixator[0] === "x") {
+          value = "";
+          cellStyle = { backgroundColor: "#f0ebeb", width: "100%", height: "100%" };
+        } else {
+          cellStyle = { ...cellStyle, color: "#c2c2c2" };
+        }
       }
       return <span style={cellStyle}>{value}</span>;
     },

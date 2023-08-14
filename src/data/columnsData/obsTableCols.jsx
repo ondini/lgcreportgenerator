@@ -226,6 +226,7 @@ export const generateTSTNObsCols = () => {
       units: "MM",
       path: "roms/i/measPLR3D/i/target/sigmaDCorr",
       unitConv: distM2MMf,
+      fixator: "-SCONSTFIX",
     }), // distance Consatnt Sigma
     SCONSTFIX: fieldGen("SCONSTFIX", "S. Cons.", {
       show: false,
@@ -250,21 +251,15 @@ export const generateTSTNObsCols = () => {
     //   path: "measDSPT/i/target/line",
     // }), // target instr ID
     HTGT: fieldGen("HTGT", "Tgt. height", {
-      flex: 0.11,
-      minWidth: 50,
       units: "M",
       path: "roms/i/measPLR3D/i/target/targetHt",
     }), // target height
     THSE: fieldGen("THSE", "Tgt. height. Sig", {
-      flex: 0.11,
-      minWidth: 50,
       units: "MM",
       path: "roms/i/measPLR3D/i/target/sigmaTargetHt",
       unitConv: distM2MMf,
     }), // target
     TCSE: fieldGen("TCSE", "Tgt. centering Sig.", {
-      flex: 0.11,
-      minWidth: 50,
       units: "MM",
       path: "roms/i/measPLR3D/i/target/sigmaTargetCentering",
       unitConv: distM2MMf,

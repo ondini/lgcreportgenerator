@@ -4,7 +4,7 @@ import { useState } from "react";
 import { getData } from "../../data_processing/processing";
 import Title from "../../components/Title";
 import "./Histogram.css";
-import Switch from "@mui/material/Switch";
+import { Switch, TextField, Button } from "@mui/material";
 import { noSrcMeasTypes } from "../../data/constants";
 import { linkPathPlaceholder } from "../../data/constants";
 
@@ -170,7 +170,7 @@ const Histogram = ({ residuals }) => {
   const normalizedResiduals = makeNormPlotData(measTypes, residuals);
   const normLayout = [makeNormPlotLayout(normalizedResiduals)];
 
-  const createHists = (measType, filterInstr) => {
+  const createHists = (measType, filterInstr, nbinsx) => {
     // function that creates the histogram components for each of the residuals of the selected measurement type
     const nonResKeys = ["TGTPOS", "TGTLINE", "INSPOS", "INSLINE"]; // keys that are not residuals
 
@@ -181,7 +181,7 @@ const Histogram = ({ residuals }) => {
         histograms.push(
           <div className="histsec-plots-plot" key={measType + key}>
             <Plot
-              data={makePlotData(residuals[measType].residualsData, measType, key, 30, filterInstr)}
+              data={makePlotData(residuals[measType].residualsData, measType, key, nbinsx, filterInstr)}
               layout={{ title: key, bargroupgap: 0.2, barmode: "stack" }}
               onClick={handleHistogramClick}
             />
@@ -193,6 +193,7 @@ const Histogram = ({ residuals }) => {
   };
 
   let [filterInstr, setFilterInstr] = useState(true); // state of the filter by instrument
+  let [nBins, setNBins] = useState(30); // state of the number of bins
   let [histList, setHistList] = useState(
     // state of the histogram components
     createHists(measTypes[0], filterInstr)
@@ -202,7 +203,7 @@ const Histogram = ({ residuals }) => {
   useEffect(() => {
     // update and re-render the histogram components when the filter or measurement type changes
     setHistList(createHists(key, filterInstr));
-  }, [filterInstr, key]);
+  }, [filterInstr, key, nBins]);
 
   let measTypeButtons = measTypes.map((key) => {
     // create the measurement type buttons
@@ -214,7 +215,8 @@ const Histogram = ({ residuals }) => {
           setKey(key);
         }}
       >
-        {key}
+        {/* slice to remove the first character which is f in e.g.'fTSTN' */}
+        {key.slice(1)}
       </button>
     );
   });

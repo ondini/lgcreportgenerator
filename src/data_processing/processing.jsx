@@ -18,7 +18,7 @@ import { measurementTypes, pointTypes } from "../data/constants";
 // ============== UTILITY FUNCTIONS ================ //
 // ================================================= //
 
-const getFromDict = (data, path, iteratorVals, unitConv) => {
+const getFromDict = (data, path, iteratorVals, unitConv, subresult = false) => {
   // function used to get data from neseted dictionaries using path where each key is separated by "/"
   // if key is "i" then it is replaced by value from iterator array
   // if "!" is present in path, then the paths are interpreted as values to be used in expression resulting after splitting on ! and replacing the paths
@@ -30,11 +30,11 @@ const getFromDict = (data, path, iteratorVals, unitConv) => {
       if (["", "+", "-", "*", "/"].includes(curr)) {
         return acc + curr;
       } else {
-        let val = getFromDict(data, curr, iteratorVals, unitConv);
+        let val = getFromDict(data, curr, iteratorVals, unitConv, true);
         return acc + (typeof val === "number" && val < 0 ? "(" + val + ")" : val);
       }
     }, "");
-    return eval(expr);
+    return unitConv(eval(expr));
   } else {
     // gettin data from path
     let pathArr = path.split("/");
@@ -52,7 +52,7 @@ const getFromDict = (data, path, iteratorVals, unitConv) => {
       }
       res = res[key];
     });
-    return unitConv(res);
+    return subresult ? res : unitConv(res);
   }
 };
 

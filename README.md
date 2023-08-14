@@ -83,8 +83,8 @@ Stations Table:
 3d Point Table:
 
 - ! take Sigma data from diagonal !!!
-- ! we need 0 padding for columns (trailing zeros)
-- ! we need export to csv perhaps
+- ~~! 0 padding for columns (trailing zeros)~~
+- ! export to csv perhaps
 - ! mark columns by categories (vertical line)
 - ~~! take sigmas from fCovarianceMatrixInRoot~~
 - !! hidden columns with the value in subframe (add hidden 6 columns to 3D pts table (3x coords + 3x uncertainties from diagonal!))
@@ -114,19 +114,19 @@ Frames:
 
 - ~~! one table with all frames with their parameters~~
 - ~~! tree diagram of frames with transformation information on edges~~
-- ! tree plot collapsible
+- ~~ ! tree plot collapsible ~~
 - ! tree plot line to jump to frame definition (link) from node
-- ! table fixedTranfParams should be visible in table - color tx ty etc, + make sigmas no_value if it is fixed + legend for colors
+- ~~! table fixedTranfParams should be visible in table - color tx ty etc, + make sigmas no_value if it is fixed + legend for colors~~
 - ! table add line column into table (with link)
 
 General stuff:
 
 - ~~! navigation bar~~
 - ! filter numerical values
-- ! formatting!
+- ~~! formatting~~
 - ~~! add table resume de mesures~~
 - ! put units everywhere it is possible
-- ! remove f from fTSTN everywhere possible on frontend
+- ~~! remove f from fTSTN everywhere possible on frontend~~
 - ~~! add support for more types~~
 
   - ~~PL3D~~

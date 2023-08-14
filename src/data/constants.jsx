@@ -16,13 +16,20 @@ export const measurementTypes = [
 export const pointTypes = ["POIN", "VXY", "VXZ", "VX", "VYZ", "VY", "VZ", "CALA"];
 
 export const noSrcMeasTypes = ["fOBSXYZ", "fRADI", "fDVER"]; // measurement types that do not have a source instrument
-export const NAVBAR_WIDTH_WIDE = "200px";
 
 export const DP = { defaultPrecision: 6 }; // done this way, so that it is replacable after compilation
 export const linkPathPlaceholder = "linkPathPlaceholder";
 
-const angleRad2CC = 63.662 * 10000; // radians to centesimal circle conv. factor
-const angleRad2GON = 63.662; // radians to gon conv. factor
+// ======= DISPLAY CONSTANTS =======
+
+export const NAVBAR_WIDTH_WIDE = "200px";
+export const PLOT_3D_WIDTH = 1200;
+export const PLOT_3D_HEIGHT = 1000;
+
+// ======= UNIT CONVERSION FACTORS =======
+
+const angleRad2GON = 63.6619772368; // radians to gon conv. factor
+const angleRad2CC = angleRad2GON * 10000; // radians to centesimal circle conv. factor
 const distM2HMM = 100000; // meters to hundredths of milimeter conv. factor
 const distM2MM = 1000; // meters to milimeters conv. factor
 

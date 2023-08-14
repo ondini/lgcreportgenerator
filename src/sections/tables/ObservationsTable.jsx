@@ -69,7 +69,6 @@ export default function ObservationsTable({ observations }) {
           hideFooter
           disableRowSelectionOnClick
           slots={{ toolbar: GridToolbar }}
-          // initialState={init}
         />
       </Box>
     );
@@ -94,7 +93,8 @@ export default function ObservationsTable({ observations }) {
           setKey(key);
         }}
       >
-        {key}
+        {/* slice to remove the first character which is f in e.g.'fTSTN' */}
+        {key.slice(1)}
       </button>
     );
   });
