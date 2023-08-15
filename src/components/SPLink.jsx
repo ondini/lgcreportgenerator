@@ -2,16 +2,16 @@
 
 import { linkPathPlaceholder } from "../data/constants";
 
-const SPLink = ({ title, line }) => {
+const SPLink = ({ title, line, style = {} }) => {
   let clickHandler = (event) => {
     if (event.ctrlKey) {
       window.location.href = `surveypad://link//${linkPathPlaceholder},${line}`;
     }
   };
   return (
-    <div onClick={clickHandler} className="link">
+    <span style={{ ...style }} onClick={clickHandler} className="link">
       {title}
-    </div>
+    </span>
   );
 };
 

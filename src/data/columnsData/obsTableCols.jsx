@@ -43,14 +43,13 @@ export const generateTSTNObsCols = () => {
 
     // ========== OBS DATA ========== //
     INSID: fieldGen("INSID", "Instr. ID", {
-      flex: 1,
-      minWidth: 130,
-      cellClassName: "name-column--cell border-right--cell",
+      size: "L",
+      border: true,
       path: "instrument/ID",
+      link: "INSLINE",
     }), // instrument id
     INSPOS: fieldGen("INSPOS", "Instr. Pos.", {
-      felx: 1,
-      minWidth: 250,
+      size: "XL",
       path: "instrumentPos",
       link: "INSLINE",
       tooltip: ({ row }) => {
@@ -70,22 +69,21 @@ export const generateTSTNObsCols = () => {
     }), // instrument position
     INSLINE: fieldGen("INSLINE", "ILine", { path: "line", show: false }), // instrument line
     TGTPOS: fieldGen("TGTPOS", "Tgt. Pos.", {
-      flex: 1,
-      minWidth: 150,
+      size: "L",
       path: "roms/i/measPLR3D/i/targetPos",
       link: "TGTLINE",
     }), // target position
     TGTLINE: fieldGen("TGTLINE", "TLine", { show: false, path: "roms/i/measPLR3D/i/line" }), // target line
-    TYPE: fieldGen("TYPE", "Type", { cellClassName: "border-right--cell" }), // type of measurement
+    TYPE: fieldGen("TYPE", "Type", { border: true }), // type of measurement
     OBSLINE: fieldGen("OBSLINE", "OLine", { show: false, path: "roms/i/measPLR3D/i/line" }), // observation line
 
     // ========== ANGL ========== //
     OBSANGL: fieldGen("OBSANGL", "Obs. Angle", {
-      flex: 0.8,
-      minWidth: 100,
+      size: "M",
       units: "GON",
       path: "roms/i/measPLR3D/i/angles/0/fValue",
       unitConv: angleRad2GONf,
+      link: "OBSLINE",
     }), // angle observations
     SANGL: fieldGen("SANGL", "S. Ang.", {
       units: "CC",
@@ -93,8 +91,7 @@ export const generateTSTNObsCols = () => {
       unitConv: angleRad2CCf,
     }), // angle standard deviation
     CALCANGL: fieldGen("CALCANGL", "Calc. Angl.", {
-      flex: 0.8,
-      minWidth: 100,
+      size: "M",
       units: "GON",
       path: "!roms/i/measPLR3D/i/angles/0/fValue!+!roms/i/measPLR3D/i/anglesResiduals/0/fValue!",
       unitConv: angleRad2GONf,
@@ -116,17 +113,17 @@ export const generateTSTNObsCols = () => {
     OBSEANGL: fieldGen("OBSEANGL", "Observ. Sig. Angl.", {
       units: "CC",
       path: "roms/i/measPLR3D/i/target/sigmaAngl",
-      cellClassName: "border-right--cell",
+      border: true,
       unitConv: angleRad2CCf,
     }), // angle OBS SIGMA
 
     // ========== ZEND ========== //
     OBSZEND: fieldGen("OBSZEND", "Obs. Zend.", {
-      flex: 0.8,
-      minWidth: 100,
+      size: "M",
       units: "GON",
       path: "roms/i/measPLR3D/i/angles/1/fValue",
       unitConv: angleRad2GONf,
+      link: "OBSLINE",
     }), // zenith observations
     SZEND: fieldGen("SZEND", "S. Zend.", {
       units: "CC",
@@ -134,8 +131,7 @@ export const generateTSTNObsCols = () => {
       unitConv: angleRad2CCf,
     }), // zenith standard deviation
     CALCZEND: fieldGen("CALCZEND", "Calc. Zend.", {
-      flex: 0.8,
-      minWidth: 100,
+      size: "M",
       units: "GON",
       path: "!roms/i/measPLR3D/i/angles/1/fValue!+!roms/i/measPLR3D/i/anglesResiduals/1/fValue!",
       unitConv: angleRad2GONf,
@@ -157,16 +153,16 @@ export const generateTSTNObsCols = () => {
     OBSEZEND: fieldGen("OBSEZEND", "Observ. Sig. Zend.", {
       units: "CC",
       path: "roms/i/measPLR3D/i/target/sigmaZenD",
-      cellClassName: "border-right--cell",
+      border: true,
       unitConv: angleRad2CCf,
     }), // angle OBS ZEND
 
     // ========== DIST ========== //
     OBSDIST: fieldGen("OBSDIST", "Obs. Dist.", {
-      flex: 0.8,
-      minWidth: 100,
+      size: "M",
       units: "M",
       path: "roms/i/measPLR3D/i/distances/0/fValue",
+      link: "OBSLINE",
     }), // distance observations
     SDIST: fieldGen("SDIST", "S. Dist.", {
       units: "MM",
@@ -174,8 +170,7 @@ export const generateTSTNObsCols = () => {
       unitConv: distM2MMf,
     }), // distance standard deviation
     CALCDIST: fieldGen("CALCDIST", "Calc. Dist.", {
-      flex: 0.8,
-      minWidth: 100,
+      size: "M",
       units: "M",
       path: "!roms/i/measPLR3D/i/distances/0/fValue!+!roms/i/measPLR3D/i/distancesResiduals/0/fValue!",
     }), // calculated distance
@@ -192,7 +187,7 @@ export const generateTSTNObsCols = () => {
       units: "MM",
       path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRAngl",
       unitConv: distM2MMf,
-      cellClassName: "border-right--cell",
+      border: true,
     }), // angle OBS DIST
 
     // ========== DIST EXTENSION ========== //
@@ -202,6 +197,7 @@ export const generateTSTNObsCols = () => {
     //   path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRDist",
     // }), // Sensitivity
     CONST: fieldGen("CONST", "Constant", {
+      size: "M",
       units: "M",
       path: "roms/i/measPLR3D/i/target/distCorrectionValue",
     }), // distance Constant
@@ -219,21 +215,20 @@ export const generateTSTNObsCols = () => {
       units: "MM/KM",
       path: "roms/i/measPLR3D/i/target/ppmDist",
       unitConv: distM2MMf,
-      cellClassName: "border-right--cell",
+      border: true,
     }), // distance Consatnt Sigma
 
     // ========== TGT ========== //
     TGTID: fieldGen("TGTID", "Tgt. Pos.", {
-      flex: 0.8,
-      minWidth: 100,
+      size: "M",
       path: "roms/i/measPLR3D/i/target/ID",
     }), // target instr ID
     // TGTIDLINE: fieldGen("TGTIDLINE", "Tgt. Line.", {
-    //   flex: 1,
-    //   minWidth: 150,
+    //   show: false,
     //   path: "measDSPT/i/target/line",
     // }), // target instr ID
     HTGT: fieldGen("HTGT", "Tgt. height", {
+      size: "M",
       units: "M",
       path: "roms/i/measPLR3D/i/target/targetHt",
     }), // target height

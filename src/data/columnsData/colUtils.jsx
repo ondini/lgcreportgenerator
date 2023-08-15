@@ -89,24 +89,55 @@ function cellRenderer(params) {
     );
   }
 
-  if (params.colDef.link) {
-    const TGTLINE = params.row[params.colDef.link];
-    return <SPLink title={params.value} line={TGTLINE} />;
-  }
-
   let cellStyle = { padding: "0.5rem" }; // base style for cell
 
   let value = params.value === undefined || isNaN(params.value) ? params.value : params.formattedValue;
 
   if (typeof params.value != "string" && (params.value === undefined || isNaN(params.value))) {
-    cellStyle = { backgroundColor: "#f0ebeb", width: "100%", height: "100%" };
+    cellStyle = { padding: "0rem", backgroundColor: "#f0ebeb", width: "100%", height: "100%", margin: "0px" };
   } else if (typeof params.value != "string" && !isNaN(params.value) && params.value != undefined) {
     value = addTrailingZeros(params.formattedValue, decGen(params.colDef.units));
   }
 
   [value, cellStyle] = fixedValueDecoder(params, value, cellStyle);
 
+  if (params.colDef.link) {
+    const TGTLINE = params.row[params.colDef.link];
+    return <SPLink title={value} line={TGTLINE} style={cellStyle} />;
+  }
+
   return <span style={cellStyle}>{value}</span>;
+}
+
+function decodeSize(size, args) {
+  switch (size) {
+    case "XS":
+      args.flex = 0.6;
+      args.minWidth = 70;
+      return args;
+    case "S":
+      args.flex = 0.8;
+      args.minWidth = 80;
+      return args;
+    case "M":
+      args.flex = 1;
+      args.minWidth = 110;
+      return args;
+    case "L":
+      args.flex = 1.1;
+      args.minWidth = 150;
+      return args;
+    case "XL":
+      args.flex = 1.3;
+      args.minWidth = 200;
+      return args;
+    case "XXL":
+      args.flex = 1.5;
+      args.minWidth = 250;
+      return args;
+    default:
+      return args;
+  }
 }
 
 export function fieldGen(field, headerName, args = {}) {
@@ -114,8 +145,8 @@ export function fieldGen(field, headerName, args = {}) {
   let defaultArgs = {
     field: field,
     headerName: headerName,
-    flex: 0.5,
-    minWidth: 60,
+    flex: 0.6,
+    minWidth: 70,
     show: true,
     sortable: true,
     units: "",
@@ -138,6 +169,9 @@ export function fieldGen(field, headerName, args = {}) {
       defaultArgs.valueFormatter = generateNumFormatter(decGen(args[key]), 1);
       defaultArgs.align = "right";
       defaultArgs.type = "number";
+    } else if (key === "size") defaultArgs = decodeSize(args[key], defaultArgs);
+    else if (key === "border" && args[key] === true) {
+      defaultArgs.cellClassName = "border-right--cell";
     }
     defaultArgs[key] = args[key];
   });
