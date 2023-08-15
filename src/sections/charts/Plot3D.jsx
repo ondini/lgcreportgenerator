@@ -4,14 +4,7 @@ import { get3DPoints } from "../../data_processing/processing";
 import Title from "../../components/Title";
 import { PLOT_3D_HEIGHT, PLOT_3D_WIDTH } from "../../data/constants";
 
-const Plot3D = ({ data }) => {
-  let coords = get3DPoints(data.LGC_DATA);
-  const datas = {
-    x: coords.map((coord) => coord[0]),
-    y: coords.map((coord) => coord[1]),
-    z: coords.map((coord) => coord[2]),
-  };
-
+const Plot3D = ({ pointsCoords }) => {
   const layout = {
     width: PLOT_3D_WIDTH,
     height: PLOT_3D_HEIGHT,
@@ -40,9 +33,9 @@ const Plot3D = ({ data }) => {
             {
               type: "scatter3d",
               mode: "markers",
-              x: datas.x,
-              y: datas.y,
-              z: datas.z,
+              x: pointsCoords.X,
+              y: pointsCoords.Y,
+              z: pointsCoords.Z,
             },
           ]}
           layout={layout}

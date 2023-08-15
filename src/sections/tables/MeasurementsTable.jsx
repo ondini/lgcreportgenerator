@@ -1,6 +1,7 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { getData } from "../../data_processing/processing";
 import Title from "../../components/Title";
+import { useMemo } from "react";
 
 const mergeMeasTypesData = (data) => {
   if (Object.keys(data).length === 0) {
@@ -14,8 +15,10 @@ const mergeMeasTypesData = (data) => {
 };
 
 export default function MeasurementsTable({ data }) {
-  const observations = getData(data.LGC_DATA, "STAT");
-  let [rows, columns] = mergeMeasTypesData(observations);
+  let [rows, columns] = useMemo(() => {
+    const measurements = getData(data.LGC_DATA, "STAT");
+    return mergeMeasTypesData(measurements);
+  }, []);
 
   return (
     <div style={{ height: "900px", marginBottom: "4rem" }}>

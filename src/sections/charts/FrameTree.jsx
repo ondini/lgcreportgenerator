@@ -1,11 +1,9 @@
 import React from "react";
 import Tree from "react-d3-tree";
 import Title from "../../components/Title";
-import { getFrameTree } from "../../data_processing/processing";
+import { getFrames } from "../../data_processing/processing";
 
-const FrameTree = ({ data }) => {
-  const myTreeData = getFrameTree(data.LGC_DATA);
-
+const FrameTree = ({ tree }) => {
   return (
     <>
       {" "}
@@ -27,7 +25,7 @@ const FrameTree = ({ data }) => {
           }}
         >
           <Tree
-            data={myTreeData}
+            data={tree}
             collapsible={true}
             pathFunc={"straight"}
             separation={{ nonSiblings: 1, siblings: 0.5 }}

@@ -260,7 +260,6 @@ const Histogram = ({ residuals }) => {
             onClick={() => {
               setNBinsInput(nBinsInput < 1 ? 1 : nBinsInput > 200 ? 200 : nBinsInput);
               setNBins(nBinsInput);
-              console.log(nBinsInput, nBins);
             }}
           >
             Submit

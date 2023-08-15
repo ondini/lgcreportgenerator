@@ -1,5 +1,4 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { get3DPointEstData } from "../../data_processing/processing";
 import Title from "../../components/Title";
 import { Box } from "@mui/system";
 
@@ -39,9 +38,8 @@ const generateTableStyle = () => {
   };
 };
 
-export default function Point3DTable({ data }) {
-  const pointsData = get3DPointEstData(data.LGC_DATA);
-
+export default function Point3DTable({ pointsData }) {
+  console.log(pointsData);
   return (
     <div style={{ height: "900px", marginBottom: "4rem" }}>
       <Title title="3D Points overview" id="tablePt3D" />

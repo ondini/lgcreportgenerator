@@ -504,29 +504,16 @@ const getTSTNObsRows = (measurement) => {
 // ================================================= //
 
 export const getFrames = (data) => {
+  // this function returns tree structure for react-d3-tree, structure is defined as nested dics
+  // each node has { name, children }, children is array of nodes
   let cols = generateFrameCols();
   let columns = generateColsData(cols);
 
-  var obsData = data.tree.reduce((acc, curr) => {
-    // reduce over all frames
-    for (const key of Object.keys(cols)) {
-      // get all data defined in cols
-      columns[key].push(getFromDict(curr, cols[key].path, [], cols[key].unitConv));
-    }
-    return acc;
-  }, columns);
-
-  return makeGridData(cols, obsData);
-};
-
-export const getFrameTree = (data) => {
-  // this function returns tree structure for react-d3-tree, structure is defined as nested dics
-  // each node has { name, children }, children is array of nodes
-
-  var structure = [];
+  var tree = [];
 
   data.tree.forEach((frame, index) => {
-    let children = structure;
+    // create tree structure
+    let children = tree;
     var node = {
       name: frame.frame.name,
       children: [],
@@ -537,37 +524,16 @@ export const getFrameTree = (data) => {
         children = children.find((child) => child.name === frameName).children;
       }
     });
-
     children.push(node);
-  });
 
-  return structure;
-};
-
-export const getFrameTreeEdges = (data) => {
-  var acc = { nodes: [], edges: [], map: {} };
-
-  data.tree.forEach((frame, index) => {
-    let x = Math.random();
-    let y = Math.random();
-
-    var node = {
-      id: frame.frame.name,
-      label: frame.frame.name,
-      x: x,
-      y: y,
-    };
-    acc.nodes.push(node);
-    acc.map[frame.frame.name] = node;
-    if (frame.branch.length > 1) {
-      acc.edges.push({
-        from: frame.branch[frame.branch.length - 2],
-        to: frame.frame.name,
-      });
+    // push frame data
+    for (const key of Object.keys(cols)) {
+      // get all data defined in cols
+      columns[key].push(getFromDict(frame, cols[key].path, [], cols[key].unitConv));
     }
   });
 
-  return acc;
+  return { tree: tree, ...makeGridData(cols, columns) };
 };
 
 // ================================================= //
@@ -575,22 +541,26 @@ export const getFrameTreeEdges = (data) => {
 // ================================================= //
 
 // 3D points for table
-export const get3DPointEstData = (data, colNames) => {
+export const get3DPointData = (data, colNames) => {
   let cols = generatePoint3DCols();
   let columns = generateColsData(cols);
   let lookupTable = {};
 
   var obsData = data.points.reduce((acc, curr) => {
     // reduce over all frames
+    let name, line;
     for (const key of Object.keys(cols)) {
       // get all data defined in cols
-      columns[key].push(getFromDict(curr, cols[key].path, [], cols[key].unitConv));
+      let val = getFromDict(curr, cols[key].path, [], cols[key].unitConv);
+      columns[key].push(val);
     }
+
+    lookupTable[columns["NAME"].slice(-1)] = columns["LINE"].slice(-1);
 
     return acc;
   }, columns);
 
-  return makeGridData(cols, obsData);
+  return { ...makeGridData(cols, obsData), lookup: lookupTable, coords: { X: columns.X, Y: columns.Y, Z: columns.Z } };
 };
 
 // 3D points for table

@@ -2,9 +2,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { getFrames } from "../../data_processing/processing";
 import Title from "../../components/Title";
 
-export default function FrameTable({ data }) {
-  const observations = getFrames(data.LGC_DATA);
-
+export default function FrameTable({ frameData }) {
   return (
     <div style={{ height: "900px", marginBottom: "4rem" }}>
       <Title title="Frame overview" id="frames" />
@@ -12,8 +10,8 @@ export default function FrameTable({ data }) {
         getRowId={(row) => {
           return row.NAME;
         }}
-        rows={observations.data}
-        columns={observations.columnDetails}
+        rows={frameData.data}
+        columns={frameData.columnDetails}
         hideFooter
         disableRowSelectionOnClick
         slots={{ toolbar: GridToolbar }}
