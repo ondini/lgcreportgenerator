@@ -7,7 +7,6 @@ const SPLink = ({ title, line }) => {
     if (event.ctrlKey) {
       window.location.href = `surveypad://link//${linkPathPlaceholder},${line}`;
     }
-    console.log(event);
   };
   return (
     <div onClick={clickHandler} className="link">

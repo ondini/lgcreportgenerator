@@ -39,7 +39,6 @@ const generateTableStyle = () => {
 };
 
 export default function Point3DTable({ pointsData }) {
-  console.log(pointsData);
   return (
     <div style={{ height: "900px", marginBottom: "4rem" }}>
       <Title title="3D Points overview" id="tablePt3D" />

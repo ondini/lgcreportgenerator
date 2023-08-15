@@ -52,34 +52,23 @@ export const generateTSTNObsCols = () => {
       felx: 1,
       minWidth: 250,
       path: "instrumentPos",
+      link: "INSLINE",
       tooltip: ({ row }) => {
         return (
-          <InstrumentTooltip
-            title={row.INSPOS}
-            details={
-              <>
-                <div>
-                  <b>Position data:</b> HI: {numFormatter(row.HI, 5)} SHI: {numFormatter(row.SHI, 2)} ROT3D:{" "}
-                  {row.ROT3D ? "true" : "false"}
-                </div>
-                <div>
-                  <b>Rom data:</b> ACST: {numFormatter(row.ACST, 5)} V0: {numFormatter(row.V0, 5)} SV0:{" "}
-                  {numFormatter(row.SV0, 1)}
-                </div>
-              </>
-            }
-          />
+          <>
+            <div>
+              <b>Position data:</b> HI: {numFormatter(row.HI, 5)} SHI: {numFormatter(row.SHI, 2)} ROT3D:{" "}
+              {row.ROT3D ? "true" : "false"}
+            </div>
+            <div>
+              <b>Rom data:</b> ACST: {numFormatter(row.ACST, 5)} V0: {numFormatter(row.V0, 5)} SV0:{" "}
+              {numFormatter(row.SV0, 1)}
+            </div>
+          </>
         );
       },
     }), // instrument position
-    INSLINE: fieldGen("INSLINE", "ILine", {
-      flex: 0.11,
-      minWidth: 50,
-      path: "line",
-      renderCell: ({ row: { INSLINE } }) => {
-        return <a href={`surveypad://link//${linkPathPlaceholder},${INSLINE}`}>{INSLINE}</a>;
-      },
-    }), // instrument line
+    INSLINE: fieldGen("INSLINE", "ILine", { path: "line", show: false }), // instrument line
     TGTPOS: fieldGen("TGTPOS", "Tgt. Pos.", {
       flex: 1,
       minWidth: 150,

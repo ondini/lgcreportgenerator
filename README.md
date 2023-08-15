@@ -82,7 +82,7 @@ Stations Table:
 
 3d Point Table:
 
-- ! take Sigma data from diagonal !!!
+- ~~! take Sigma data from diagonal ~~
 - ~~! 0 padding for columns (trailing zeros)~~
 - ! export to csv perhaps
 - ! mark columns by categories (vertical line)

@@ -13,10 +13,27 @@
   text-decoration: none;
   background-color: transparent;
   cursor: pointer;
+  padding: "0.5rem";
 }
 
 .link:hover {
-  color: #b30000;
+  color: #ff00b354;
+  text-decoration: underline;
+}
+
+.tooltip {
+  background-color: rgba(196, 248, 255, 0.4);
+  color: #02767aef;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 10px;
+  margin-left: 0.5rem;
+}
+
+.tooltip:hover {
+  background-color: rgba(196, 248, 255, 0.2);
+  color: #02767a6c;
+  text-decoration: dashed;
   text-decoration: underline;
 }
 

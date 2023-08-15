@@ -18,7 +18,7 @@ export default function MeasurementsTable({ data }) {
   let [rows, columns] = useMemo(() => {
     const measurements = getData(data.LGC_DATA, "STAT");
     return mergeMeasTypesData(measurements);
-  }, []);
+  }, [data.LGC_DATA]);
 
   return (
     <div style={{ height: "900px", marginBottom: "4rem" }}>

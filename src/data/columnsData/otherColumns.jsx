@@ -2,8 +2,6 @@ import { fieldGen, getVarTypeFromFixed, fieldGene } from "./colUtils";
 import { distM2MMf } from "../constants";
 import { linkPathPlaceholder } from "../constants";
 
-import "./otherColumns.css";
-
 // =======================================================
 // =============== POINT3D TABLE COLUMNS =================
 // =======================================================

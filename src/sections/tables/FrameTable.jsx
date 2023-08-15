@@ -1,5 +1,4 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { getFrames } from "../../data_processing/processing";
 import Title from "../../components/Title";
 
 export default function FrameTable({ frameData }) {

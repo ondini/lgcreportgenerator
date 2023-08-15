@@ -17,7 +17,7 @@ import { styled } from "@mui/material/styles";
 import { useState, useMemo } from "react";
 import { getData, get3DPointData, getFrames } from "./data_processing/processing";
 
-const dataFile = "2022-11-29_ ATLAS_network_YETS2022-23_TestJSON.json";
+const dataFile = "Example.json";
 const GMData = require(`./jsons_tmp/${dataFile}`);
 
 const MainLayoutStyle = styled("div")(({ theme }) => ({

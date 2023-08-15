@@ -1,7 +1,7 @@
 import { pointTypes, DP } from "../constants";
 import { linkPathPlaceholder } from "../constants";
 
-import SPLink from "../../components/SPLink";
+import { SPLink, InstrumentTooltip } from "../../components";
 // =======================================================
 // ============= COLUMNS UTILITY FUNCTIONS ===============
 // =======================================================
@@ -79,6 +79,16 @@ function decGen(unit) {
 // ========================================================================
 
 function cellRenderer(params) {
+  if (params.colDef.tooltip) {
+    return (
+      <InstrumentTooltip
+        title={params.value}
+        details={params.colDef.tooltip(params)}
+        line={params.colDef.link ? params.row[params.colDef.link] : undefined}
+      />
+    );
+  }
+
   if (params.colDef.link) {
     const TGTLINE = params.row[params.colDef.link];
     return <SPLink title={params.value} line={TGTLINE} />;
