@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import "./Header.css";
 import { measurementTypes } from "../data/constants";
 import { numFormatter } from "../data/columnsData/colUtils";

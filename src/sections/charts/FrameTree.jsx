@@ -1,7 +1,6 @@
 import React from "react";
 import Tree from "react-d3-tree";
 import Title from "../../components/Title";
-import { getFrames } from "../../data_processing/processing";
 
 const FrameTree = ({ tree }) => {
   return (

@@ -27,6 +27,7 @@ const InstrumentTooltip = ({ title, details, line = undefined }) => {
 
   const handleTooltipOpen = (event) => {
     setOpen(true);
+    console.log(line);
     if (event.ctrlKey && line) {
       window.location.href = `surveypad://link//${linkPathPlaceholder},${line}`;
     }

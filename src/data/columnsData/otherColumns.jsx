@@ -9,17 +9,23 @@ import { linkPathPlaceholder } from "../constants";
 
 export const generatePoint3DCols = () => {
   return {
-    NAME: fieldGen("NAME", "Name", { flex: 1.3, minWidth: 130, path: "fName", link: "LINE" }),
+    NAME: fieldGen("NAME", "Name", { size: "L", path: "fName", link: "LINE" }),
     LINE: fieldGen("LINE", "Line", { path: "line", show: false }),
     TYPE: fieldGen("TYPE", "Type", { path: "fixedState", unitConv: getVarTypeFromFixed }),
-    FRAME: fieldGen("FRAME", "Frame", { flex: 0.4, minWidth: 50, path: "fFramePosition_Name", units: "M" }),
-    X: fieldGen("X", "X", { flex: 1, minWidth: 100, path: "fEstimatedValueInRoot/fVector/0", units: "M" }),
-    Y: fieldGen("Y", "Y", { flex: 1, minWidth: 100, path: "fEstimatedValueInRoot/fVector/1", units: "M" }),
-    Z: fieldGen("Z", "Z", { flex: 1, minWidth: 100, path: "fEstimatedValueInRoot/fVector/2", units: "M" }),
-    H: fieldGen("H", "H", { flex: 1, minWidth: 100, path: "fEstimatedHeightInRoot/fValue", units: "M" }),
+    FRAME: fieldGen("FRAME", "Frame", { path: "fFramePosition_Name", units: "M", border: true }),
+    X: fieldGen("X", "X", { size: "L", path: "fEstimatedValueInRoot/fVector/0", units: "M" }),
+    Y: fieldGen("Y", "Y", { size: "L", path: "fEstimatedValueInRoot/fVector/1", units: "M" }),
+    Z: fieldGen("Z", "Z", { size: "L", path: "fEstimatedValueInRoot/fVector/2", units: "M" }),
+    H: fieldGen("H", "H", {
+      size: "L",
+      minWidth: 100,
+      path: "fEstimatedHeightInRoot/fValue",
+      units: "M",
+      border: true,
+    }),
     SX: fieldGen("SX", "SX", { path: "fCovarianceMatrixInRoot/0/0", units: "MM" }),
     SY: fieldGen("SY", "SY", { path: "fCovarianceMatrixInRoot/1/1", units: "MM" }),
-    SZ: fieldGen("SZ", "SZ", { path: "fCovarianceMatrixInRoot/2/2", units: "MM" }),
+    SZ: fieldGen("SZ", "SZ", { path: "fCovarianceMatrixInRoot/2/2", units: "MM", border: true }),
     DX: fieldGen("DX", "DX", {
       unitConv: distM2MMf,
       path: "!fEstimatedValueInRoot/fVector/0!-!fProvisionalValueInRoot/fVector/0!",
@@ -42,14 +48,20 @@ export const generatePoint3DCols2 = () => {
   return {
     id: fieldGene("id", "Name", { flex: 1.3, minWidth: 130, path: "fName" }),
     TYPE: fieldGene("TYPE", "Type", { path: "fixedState", unitConv: getVarTypeFromFixed, show: false }),
-    FRAME: fieldGene("FRAME", "Frame", { flex: 0.4, minWidth: 50, path: "fFramePosition_Name" }),
+    FRAME: fieldGene("FRAME", "Frame", { flex: 0.4, minWidth: 50, path: "fFramePosition_Name", border: true }),
     X: fieldGene("X", "X", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedValueInRoot/fVector/0" }),
     Y: fieldGene("Y", "Y", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedValueInRoot/fVector/1" }),
     Z: fieldGene("Z", "Z", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedValueInRoot/fVector/2" }),
-    H: fieldGene("H", "H", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedHeightInRoot/fValue" }),
+    H: fieldGene("H", "H", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedHeightInRoot/fValue", border: true }),
     SX: fieldGene("SX", "SX", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fCovarianceMatrixInRoot/0/0" }),
     SY: fieldGene("SY", "SY", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fCovarianceMatrixInRoot/1/1" }),
-    SZ: fieldGene("SZ", "SZ", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fCovarianceMatrixInRoot/2/2" }),
+    SZ: fieldGene("SZ", "SZ", {
+      flex: 0.4,
+      minWidth: 50,
+      numDecs: 2,
+      path: "fCovarianceMatrixInRoot/2/2",
+      border: true,
+    }),
     DX: fieldGene("DX", "DX", {
       unitConv: distM2MMf,
       path: "!fEstimatedValueInRoot/fVector/0!-!fProvisionalValueInRoot/fVector/0!",
@@ -72,19 +84,19 @@ export const generatePoint3DCols2 = () => {
 // =============== STATIONS TABLE COLUMNS ================
 // =======================================================
 
-export const generateStationsCols = () => {
+export const generateMeasurementsCols = () => {
   return {
     // ================== TOOLTIP INFO ==================
 
     // ================== STATION INFO ==================
-    TYPE: fieldGen("TYPE", "Type", { flex: 0.5, minWidth: 50, keyword: "fObsText" }), // temporary, is replaced individually
-    STN_POS: fieldGen("STN_POS", "Station position", {
-      flex: 1,
-      minWidth: 200,
-      cellClassName: "name-column--cell border-right--cell",
+    MMT_POS: fieldGen("MMT_POS", "Msmt. position", {
+      size: "L",
+      link: "MMT_LINE",
       keyword: "fObsText",
+      border: true,
     }),
-    // STN_LINE: fieldGen("STN_LINE", "Station line"),
+    MMT_LINE: fieldGen("MMT_LINE", "Msmt. line", { show: false }),
+    TYPE: fieldGen("TYPE", "Type", { keyword: "fObsText", border: true }), // temporary, is replaced individually
     RES_MAX: fieldGen("RES_MAX", "Res. Max.", { units: "MM", keyword: "fResMax" }),
     RES_MIN: fieldGen("RES_MIN", "Res. Min.", { units: "MM", keyword: "fResMin" }),
     RES_AVG: fieldGen("RES_AVG", "Res. Avg.", { units: "MM", keyword: "fMean" }),

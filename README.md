@@ -115,8 +115,9 @@ Frames:
 - ~~! tree diagram of frames with transformation information on edges~~
 - ~~ ! tree plot collapsible ~~
 - ! tree plot line to jump to frame definition (link) from node
+- ! resolve zooming
 - ~~! table fixedTranfParams should be visible in table - color tx ty etc, + make sigmas no_value if it is fixed + legend for colors~~
-- ! table add line column into table (with link)
+- ~~! add line column into table (with link)~~
 
 General stuff:
 

@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import Plot from "react-plotly.js";
 import { useState } from "react";
-import { getData } from "../../data_processing/processing";
-import Title from "../../components/Title";
+import { Title } from "../../components";
 import "./Histogram.css";
 import { Switch, TextField, Button } from "@mui/material";
 import { noSrcMeasTypes } from "../../data/constants";

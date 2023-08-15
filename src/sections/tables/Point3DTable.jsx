@@ -1,5 +1,4 @@
 import { Table, Title } from "../../components";
-import { Box } from "@mui/system";
 
 export default function Point3DTable({ pointsData }) {
   return (

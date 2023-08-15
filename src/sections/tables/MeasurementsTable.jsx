@@ -1,4 +1,3 @@
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { getData } from "../../data_processing/processing";
 import { Table, Title } from "../../components";
 import { useMemo } from "react";
@@ -14,9 +13,9 @@ const mergeMeasTypesData = (data) => {
   return [mergedData, data[Object.keys(data)[0]].columnDetails];
 };
 
-export default function MeasurementsTable({ data }) {
+export default function MeasurementsTable({ data, lookupTab3D }) {
   let [rows, columns] = useMemo(() => {
-    const measurements = getData(data.LGC_DATA, "STAT");
+    const measurements = getData(data.LGC_DATA, "STAT", lookupTab3D);
     return mergeMeasTypesData(measurements);
   }, [data.LGC_DATA]);
 

@@ -1,9 +1,12 @@
 import React from "react";
-import "./Title.css";
+
+const titleStyle = {
+  marginTop: "4rem",
+};
 
 const Title = ({ title, id }) => {
   return (
-    <div className="title" id={id}>
+    <div style={titleStyle} id={id}>
       <h2>{title}</h2>
     </div>
   );

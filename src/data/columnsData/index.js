@@ -16,7 +16,7 @@ import {
  } from './obsTableCols.jsx';
 
  import {
-    generateStationsCols,
+  generateMeasurementsCols,
     generateFrameCols,
     generatePoint3DCols,
     generatePoint3DCols2
@@ -28,7 +28,7 @@ export {
     generateTSTNObsCols, 
 
     
-    generateStationsCols,
+    generateMeasurementsCols,
     generateFrameCols,
     generatePoint3DCols,
     generatePoint3DCols2
