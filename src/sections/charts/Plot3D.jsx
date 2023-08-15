@@ -17,10 +17,8 @@ const Plot3D = ({ data }) => {
     height: PLOT_3D_HEIGHT,
     scene: {
       xaxis: { title: "X" },
-      yaxis: { title: "Y" },
-      zaxis: { title: "Z" },
-      aspectmode: "cube", // Set aspect mode to 'cube'
-      aspectratio: { x: 1, y: 1, z: 1 }, // Set equal aspect ratios for all axes
+      yaxis: { title: "Y", scaleanchor: "x" },
+      zaxis: { title: "Z", scaleanchor: "x" },
     },
     showlegend: false,
     border: "1px solid #e0e0e0",

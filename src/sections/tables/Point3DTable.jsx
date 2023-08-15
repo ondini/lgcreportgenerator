@@ -47,6 +47,9 @@ export default function Point3DTable({ data }) {
       <Title title="3D Points overview" id="tablePt3D" />
       <Box sx={generateTableStyle()}>
         <DataGrid
+          getRowId={(row) => {
+            return row.NAME;
+          }}
           rows={pointsData.data}
           columns={pointsData.columnDetails}
           hideFooter

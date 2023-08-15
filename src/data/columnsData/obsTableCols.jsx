@@ -52,7 +52,7 @@ export const generateTSTNObsCols = () => {
       felx: 1,
       minWidth: 250,
       path: "instrumentPos",
-      renderCell: ({ row }) => {
+      tooltip: ({ row }) => {
         return (
           <InstrumentTooltip
             title={row.INSPOS}
@@ -88,8 +88,7 @@ export const generateTSTNObsCols = () => {
     }), // target position
     TGTLINE: fieldGen("TGTLINE", "TLine", { show: false, path: "roms/i/measPLR3D/i/line" }), // target line
     TYPE: fieldGen("TYPE", "Type", { cellClassName: "border-right--cell" }), // type of measurement
-
-    OBSLINE: fieldGen("OBSLINE", "OLine", { show: false, path: "roms/i/measPLR3D/i/line" }), // target line
+    OBSLINE: fieldGen("OBSLINE", "OLine", { show: false, path: "roms/i/measPLR3D/i/line" }), // observation line
 
     // ========== ANGL ========== //
     OBSANGL: fieldGen("OBSANGL", "Obs. Angle", {

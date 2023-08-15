@@ -578,6 +578,7 @@ export const getFrameTreeEdges = (data) => {
 export const get3DPointEstData = (data, colNames) => {
   let cols = generatePoint3DCols();
   let columns = generateColsData(cols);
+  let lookupTable = {};
 
   var obsData = data.points.reduce((acc, curr) => {
     // reduce over all frames
@@ -585,6 +586,7 @@ export const get3DPointEstData = (data, colNames) => {
       // get all data defined in cols
       columns[key].push(getFromDict(curr, cols[key].path, [], cols[key].unitConv));
     }
+
     return acc;
   }, columns);
 

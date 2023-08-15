@@ -11,13 +11,8 @@ import "./otherColumns.css";
 
 export const generatePoint3DCols = () => {
   return {
-    id: fieldGen("id", "Name", { flex: 1.3, minWidth: 130, path: "fName" }),
-    idLINE: fieldGen("idLINE", "Line", {
-      path: "line",
-      renderCell: ({ row: { idLINE } }) => {
-        return <a href={`surveypad://link//${linkPathPlaceholder},${idLINE}`}>{idLINE}</a>;
-      },
-    }),
+    NAME: fieldGen("NAME", "Name", { flex: 1.3, minWidth: 130, path: "fName", link: "LINE" }),
+    LINE: fieldGen("LINE", "Line", { path: "line", show: false }),
     TYPE: fieldGen("TYPE", "Type", { path: "fixedState", unitConv: getVarTypeFromFixed }),
     FRAME: fieldGen("FRAME", "Frame", { flex: 0.4, minWidth: 50, path: "fFramePosition_Name", units: "M" }),
     X: fieldGen("X", "X", { flex: 1, minWidth: 100, path: "fEstimatedValueInRoot/fVector/0", units: "M" }),

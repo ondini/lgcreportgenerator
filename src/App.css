@@ -8,6 +8,18 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.link {
+  color: #ff00b3;
+  text-decoration: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: #b30000;
+  text-decoration: underline;
+}
+
 @media screen and (max-width: 2500px) {
   .app {
     padding: 2rem;

@@ -1,9 +1,17 @@
 import { pointTypes, DP } from "../constants";
 import { linkPathPlaceholder } from "../constants";
 
+import SPLink from "../../components/SPLink";
 // =======================================================
 // ============= COLUMNS UTILITY FUNCTIONS ===============
 // =======================================================
+
+export const getVarTypeFromFixed = (fixedState) => {
+  // compute point type from fixed state
+  // convert fixed state T/F values to binary string, parse it as int and use it as index in pointTypes array (containing names)
+  const index = parseInt(fixedState.map((i) => (i ? 1 : 0)).join(""), 2);
+  return pointTypes[index];
+};
 
 export function generateNumFormatter(decimals, factor) {
   // function for generating other function which serves as number formatter for the DataGrid
@@ -27,6 +35,70 @@ function addTrailingZeros(num, numDecs) {
   return str.padEnd(numDecs + decs[0].length + 1, "0");
 }
 
+function fixedValueDecoder(params, value, cellStyle) {
+  let fixed = false;
+  if (params.colDef.fixator) {
+    fixed =
+      params.colDef.fixator[0] === "-"
+        ? params.row[params.colDef.fixator.slice(1)] === false
+        : params.colDef.fixator[0] === "x"
+        ? params.row[params.colDef.fixator.slice(1)]
+        : params.row[params.colDef.fixator];
+  }
+
+  if (fixed) {
+    if (params.colDef.fixator[0] === "x") {
+      value = "";
+      cellStyle = { backgroundColor: "#f0ebeb", width: "100%", height: "100%" };
+    } else {
+      cellStyle = { ...cellStyle, color: "#c2c2c2" };
+    }
+  }
+  return [value, cellStyle];
+}
+
+function decGen(unit) {
+  // function for generating number of decimals for the DataGrid given by units and default precision
+  const prec = DP.precision < 0 ? 0 : DP.precision > 7 ? 7 : DP.precision;
+  switch (unit) {
+    case "M":
+    case "GON":
+      return prec;
+    case "MM":
+    case "-": // for res/sig
+    case "MM/CM":
+    case "MM/KM":
+      return prec - 3 > 0 ? prec - 3 : 0;
+    case "CC":
+      return prec - 4 > 0 ? prec - 4 : 0;
+  }
+}
+
+// ========================================================================
+// ============= COLUMNS RENDERING AND DEFINITION FUNCTIONS ===============
+// ========================================================================
+
+function cellRenderer(params) {
+  if (params.colDef.link) {
+    const TGTLINE = params.row[params.colDef.link];
+    return <SPLink title={params.value} line={TGTLINE} />;
+  }
+
+  let cellStyle = { padding: "0.5rem" }; // base style for cell
+
+  let value = params.value === undefined || isNaN(params.value) ? params.value : params.formattedValue;
+
+  if (typeof params.value != "string" && (params.value === undefined || isNaN(params.value))) {
+    cellStyle = { backgroundColor: "#f0ebeb", width: "100%", height: "100%" };
+  } else if (typeof params.value != "string" && !isNaN(params.value) && params.value != undefined) {
+    value = addTrailingZeros(params.formattedValue, decGen(params.colDef.units));
+  }
+
+  [value, cellStyle] = fixedValueDecoder(params, value, cellStyle);
+
+  return <span style={cellStyle}>{value}</span>;
+}
+
 export function fieldGen(field, headerName, args = {}) {
   // function generating template for DataGrid column definition
   let defaultArgs = {
@@ -41,47 +113,10 @@ export function fieldGen(field, headerName, args = {}) {
     renderHeader: (params) => (
       <>
         <strong>{params.colDef.headerName}</strong>
-        <span>{params.colDef.units == "" ? "" : "(" + params.colDef.units + ")"}</span>
+        <span>{params.colDef.units == "" ? "" : "(" + params.colDef.units.toLowerCase() + ")"}</span>
       </>
     ),
-
-    renderCell: (params) => {
-      let cellStyle = { padding: "0.5rem" };
-      let value = params.value === undefined || isNaN(params.value) ? params.value : params.formattedValue;
-      if (typeof params.value != "string" && (params.value === undefined || isNaN(params.value))) {
-        cellStyle = { backgroundColor: "#f0ebeb", width: "100%", height: "100%" };
-      } else if (typeof params.value != "string" && !isNaN(params.value) && params.value != undefined) {
-        cellStyle = { ...cellStyle, textAlign: "right" };
-        value = addTrailingZeros(params.formattedValue, decGen(params.colDef.units));
-      }
-      let fixed = false;
-      if (params.colDef.fixator) {
-        fixed =
-          params.colDef.fixator[0] === "-"
-            ? params.row[params.colDef.fixator.slice(1)] === false
-            : params.colDef.fixator[0] === "x"
-            ? params.row[params.colDef.fixator.slice(1)]
-            : params.row[params.colDef.fixator];
-      }
-      if (fixed) {
-        if (params.colDef.fixator[0] === "x") {
-          value = "";
-          cellStyle = { backgroundColor: "#f0ebeb", width: "100%", height: "100%" };
-        } else {
-          cellStyle = { ...cellStyle, color: "#c2c2c2" };
-        }
-      }
-
-      if (params.colDef.link) {
-        const TGTLINE = params.row[params.colDef.link];
-        return (
-          <a style={cellStyle} href={`surveypad://link//${linkPathPlaceholder},${TGTLINE}`}>
-            {params.value}
-          </a>
-        );
-      }
-      return <span style={cellStyle}>{value}</span>;
-    },
+    renderCell: cellRenderer,
   };
 
   Object.keys(args).forEach((key) => {
@@ -98,22 +133,6 @@ export function fieldGen(field, headerName, args = {}) {
   });
 
   return defaultArgs;
-}
-
-function decGen(unit) {
-  const prec = DP.defaultPrecision < 0 ? 0 : DP.defaultPrecision > 7 ? 7 : DP.defaultPrecision;
-  switch (unit) {
-    case "M":
-    case "GON":
-      return prec;
-    case "MM":
-    case "-": // for res/sig
-    case "MM/CM":
-    case "MM/KM":
-      return prec - 3 > 0 ? prec - 3 : 0;
-    case "CC":
-      return prec - 4 > 0 ? prec - 4 : 0;
-  }
 }
 
 export function fieldGene(field, headerName, args = {}) {
@@ -168,10 +187,3 @@ export function fieldGene(field, headerName, args = {}) {
 
   return defaultArgs;
 }
-
-export const getVarTypeFromFixed = (fixedState) => {
-  // compute point type from fixed state
-  // convert fixed state T/F values to binary string, parse it as int and use it as index in pointTypes array (containing names)
-  const index = parseInt(fixedState.map((i) => (i ? 1 : 0)).join(""), 2);
-  return pointTypes[index];
-};
