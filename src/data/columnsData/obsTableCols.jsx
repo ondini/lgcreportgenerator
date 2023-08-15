@@ -49,7 +49,7 @@ export const generateTSTNObsCols = () => {
       link: "INSLINE",
     }), // instrument id
     INSPOS: fieldGen("INSPOS", "Instr. Pos.", {
-      size: "XL",
+      size: "XXL",
       path: "instrumentPos",
       link: "INSLINE",
       tooltip: ({ row }) => {

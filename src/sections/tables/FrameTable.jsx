@@ -1,19 +1,16 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import Title from "../../components/Title";
+import { Table, Title } from "../../components";
 
 export default function FrameTable({ frameData }) {
   return (
     <div style={{ height: "900px", marginBottom: "4rem" }}>
       <Title title="Frame overview" id="frames" />
-      <DataGrid
+      <Table
         getRowId={(row) => {
           return row.NAME;
         }}
         rows={frameData.data}
         columns={frameData.columnDetails}
-        hideFooter
-        disableRowSelectionOnClick
-        slots={{ toolbar: GridToolbar }}
       />
     </div>
   );

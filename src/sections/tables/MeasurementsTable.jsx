@@ -1,6 +1,6 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { getData } from "../../data_processing/processing";
-import Title from "../../components/Title";
+import { Table, Title } from "../../components";
 import { useMemo } from "react";
 
 const mergeMeasTypesData = (data) => {
@@ -23,15 +23,12 @@ export default function MeasurementsTable({ data }) {
   return (
     <div style={{ height: "900px", marginBottom: "4rem" }}>
       <Title title={"Measurement statistics"} id="measurements" />
-      <DataGrid
+      <Table
         getRowId={(row) => {
           return Math.floor(Math.random() * 100000000000);
         }}
         rows={rows}
         columns={columns}
-        hideFooter
-        disableRowSelectionOnClick
-        slots={{ toolbar: GridToolbar }}
       />
     </div>
   );
