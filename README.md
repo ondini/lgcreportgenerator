@@ -10,6 +10,10 @@ Notes -> supported measurement types are defined in constants -> each of them mu
 
 -> Columns for instrument line are ready, but they are not accessible in the object, so needs to be added later.
 
+-> How fixed arguments work
+-> How link arguments & lookup table work, + instrument tooltip
+-> How computations with ! work
+
 #### Single file compilation
 
 In this part is explained, how to change (and how was changed) the react project from classical create-react-app template to template, which builds all the project into a single index.html.

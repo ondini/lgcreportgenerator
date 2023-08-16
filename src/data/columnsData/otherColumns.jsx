@@ -9,7 +9,7 @@ import { linkPathPlaceholder } from "../constants";
 
 export const generatePoint3DCols = () => {
   return {
-    NAME: fieldGen("NAME", "Name", { size: "L", path: "fName", link: "LINE" }),
+    NAME: fieldGen("NAME", "Name", { size: "XL", path: "fName", link: "LINE" }),
     LINE: fieldGen("LINE", "Line", { path: "line", show: false }),
     TYPE: fieldGen("TYPE", "Type", { path: "fixedState", unitConv: getVarTypeFromFixed }),
     FRAME: fieldGen("FRAME", "Frame", { path: "fFramePosition_Name", units: "M", border: true }),
@@ -110,25 +110,20 @@ export const generateMeasurementsCols = () => {
 
 export const generateFrameCols = () => {
   return {
-    NAME: fieldGen("NAME", "Name", { flex: 1, minWidth: 200, path: "frame/name" }),
-    LINE: fieldGen("LINE", "Line", {
-      path: "frame/line",
-      renderCell: ({ row: { LINE } }) => {
-        return <a href={`surveypad://link//${linkPathPlaceholder},${LINE}`}>{LINE}</a>;
-      },
-    }),
-    TX_INIT: fieldGen("TX_INIT", "TX initial", { units: "M", path: "frame/fProvParameter/0" }),
-    TY_INIT: fieldGen("TY_INIT", "TY initial", { units: "M", path: "frame/fProvParameter/1" }),
-    TZ_INIT: fieldGen("TZ_INIT", "TZ initial", { units: "M", path: "frame/fProvParameter/2" }),
-    RX_INIT: fieldGen("RX_INIT", "RX initial", { units: "GON", path: "frame/fProvParameter/3" }),
-    RY_INIT: fieldGen("RY_INIT", "RY initial", { units: "GON", path: "frame/fProvParameter/4" }),
-    RZ_INIT: fieldGen("RZ_INIT", "RZ initial", { units: "GON", path: "frame/fProvParameter/5" }),
-    TX_CALC: fieldGen("TX_CALC", "TX calculated", { units: "M", path: "frame/fEstParameter/0", fixator: "TX_FIXED" }),
-    TY_CALC: fieldGen("TY_CALC", "TY calculated", { units: "M", path: "frame/fEstParameter/1", fixator: "TY_FIXED" }),
-    TZ_CALC: fieldGen("TZ_CALC", "TZ calculated", { units: "M", path: "frame/fEstParameter/2", fixator: "TZ_FIXED" }),
-    RX_CALC: fieldGen("RX_CALC", "RX calculated", { units: "GON", path: "frame/fEstParameter/3", fixator: "RX_FIXED" }),
-    RY_CALC: fieldGen("RY_CALC", "RY calculated", { units: "GON", path: "frame/fEstParameter/4", fixator: "RY_FIXED" }),
-    RZ_CALC: fieldGen("RZ_CALC", "RZ calculated", { units: "GON", path: "frame/fEstParameter/5", fixator: "RZ_FIXED" }),
+    NAME: fieldGen("NAME", "Name", { size:"XL", path: "frame/name", link: "LINE" }),
+    LINE: fieldGen("LINE", "Line", { path: "frame/line", show: false }),
+    TX_INIT: fieldGen("TX_INIT", "TX initial", { units: "M", path: "frame/fProvParameter/0", size: "M" }),
+    TY_INIT: fieldGen("TY_INIT", "TY initial", { units: "M", path: "frame/fProvParameter/1", size: "M" }),
+    TZ_INIT: fieldGen("TZ_INIT", "TZ initial", { units: "M", path: "frame/fProvParameter/2", size: "M" }),
+    RX_INIT: fieldGen("RX_INIT", "RX initial", { units: "GON", path: "frame/fProvParameter/3", size: "M" }),
+    RY_INIT: fieldGen("RY_INIT", "RY initial", { units: "GON", path: "frame/fProvParameter/4", size: "M" }),
+    RZ_INIT: fieldGen("RZ_INIT", "RZ initial", { units: "GON", path: "frame/fProvParameter/5", size: "M" }),
+    TX_CALC: fieldGen("TX_CALC", "TX calculated", { units: "M", path: "frame/fEstParameter/0", fixator: "TX_FIXED", size: "M" }),
+    TY_CALC: fieldGen("TY_CALC", "TY calculated", { units: "M", path: "frame/fEstParameter/1", fixator: "TY_FIXED", size: "M" }),
+    TZ_CALC: fieldGen("TZ_CALC", "TZ calculated", { units: "M", path: "frame/fEstParameter/2", fixator: "TZ_FIXED", size: "M" }),
+    RX_CALC: fieldGen("RX_CALC", "RX calculated", { units: "GON", path: "frame/fEstParameter/3", fixator: "RX_FIXED", size: "M" }),
+    RY_CALC: fieldGen("RY_CALC", "RY calculated", { units: "GON", path: "frame/fEstParameter/4", fixator: "RY_FIXED", size: "M" }),
+    RZ_CALC: fieldGen("RZ_CALC", "RZ calculated", { units: "GON", path: "frame/fEstParameter/5", fixator: "RZ_FIXED", size: "M" }),
     TX_SIG: fieldGen("TX_SIG", "TX sigma", { units: "MM", path: "frame/fEstPrecision/0", fixator: "xTX_FIXED" }),
     TY_SIG: fieldGen("TY_SIG", "TY sigma", { units: "MM", path: "frame/fEstPrecision/1", fixator: "xTY_FIXED" }),
     TZ_SIG: fieldGen("TZ_SIG", "TZ sigma", { units: "MM", path: "frame/fEstPrecision/2", fixator: "xTZ_FIXED" }),

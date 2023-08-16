@@ -39,17 +39,17 @@ function fixedValueDecoder(params, value, cellStyle) {
   let fixed = false;
   if (params.colDef.fixator) {
     fixed =
-      params.colDef.fixator[0] === "-"
+      (params.colDef.fixator[0] === "-" || params.colDef.fixator[0] === "y" )
         ? params.row[params.colDef.fixator.slice(1)] === false
-        : params.colDef.fixator[0] === "x"
+        : params.colDef.fixator[0] === "x" 
         ? params.row[params.colDef.fixator.slice(1)]
         : params.row[params.colDef.fixator];
   }
 
   if (fixed) {
-    if (params.colDef.fixator[0] === "x") {
-      value = "";
-      cellStyle = { backgroundColor: "#f0ebeb", width: "100%", height: "100%" };
+    if (params.colDef.fixator[0] === "x" || params.colDef.fixator[0] === "y") {
+      value = "FIXED";
+      cellStyle = { ...cellStyle, color: "blue" };
     } else {
       cellStyle = { ...cellStyle, color: "#c2c2c2" };
     }
@@ -59,7 +59,7 @@ function fixedValueDecoder(params, value, cellStyle) {
 
 function decGen(unit) {
   // function for generating number of decimals for the DataGrid given by units and default precision
-  const prec = DP.precision < 0 ? 0 : DP.precision > 7 ? 7 : DP.precision;
+  const prec = DP.globalPrecision < 0 ? 0 : DP.globalPrecision > 7 ? 7 : DP.globalPrecision;
   switch (unit) {
     case "M":
     case "GON":
@@ -94,7 +94,7 @@ function cellRenderer(params) {
   let value = params.value === undefined || isNaN(params.value) ? params.value : params.formattedValue;
 
   if (typeof params.value != "string" && (params.value === undefined || isNaN(params.value))) {
-    cellStyle = { padding: "0rem", backgroundColor: "#f0ebeb", width: "100%", height: "100%", margin: "0px" };
+    cellStyle = { padding: 0, backgroundColor: "#f0ebeb", width: "100%", height: "100%", margin: "0px" };
   } else if (typeof params.value != "string" && !isNaN(params.value) && params.value != undefined) {
     value = addTrailingZeros(params.formattedValue, decGen(params.colDef.units));
   }

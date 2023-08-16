@@ -17,13 +17,13 @@ export const pointTypes = ["POIN", "VXY", "VXZ", "VX", "VYZ", "VY", "VZ", "CALA"
 
 export const noSrcMeasTypes = ["fOBSXYZ", "fRADI", "fDVER"]; // measurement types that do not have a source instrument
 
-export const DP = { precision: 6 }; // done this way, so that it is replacable after compilation
+export const DP = { globalPrecision: 6 }; // done this way, so that it is replacable after compilation
 export const linkPathPlaceholder = "linkPathPlaceholder";
 
 // ======= DISPLAY CONSTANTS =======
 
 export const NAVBAR_WIDTH_WIDE = "200px";
-export const PLOT_3D_WIDTH = 1200;
+export const PLOT_3D_WIDTH = 1100;
 export const PLOT_3D_HEIGHT = 1000;
 
 // ======= UNIT CONVERSION FACTORS =======
