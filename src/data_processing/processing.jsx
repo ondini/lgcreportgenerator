@@ -18,10 +18,12 @@ import { measurementTypes, pointTypes } from "../data/constants";
 // ============== UTILITY FUNCTIONS ================ //
 // ================================================= //
 
-const getFromDict = (data, path, iteratorVals, unitConv, subresult = false) => {
+const getFromDict = (data, path, iteratorVals, unitConv, lookupTab={}, subresult = false) => {
   // function used to get data from neseted dictionaries using path where each key is separated by "/"
   // if key is "i" then it is replaced by value from iterator array
   // if "!" is present in path, then the paths are interpreted as values to be used in expression resulting after splitting on ! and replacing the paths
+  // if lkp: is prefix of the path, use lookupTab to look for the value based on value following the prefix -> This is used for valus, which are not present
+  //     in the passed data and need to be obtained from different parts of JSON, preprocessed and passed separately like this.
 
   if (path.startsWith("!")) {
     // expression evaluation part
@@ -30,11 +32,14 @@ const getFromDict = (data, path, iteratorVals, unitConv, subresult = false) => {
       if (["", "+", "-", "*", "/"].includes(curr)) {
         return acc + curr;
       } else {
-        let val = getFromDict(data, curr, iteratorVals, unitConv, true);
+        let val = getFromDict(data, curr, iteratorVals, unitConv, lookupTab, true);
         return acc + (typeof val === "number" && val < 0 ? "(" + val + ")" : val);
       }
     }, "");
     return unitConv(eval(expr));
+  } else if (path.startsWith("lkp:")){
+    const key = getFromDict(data, path.slice(4), iteratorVals, unitConv, lookupTab, true); // slice 4, becasuse that is the lkp: offset
+    return lookupTab[key]
   } else {
     // gettin data from path
     let pathArr = path.split("/");
@@ -237,7 +242,6 @@ const getTSTNMeasurementRows = (measurement) => {
   let columns = generateColsData(cols);
 
   let keys = ["anglSummary_", "zendSummary_", "distSummary_", "dhorSummary_"];
-  console.log(measurement);
   measurement.fTSTN.forEach((curr) => {
     // go over all measurements
     for (let i = 0; i < curr.roms.length; i++) {
@@ -246,13 +250,13 @@ const getTSTNMeasurementRows = (measurement) => {
       keys.forEach((measName) => {
         // check all subtypes and add its values if present
         if (measName in rom) {
-          columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
-          columns["TYPE"].push(measName.slice(0, -8).toUpperCase());
           for (const key of Object.keys(cols)) {
             if (key !== "TYPE" && key !== "MMT_LINE") {
               columns[key].push(rom[measName][cols[key].keyword]);
             }
           }
+          columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
+          columns["TYPE"].push(measName.slice(0, -8).toUpperCase());
         }
       });
 
@@ -264,13 +268,13 @@ const getTSTNMeasurementRows = (measurement) => {
           ["DIST", "distObsSum"],
         ].forEach(([key, path]) => {
           if ("plr3dSummary_" in rom) {
-            columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
-            columns["TYPE"].push("PL3D:" + key);
             for (const key of Object.keys(cols)) {
               if (key !== "TYPE" && key !== "MMT_LINE") {
                 columns[key].push(rom["plr3dSummary_"][path][cols[key].keyword]);
               }
             }
+            columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
+            columns["TYPE"].push("PL3D:" + key);
           }
         });
       }
@@ -292,13 +296,13 @@ const getCAMMeasurementRows = (measurement, paths) => {
 
     measurement.fCAM.forEach((curr) => {
       if (sumType in curr[sumPath]) {
-        columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase() + ":" + obsName);
-        columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
         for (const key of Object.keys(cols)) {
           if (key !== "TYPE" && key !== "MMT_LINE") {
             columns[key].push(curr[sumPath][sumType][cols[key].keyword]);
           }
         }
+        columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase() + ":" + obsName);
+        columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
       }
     });
   });
@@ -317,13 +321,13 @@ const getNestedMeasurementRows = (measurement, paths) => {
     // sumPath is the path to the observation summary, uvdSummary_
     // sumType is summary type name, yVectorCompObsSum ...
 
-    columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase() + ":" + obsName);
-    columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
     for (const key of Object.keys(cols)) {
       if (key !== "TYPE" && key !== "MMT_LINE") {
         columns[key].push(measurement[sumPath][sumType][cols[key].keyword]);
       }
     }
+    columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase() + ":" + obsName);
+    columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
   });
 
   return makeGridData(cols, columns);
@@ -338,13 +342,13 @@ const getXMeasurementRows = (measurement, path) => {
 
   measurement[obsType].forEach((curr) => {
     if (curr[sumPath].fIsInitialised) {
-      columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase());
-      columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
       for (const key of Object.keys(cols)) {
         if (key !== "TYPE" && key !== "MMT_LINE") {
           columns[key].push(curr[sumPath][cols[key].keyword]);
         }
       }
+      columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase());
+      columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
     }
   });
 
@@ -358,12 +362,13 @@ const getNTMeasurementRows = (measurement, path) => {
 
   const [obsType, sumPath] = path;
 
-  columns["TYPE"].push(obsType.slice(1));
   for (const key of Object.keys(cols)) {
-    if (key !== "TYPE") {
+    if (key !== "TYPE" && key !== "MMT_LINE") {
       columns[key].push(measurement[sumPath][cols[key].keyword]);
     }
   }
+  columns["TYPE"].push(obsType.slice(1));
+  columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
 
   return makeGridData(cols, columns);
 };
@@ -463,12 +468,12 @@ const getTSTNObsRows = (measurement) => {
 
   let keys = ["measPLR3D", "measANGL", "measZEND", "measDIST", "measDHOR"];
 
-  const getTSTNRowVal = (allColPaths, curr, cols, iterationIndices, measName, key) => {
+  const getTSTNRowVal = (allColPaths, curr, cols, iterationIndices, measName, key, lookupTab) => {
     // function that gets value for each row in TSTN
     if (measName == "measPLR3D") {
-      return getFromDict(curr, cols[key].path, iterationIndices, cols[key].unitConv);
+      return getFromDict(curr, cols[key].path, iterationIndices, cols[key].unitConv, lookupTab);
     } else if (key in allColPaths[measName]) {
-      return getFromDict(curr, allColPaths[measName][key].path, iterationIndices, cols[key].unitConv);
+      return getFromDict(curr, allColPaths[measName][key].path, iterationIndices, cols[key].unitConv, lookupTab);
     } else {
       return undefined;
     }
@@ -487,7 +492,7 @@ const getTSTNObsRows = (measurement) => {
             for (const key of Object.keys(cols)) {
               // check all data defined in cols
               if (key !== "TYPE") {
-                columns[key].push(getTSTNRowVal(allColPaths, curr, cols, [i, j], measName, key));
+                columns[key].push(getTSTNRowVal(allColPaths, curr, cols, [i, j], measName, key, measurement.lookup));
               }
             }
             columns["TYPE"].push(measName.slice(4));

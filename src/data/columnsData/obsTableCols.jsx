@@ -67,13 +67,13 @@ export const generateTSTNObsCols = () => {
         );
       },
     }), // instrument position
-    INSLINE: fieldGen("INSLINE", "ILine", { path: "line", show: false }), // instrument line
+    INSLINE: fieldGen("INSLINE", "ILine", { path: "lkp:instrumentPos", show: false }), // instrument line
     TGTPOS: fieldGen("TGTPOS", "Tgt. Pos.", {
       size: "L",
       path: "roms/i/measPLR3D/i/targetPos",
       link: "TGTLINE",
     }), // target position
-    TGTLINE: fieldGen("TGTLINE", "TLine", { show: false, path: "roms/i/measPLR3D/i/line" }), // target line
+    TGTLINE: fieldGen("TGTLINE", "TLine", { show: false, path: "lkp:roms/i/measPLR3D/i/targetPos" }), // target line
     TYPE: fieldGen("TYPE", "Type", { border: true }), // type of measurement
     OBSLINE: fieldGen("OBSLINE", "OLine", { show: false, path: "roms/i/measPLR3D/i/line" }), // observation line
 
@@ -257,9 +257,10 @@ export const generateANGLEPaths = () => {
     // ========== OBS DATA ========== //
     INSID: { path: "instrument/ID" }, // instrument id
     INSPOS: { path: "instrumentPos" }, // instrument position
-    INSLINE: { path: "line" }, // instrument line
-    TGTPOS: { path: "roms/i/measANGL/i/targetPos" }, // target position
-    TGTLINE: { path: "roms/i/measANGL/i/line" }, // target line
+    INSLINE: { path: "lkp:instrumentPos"}, // instrument line
+    TGTPOS: { path: "roms/i/measANGL/i/targetPos"}, // target position
+    TGTLINE: { path: "lkp:roms/i/measANGL/i/targetPos" }, // target line
+    OBSLINE: { path: "roms/i/measANGL/i/line" }, // observation line
     // ========== ANGLE DATA ========== //
     OBSANGL: { path: "roms/i/measANGL/i/angles/0/fValue" },
     SANGL: { path: "roms/i/measANGL/i/target/sigmaCombinedAngle" },
@@ -287,9 +288,10 @@ export const generateZENDPaths = () => {
     // ========== OBS DATA ========== //
     INSID: { path: "instrument/ID" }, // instrument id
     INSPOS: { path: "instrumentPos" }, // instrument position
-    INSLINE: { path: "line" }, // instrument line
-    TGTPOS: { path: "roms/i/measZEND/i/targetPos" }, // target position
-    TGTLINE: { path: "roms/i/measZEND/i/line" }, // target line
+    INSLINE: { path: "lkp:instrumentPos"}, // instrument line
+    TGTPOS: { path: "roms/i/measZEND/i/targetPos"}, // target position
+    TGTLINE: { path: "lkp:roms/i/measZEND/i/targetPos" }, // target line
+    OBSLINE: {  path: "roms/i/measZEND/i/line" }, // observation line
     // ========== ZEND DATA ========== //
     OBSZEND: { path: "roms/i/measZEND/i/angles/0/fValue" },
     SZEND: { path: "roms/i/measZEND/i/target/sigmaCombinedAngle" },
@@ -317,9 +319,10 @@ export const generateDISTPaths = () => {
     // ========== OBS DATA ========== //
     INSID: { path: "instrument/ID" }, // instrument id
     INSPOS: { path: "instrumentPos" }, // instrument position
-    INSLINE: { path: "line" }, // instrument line
-    TGTPOS: { path: "roms/i/measDIST/i/targetPos" }, // target position
-    TGTLINE: { path: "roms/i/measDIST/i/line" }, // target line
+    INSLINE: { path: "lkp:instrumentPos"}, // instrument line
+    TGTPOS: { path: "roms/i/measDIST/i/targetPos"}, // target position
+    TGTLINE: { path: "lkp:roms/i/measDIST/i/targetPos" }, // target line
+    OBSLINE: {  path: "roms/i/measDIST/i/line" }, // observation line
     // ========== DIST DATA ========== //
     OBSDIST: { path: "roms/i/measDIST/i/distances/0/fValue" },
     SDIST: { path: "roms/i/measDIST/i/target/sigmaCombinedDist" },
