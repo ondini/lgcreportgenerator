@@ -2,6 +2,7 @@ import { pointTypes, DP } from "../constants";
 import { linkPathPlaceholder } from "../constants";
 
 import { SPLink, InstrumentTooltip } from "../../components";
+
 // =======================================================
 // ============= COLUMNS UTILITY FUNCTIONS ===============
 // =======================================================

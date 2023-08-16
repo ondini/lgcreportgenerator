@@ -39,6 +39,9 @@ const getFromDict = (data, path, iteratorVals, unitConv, lookupTab={}, subresult
     return unitConv(eval(expr));
   } else if (path.startsWith("lkp:")){
     const key = getFromDict(data, path.slice(4), iteratorVals, unitConv, lookupTab, true); // slice 4, becasuse that is the lkp: offset
+    if (path.indexOf("ECHO") !== -1){
+      console.log(key, lookupTab[key], lookupTab)
+    }
     return lookupTab[key]
   } else {
     // gettin data from path
@@ -393,7 +396,7 @@ const getXObsRows = (measurement, measType) => {
     for (let j = 0; j < curr[path[1]].length; j++) {
       // get all data defined in cols
       for (const key of Object.keys(cols)) {
-        columns[key].push(getFromDict(curr, cols[key].path, [j], cols[key].unitConv));
+        columns[key].push(getFromDict(curr, cols[key].path, [j], cols[key].unitConv, measurement.lookup));
       }
     }
     return acc;
@@ -555,14 +558,13 @@ export const get3DPointData = (data, colNames) => {
 
   var obsData = data.points.reduce((acc, curr) => {
     // reduce over all frames
-    let name, line;
     for (const key of Object.keys(cols)) {
       // get all data defined in cols
       let val = getFromDict(curr, cols[key].path, [], cols[key].unitConv);
       columns[key].push(val);
     }
-    lookupTable[columns["NAME"].slice(-1)] = columns["LINE"].slice(-1)[0];
-
+    lookupTable[columns["NAME"].slice(-1)[0]] = columns["LINE"].slice(-1)[0] > 0 ? columns["LINE"].slice(-1)[0]: 0;
+    
     return acc;
   }, columns);
 

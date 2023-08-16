@@ -17,7 +17,7 @@ import { styled } from "@mui/material/styles";
 import { useState, useMemo } from "react";
 import { getData, get3DPointData, getFrames } from "./data_processing/processing";
 
-const dataFile = "21517v2_mx_TSTN.json" //"SUS-1895_26465_TT2-radial_calage-FTN.json";
+const dataFile = "SUS-1895_26465_TT2-radial_calage-FTN.json" //"SUS-1895_26465_TT2-radial_calage-FTN.json";
 const GMData = require(`./jsons_tmp/${dataFile}`);
 
 const MainLayoutStyle = styled("div")(({ theme }) => ({
@@ -37,9 +37,11 @@ function App() {
     return get3DPointData(GMData.LGC_DATA);
   }, []);
 
+  console.log(points3D.lookup)
+
   const observations = useMemo(() => {
     return getData(GMData.LGC_DATA, "OBS", points3D.lookup);
-  }, []);
+  }, [points3D.lookup]);
 
   const frames = useMemo(() => {
     return getFrames(GMData.LGC_DATA);
