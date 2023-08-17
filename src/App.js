@@ -17,7 +17,7 @@ import { styled } from "@mui/material/styles";
 import { useState, useMemo } from "react";
 import { getData, get3DPointData, getFrames } from "./data_processing/processing";
 
-const dataFile = "926.json";
+const dataFile = "CAM_CAMD_UVEC_CALA.json";
 const GMData = require(`./jsons_tmp/${dataFile}`);
 
 const MainLayoutStyle = styled("div")(({ theme }) => ({
@@ -36,8 +36,6 @@ function App() {
   const points3D = useMemo(() => {
     return get3DPointData(GMData.LGC_DATA);
   }, []);
-
-  console.log(points3D.lookup)
 
   const observations = useMemo(() => {
     return getData(GMData.LGC_DATA, "OBS", points3D.lookup);

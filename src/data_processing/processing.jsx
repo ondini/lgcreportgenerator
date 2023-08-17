@@ -173,9 +173,9 @@ const statTypeSelector = (measurement, type) => {
     case "fTSTN":
       return getTSTNMeasurementRows(measurement);
     case "fOBSXYZ":
-      return getNestedMeasurementRows(measurement, fOBSXYZPaths);
+      return getOBSXYZMeasurementRows(measurement, fOBSXYZPaths);
     case "fECWI":
-      return getECWIMeasurementRows(measurement, fECWIPaths);
+      return getNestedMeasurementRows(measurement, fECWIPaths, "fECWI");
     case "fECHO":
       return getXMeasurementRows(measurement, ["fECHO", "echoSummary_"]);
     case "fORIE":
@@ -197,8 +197,8 @@ const statTypeSelector = (measurement, type) => {
     // let dhorRows = getXMeasurementRows(measurement, ["fLEVEL", "dhorSummary_"]);
     // return { data: dlevRows.data.concat(dhorRows.data), columnDetails: dlevRows.columnDetails };
     case "fCAM":
-      let uvecRows = getCAMMeasurementRows(measurement, UVECPaths);
-      let uvdRows = getCAMMeasurementRows(measurement, UVDPaths);
+      let uvecRows = getNestedMeasurementRows(measurement, UVECPaths, "fCAM");
+      let uvdRows = getNestedMeasurementRows(measurement, UVDPaths, "fCAM");
       return { data: uvecRows.data.concat(uvdRows.data), columnDetails: uvecRows.columnDetails };
     default:
       return {};
@@ -284,17 +284,16 @@ const getTSTNMeasurementRows = (measurement) => {
   return makeGridData(cols, columns);
 };
 
-const getCAMMeasurementRows = (measurement, paths) => {
-  // function that gets data for observation table for CAM meas. type
+const getNestedMeasurementRows = (measurement, paths, measType) => {
+  // function that gets data for observation table for ECWI, CAM
   let cols = generateMeasurementsCols();
   let columns = generateColsData(cols);
 
   paths.forEach(([obsName, sumPath, sumType]) => {
     // obsName is the name of the observation, X, Y ..
-    // sumPath is the path to the observation summary, uvdSummary_ ...
+    // sumPath is the path to the observation summary, uvdSummary_
     // sumType is summary type name, yVectorCompObsSum ...
-
-    measurement.fCAM.forEach((curr) => {
+    measurement[measType].forEach((curr) => {
       if (sumType in curr[sumPath]) {
         for (const key of Object.keys(cols)) {
           if (key !== "TYPE" && key !== "MMT_LINE") {
@@ -310,9 +309,8 @@ const getCAMMeasurementRows = (measurement, paths) => {
   return makeGridData(cols, columns);
 };
 
-const getNestedMeasurementRows = (measurement, paths) => {
-  // function that gets data for observation table for measType,
-  // OBSXYZ, ECWI
+const getOBSXYZMeasurementRows = (measurement, paths) => {
+  // function that gets data for observation table for OBSXYZ
   let cols = generateMeasurementsCols();
   let columns = generateColsData(cols);
 
@@ -328,30 +326,6 @@ const getNestedMeasurementRows = (measurement, paths) => {
     }
     columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase() + ":" + obsName);
     columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
-  });
-
-  return makeGridData(cols, columns);
-};
-
-const getECWIMeasurementRows = (measurement, paths) => {
-  // function that gets data for observation table for measType,
-  // OBSXYZ, ECWI
-  let cols = generateMeasurementsCols();
-  let columns = generateColsData(cols);
-
-  paths.forEach(([obsName, sumPath, sumType]) => {
-    // obsName is the name of the observation, X, Y ..
-    // sumPath is the path to the observation summary, uvdSummary_
-    // sumType is summary type name, yVectorCompObsSum ...
-    measurement.fECWI.forEach((curr) => {
-      for (const key of Object.keys(cols)) {
-        if (key !== "TYPE" && key !== "MMT_LINE") {
-          columns[key].push(curr[sumPath][sumType][cols[key].keyword]);
-        }
-      }
-      columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase() + ":" + obsName);
-      columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
-    });
   });
 
   return makeGridData(cols, columns);

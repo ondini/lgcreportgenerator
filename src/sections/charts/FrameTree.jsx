@@ -3,8 +3,6 @@ import Tree from "react-d3-tree";
 import Title from "../../components/Title";
 
 const FrameTree = ({ tree, numNodes }) => {
-  console.log(tree, numNodes);
-  console.log(Math.min(1, 2 / Math.sqrt(numNodes)), Math.sqrt(numNodes), 2 / Math.sqrt(numNodes));
   return (
     <>
       {" "}

@@ -82,27 +82,21 @@ export const generateTSTNObsCols = () => {
 
     // ========== ANGL ========== //
     OBSANGL: fieldGen("OBSANGL", "Obs. Angle", {
-      size: "M",
       units: "GON",
       path: "roms/i/measPLR3D/i/angles/0/fValue",
-      unitConv: angleRad2GONPosf,
       link: "OBSLINE",
     }), // angle observations
     SANGL: fieldGen("SANGL", "S. Ang.", {
       units: "CC",
       path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRAngl",
-      unitConv: angleRad2CCf,
     }), // angle standard deviation
     CALCANGL: fieldGen("CALCANGL", "Calc. Angl.", {
-      size: "M",
       units: "GON",
       path: "!roms/i/measPLR3D/i/angles/0/fValue!+!roms/i/measPLR3D/i/anglesResiduals/0/fValue!",
-      unitConv: angleRad2GONPosf,
     }), // calculated angle
     RESANGL: fieldGen("RESANGL", "Res. Angl.", {
       units: "CC",
       path: "roms/i/measPLR3D/i/anglesResiduals/0/fValue",
-      unitConv: angleRad2CCf,
     }), // angle residual
     RESSIGANGL: fieldGen("RESSIGANGL", "Res./Sig. Angl.", {
       units: "-",
@@ -111,21 +105,17 @@ export const generateTSTNObsCols = () => {
     ECARTSANGL: fieldGen("ECARTSANGL", "Ecarts Angl.", {
       units: "MM",
       path: "!roms/i/measPLR3D/i/distances/0/fValue!*!roms/i/measPLR3D/i/anglesResiduals/0/fValue!",
-      unitConv: distM2MMf,
     }), // angle ECARTS
     OBSEANGL: fieldGen("OBSEANGL", "Observ. Sig. Angl.", {
       units: "CC",
       path: "roms/i/measPLR3D/i/target/sigmaAngl",
       border: true,
-      unitConv: angleRad2CCf,
     }), // angle OBS SIGMA
 
     // ========== ZEND ========== //
     OBSZEND: fieldGen("OBSZEND", "Obs. Zend.", {
-      size: "M",
       units: "GON",
       path: "roms/i/measPLR3D/i/angles/1/fValue",
-      unitConv: angleRad2GONPosf,
       link: "OBSLINE",
     }), // zenith observations
     SZEND: fieldGen("SZEND", "S. Zend.", {
@@ -134,15 +124,12 @@ export const generateTSTNObsCols = () => {
       unitConv: angleRad2CCf,
     }), // zenith standard deviation
     CALCZEND: fieldGen("CALCZEND", "Calc. Zend.", {
-      size: "M",
       units: "GON",
       path: "!roms/i/measPLR3D/i/angles/1/fValue!+!roms/i/measPLR3D/i/anglesResiduals/1/fValue!",
-      unitConv: angleRad2GONPosf,
     }), // calculated zenith
     RESZEND: fieldGen("RESZEND", "Res. Zend.", {
       units: "CC",
       path: "roms/i/measPLR3D/i/anglesResiduals/1/fValue",
-      unitConv: angleRad2CCf,
     }), // zenith residual
     RESSIGZEND: fieldGen("RESSIGZEND", "Res./Sig. Zend.", {
       units: "-",
@@ -151,18 +138,15 @@ export const generateTSTNObsCols = () => {
     ECARTSZEND: fieldGen("ECARTSZEND", "Ecarts Zend.", {
       units: "MM",
       path: "!roms/i/measPLR3D/i/distances/0/fValue!*!roms/i/measPLR3D/i/anglesResiduals/1/fValue!",
-      unitConv: distM2MMf,
     }), // zenith ECARTS
     OBSEZEND: fieldGen("OBSEZEND", "Observ. Sig. Zend.", {
       units: "CC",
       path: "roms/i/measPLR3D/i/target/sigmaZenD",
       border: true,
-      unitConv: angleRad2CCf,
     }), // angle OBS ZEND
 
     // ========== DIST ========== //
     OBSDIST: fieldGen("OBSDIST", "Obs. Dist.", {
-      size: "M",
       units: "M",
       path: "roms/i/measPLR3D/i/distances/0/fValue",
       link: "OBSLINE",
@@ -173,14 +157,12 @@ export const generateTSTNObsCols = () => {
       unitConv: distM2MMf,
     }), // distance standard deviation
     CALCDIST: fieldGen("CALCDIST", "Calc. Dist.", {
-      size: "M",
       units: "M",
       path: "!roms/i/measPLR3D/i/distances/0/fValue!+!roms/i/measPLR3D/i/distancesResiduals/0/fValue!",
     }), // calculated distance
     RESDIST: fieldGen("RESDIST", "Res. Dist.", {
       units: "MM",
       path: "roms/i/measPLR3D/i/distancesResiduals/0/fValue",
-      unitConv: distM2MMf,
     }), // distance residual
     RESSIGDIST: fieldGen("RESSIGDIST", "Res./Sig. Dist.", {
       units: "-",
@@ -189,7 +171,6 @@ export const generateTSTNObsCols = () => {
     OBSEDIST: fieldGen("OBSEDIST", "Observ. Sig. Dist.", {
       units: "MM",
       path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRAngl",
-      unitConv: distM2MMf,
       border: true,
     }), // angle OBS DIST
 
@@ -200,7 +181,6 @@ export const generateTSTNObsCols = () => {
     //   path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRDist",
     // }), // Sensitivity
     CONST: fieldGen("CONST", "Constant", {
-      size: "M",
       units: "M",
       path: "roms/i/measPLR3D/i/target/distCorrectionValue",
       fixator: "-SCONSTFIX",
@@ -208,7 +188,6 @@ export const generateTSTNObsCols = () => {
     SCONST: fieldGen("SCONST", "Sig. Const.", {
       units: "MM",
       path: "roms/i/measPLR3D/i/target/sigmaDCorr",
-      unitConv: distM2MMf,
       fixator: "ySCONSTFIX",
     }), // distance Consatnt Sigma
     SCONSTFIX: fieldGen("SCONSTFIX", "S. Cons.", {
@@ -218,7 +197,6 @@ export const generateTSTNObsCols = () => {
     PPM: fieldGen("PPM", "Dist. PPM", {
       units: "MM/KM",
       path: "roms/i/measPLR3D/i/target/ppmDist",
-      unitConv: distM2MMf,
       border: true,
     }), // distance Consatnt Sigma
 
@@ -232,19 +210,16 @@ export const generateTSTNObsCols = () => {
     //   path: "measDSPT/i/target/line",
     // }), // target instr ID
     HTGT: fieldGen("HTGT", "Tgt. height", {
-      size: "M",
       units: "M",
       path: "roms/i/measPLR3D/i/target/targetHt",
     }), // target height
     THSE: fieldGen("THSE", "Tgt. height. Sig", {
       units: "MM",
       path: "roms/i/measPLR3D/i/target/sigmaTargetHt",
-      unitConv: distM2MMf,
     }), // target
     TCSE: fieldGen("TCSE", "Tgt. centering Sig.", {
       units: "MM",
       path: "roms/i/measPLR3D/i/target/sigmaTargetCentering",
-      unitConv: distM2MMf,
     }), // target
   }; // residuals data
 };
@@ -441,257 +416,108 @@ export const generateORIEObsCols = () => {
 export const generateUVDObsCols = () => {
   return {
     // ========== OBS DATA ========== //
-    INSID: fieldGen("INSID", "Instrument", {
-      flex: 1,
-      minWidth: 100,
-      cellClassName: "name-column--cell border-right--cell",
-      path: "instrument/ID",
-    }), // instrument id
-    INSPOS: fieldGen("INSPOS", "Station", {
-      flex: 1,
-      minWidth: 200,
-      path: "instrumentPos",
-      cellClassName: "name-column--cell border-right--cell",
-    }), // instrument id
-    INSLINE: fieldGen("INSLINE", "RLine", {
-      flex: 0.11,
-      minWidth: 50,
-      path: "line",
-    }), // instrument line
-    TGT: fieldGen("TGT", "Target", {
-      flex: 1,
-      minWidth: 200,
-      path: "instrument/defTarget",
-    }), // target position
-    TGTPOS: fieldGen("TGTPOS", "Tgt. Position", {
-      flex: 1,
-      minWidth: 200,
-      path: "measUVD/i/targetPos",
-    }), // target position
-    TGTLINE: fieldGen("TGTLINE", "TLine", {
-      flex: 0.11,
-      minWidth: 50,
-      path: "measUVD/i/line",
-    }), // target line
+    INSID: fieldGen("INSID", "Instrument", { size: "L", path: "instrument/ID", border: true, link: "INSIDLINE" }), // instrument id
+    INSPOS: fieldGen("INSPOS", "Instr. Position", { size: "XL", path: "instrumentPos", border: true, link: "INSLINE" }), // instrument id
+    TGT: fieldGen("TGT", "Target", { size: "L", path: "instrument/defTarget" }), // target position
+    TGTPOS: fieldGen("TGTPOS", "Tgt. Position", { size: "XXL", path: "measUVEC/i/targetPos", link: "TGTLINE" }), // target position
     TYPE: fieldGen("TYPE", "Type"), // obs. type
+    INSIDLINE: fieldGen("INSIDLINE", "IDLine", { show: false, path: "line" }), // instrument line
+    INSLINE: fieldGen("INSLINE", "ILine", { show: false, path: "lkp:instrumentPos" }), // instrument line
+    TGTLINE: fieldGen("TGTLINE", "TLine", { show: false, path: "lkp:measUVD/i/targetPos" }), // target line
+    OBSLINE: fieldGen("OBSLINE", "OBSLINE", { show: false, path: "measUVD/i/line" }), // target line
 
     // ========== X DATA ========== //
-    OBSXV: fieldGen("OBSXV", "Observed X Vec.", {
-      flex: 0.8,
-      minWidth: 100,
-      numDecs: 5,
-      path: "measUVD/i/vector/fVector/0",
-    }), // observations
-    SXV: fieldGen("SXV", "Sigma X Vec.", {
-      numDecs: 2,
-      path: "measUVD/i/target/sigmaCombinedX",
-      unitConv: distM2MMf,
-    }), // standard deviation
+    OBSXV: fieldGen("OBSXV", "Observed X Vec.", { units: "M", path: "measUVD/i/vector/fVector/0", link: "OBSLINE" }), // observations
+    SXV: fieldGen("SXV", "Sigma X Vec.", { units: "MM", path: "measUVD/i/target/sigmaCombinedX" }), // standard deviation
     CALCXV: fieldGen("CALCXV", "Calculated X Vec.", {
-      flex: 0.8,
-      minWidth: 100,
-      numDecs: 5,
+      units: "M",
       path: "!measUVD/i/vector/fVector/0!+!measUVD/i/XcompResidual!",
     }), // calculated
-    RESXV: fieldGen("RESXV", "Residual X Vec.", {
-      numDecs: 1,
-      path: "measUVD/i/XcompResidual",
-      unitConv: distM2MMf,
-    }), // residual
+    RESXV: fieldGen("RESXV", "Residual X Vec.", { units: "MM", path: "measUVD/i/XcompResidual" }), // residual
     RESSIGXV: fieldGen("RESSIGXV", "Res./Sig. X Vec.", {
-      numDecs: 2,
+      units: "-",
       path: "!measUVD/i/XcompResidual!/!measUVD/i/target/sigmaCombinedX!",
     }), // RES/SIGMA
 
     // ========== Y DATA ========== //
-    OBSYV: fieldGen("OBSYV", "Observed Y Vec.", {
-      flex: 0.8,
-      minWidth: 100,
-      numDecs: 5,
-      path: "measUVD/i/vector/fVector/1",
-    }), // observations
-    SYV: fieldGen("SYV", "Sigma Y Vec.", {
-      numDecs: 2,
-      path: "measUVD/i/target/sigmaCombinedY",
-      unitConv: distM2MMf,
-    }), // standard deviation
+    OBSYV: fieldGen("OBSYV", "Observed Y Vec.", { units: "M", path: "measUVD/i/vector/fVector/1", link: "OBSLINE" }), // observations
+    SYV: fieldGen("SYV", "Sigma Y Vec.", { units: "MM", path: "measUVD/i/target/sigmaCombinedY" }), // standard deviation
     CALCYV: fieldGen("CALCYV", "Calculated Y Vec.", {
-      flex: 0.8,
-      minWidth: 100,
-      numDecs: 5,
+      units: "M",
       path: "!measUVD/i/vector/fVector/1!+!measUVD/i/YcompResidual!",
     }), // calculated
-    RESYV: fieldGen("RESYV", "Residual Y Vec.", {
-      numDecs: 1,
-      path: "measUVD/i/YcompResidual",
-      unitConv: distM2MMf,
-    }), // residual
+    RESYV: fieldGen("RESYV", "Residual Y Vec.", { units: "MM", path: "measUVD/i/YcompResidual" }), // residual
     RESSIGYV: fieldGen("RESSIGYV", "Res./Sig. Y Vec.", {
-      numDecs: 2,
+      units: "-",
       path: "!measUVD/i/YcompResidual!/!measUVD/i/target/sigmaCombinedY!",
     }), // RES/SIGMA
 
     // ========== DIST DATA ========== //
-    OBSDIST: fieldGen("OBSDIST", "Observed Dist.", {
-      flex: 0.8,
-      minWidth: 100,
-      numDecs: 5,
-      path: "measUVD/i/sdist",
-    }), // observations
-    SDIST: fieldGen("SDIST", "Sigma Dist.", {
-      numDecs: 2,
-      path: "measUVD/i/target/sigmaCombinedDist",
-      unitConv: distM2MMf,
-    }), // standard deviation
+    OBSDIST: fieldGen("OBSDIST", "Observed Dist.", { units: "M", path: "measUVD/i/sdist", link: "OBSLINE" }), // observations
+    SDIST: fieldGen("SDIST", "Sigma Dist.", { units: "MM", path: "measUVD/i/target/sigmaCombinedDist" }), // standard deviation
     CALCDIST: fieldGen("CALCDIST", "Calculated Dist.", {
-      flex: 0.8,
-      minWidth: 100,
-      numDecs: 5,
+      units: "M",
       path: "!measUVD/i/sdist!+!measUVD/i/sdistResidual!",
     }), // calculated
-    RESDIST: fieldGen("RESDIST", "Residual Dist.", {
-      numDecs: 1,
-      path: "measUVD/i/sdistResidual",
-      unitConv: distM2MMf,
-    }), // residual
+    RESDIST: fieldGen("RESDIST", "Residual Dist.", { units: "MM", path: "measUVD/i/sdistResidual" }), // residual
     RESSIGDIST: fieldGen("RESSIGDIST", "Res./Sig. Dist.", {
-      numDecs: 2,
+      units: "-",
       path: "!measUVD/i/sdistResidual!/!measUVD/i/target/sigmaCombinedDist!",
     }), // RES/SIGMA
 
     // ========== TGT DATA ========== //
 
-    OBSEX: fieldGen("OBSEX", "Observed Sig. X", {
-      numDecs: 2,
-      path: "measUVD/i/target/sigmaX",
-    }), // RES/SIGMA
-    OBSEY: fieldGen("OBSEY", "Observed Sig. Y", {
-      flex: 1,
-      minWidth: 200,
-      path: "measUVD/i/target/sigmaY",
-    }), // target
-    OBSED: fieldGen("OBSED", "Observ. Sig. Dist", {
-      flex: 0.8,
-      minWidth: 100,
-      numDecs: 5,
-      path: "measUVD/i/target/sigmaDist",
-    }), // observations
-    TCSE: fieldGen("TCSE", "Tgt. centering Sig.", {
-      numDecs: 2,
-      path: "measUVD/i/target/sigmaTargetCentering",
-      unitConv: distM2MMf,
-    }), // standard deviation
+    OBSEX: fieldGen("OBSEX", "Observed Sig. X", { units: "MM", path: "measUVD/i/target/sigmaX" }), // RES/SIGMA
+    OBSEY: fieldGen("OBSEY", "Observed Sig. Y", { units: "MM", path: "measUVD/i/target/sigmaY" }), // target
+    OBSED: fieldGen("OBSED", "Observ. Sig. Dist", { units: "MM", path: "measUVD/i/target/sigmaDist" }), // observations
+    TCSE: fieldGen("TCSE", "Tgt. centering Sig.", { units: "MM", path: "measUVD/i/target/sigmaTargetCentering" }), // standard deviation
   }; // residuals data
 };
 
-// =========== UVD OBS. TABLE COLUMNS ========== //
+// =========== UVEC OBS. TABLE COLUMNS ========== //
 export const generateUVECObsCols = () => {
   return {
     // ========== OBS DATA ========== //
-    INSID: fieldGen("INSID", "Instrument", {
-      flex: 1,
-      minWidth: 100,
-      cellClassName: "name-column--cell border-right--cell",
-      path: "instrument/ID",
-    }), // instrument id
-    INSPOS: fieldGen("INSPOS", "Station", {
-      flex: 1,
-      minWidth: 200,
-      path: "instrumentPos",
-      cellClassName: "name-column--cell border-right--cell",
-    }), // instrument id
-    INSLINE: fieldGen("INSLINE", "RLine", {
-      flex: 0.11,
-      minWidth: 50,
-      path: "line",
-    }), // instrument line
-    TGT: fieldGen("TGT", "Target", {
-      flex: 1,
-      minWidth: 200,
-      path: "instrument/defTarget",
-    }), // target position
-    TGTPOS: fieldGen("TGTPOS", "Tgt. Position", {
-      flex: 1,
-      minWidth: 200,
-      path: "measUVEC/i/targetPos",
-    }), // target position
-    TGTLINE: fieldGen("TGTLINE", "TLine", {
-      flex: 0.11,
-      minWidth: 50,
-      path: "measUVEC/i/line",
-    }), // target line
+    INSID: fieldGen("INSID", "Instrument", { size: "L", path: "instrument/ID", border: true, link: "INSIDLINE" }), // instrument id
+    INSPOS: fieldGen("INSPOS", "Instr. Position", { size: "XL", path: "instrumentPos", border: true, link: "INSLINE" }), // instrument id
+    TGT: fieldGen("TGT", "Target", { size: "L", path: "instrument/defTarget" }), // target position
+    TGTPOS: fieldGen("TGTPOS", "Tgt. Position", { size: "XXL", path: "measUVEC/i/targetPos", link: "TGTLINE" }), // target position
+    TYPE: fieldGen("TYPE", "Type"), // obs. type
+    INSIDLINE: fieldGen("INSIDLINE", "IDLine", { show: false, path: "line" }), // instrument line
+    INSLINE: fieldGen("INSLINE", "ILine", { show: false, path: "lkp:instrumentPos" }), // instrument line
+    TGTLINE: fieldGen("TGTLINE", "TLine", { show: false, path: "lkp:measUVEC/i/targetPos" }), // target line
+    OBSLINE: fieldGen("OBSLINE", "OBSLINE", { show: false, path: "measUVEC/i/line" }), // target line
 
     // ========== X DATA ========== //
-    OBSXV: fieldGen("OBSXV", "Observed X Vec.", {
-      flex: 0.8,
-      minWidth: 100,
-      numDecs: 5,
-      path: "measUVEC/i/vector/fVector/0",
-    }), // observations
-    SXV: fieldGen("SXV", "Sigma X Vec.", {
-      numDecs: 2,
-      path: "measUVEC/i/target/sigmaCombinedX",
-      unitConv: distM2MMf,
-    }), // standard deviation
+    OBSXV: fieldGen("OBSXV", "Observed X Vec.", { units: "M", path: "measUVEC/i/vector/fVector/0", link: "OBSLINE" }), // observations
+    SXV: fieldGen("SXV", "Sigma X Vec.", { units: "MM", path: "measUVEC/i/target/sigmaCombinedX" }), // standard deviation
     CALCXV: fieldGen("CALCXV", "Calculated X Vec.", {
-      flex: 0.8,
-      minWidth: 100,
-      numDecs: 5,
+      units: "M",
       path: "!measUVEC/i/vector/fVector/0!+!measUVEC/i/XcompResidual!",
     }), // calculated
-    RESXV: fieldGen("RESXV", "Residual X Vec.", {
-      numDecs: 1,
-      path: "measUVEC/i/XcompResidual",
-      unitConv: distM2MMf,
-    }), // residual
+    RESXV: fieldGen("RESXV", "Residual X Vec.", { units: "MM", path: "measUVEC/i/XcompResidual" }), // residual
     RESSIGXV: fieldGen("RESSIGXV", "Res./Sig. X Vec.", {
-      numDecs: 2,
+      units: "-",
       path: "!measUVEC/i/XcompResidual!/!measUVEC/i/target/sigmaCombinedX!",
     }), // RES/SIGMA
 
     // ========== Y DATA ========== //
-    OBSYV: fieldGen("OBSYV", "Observed Y Vec.", {
-      flex: 0.8,
-      minWidth: 100,
-      numDecs: 5,
-      path: "measUVEC/i/vector/fVector/1",
-    }), // observations
-    SYV: fieldGen("SYV", "Sigma Y Vec.", {
-      numDecs: 2,
-      path: "measUVEC/i/target/sigmaCombinedY",
-      unitConv: distM2MMf,
-    }), // standard deviation
+    OBSYV: fieldGen("OBSYV", "Observed Y Vec.", { units: "M", path: "measUVEC/i/vector/fVector/1", link: "OBSLINE" }), // observations
+    SYV: fieldGen("SYV", "Sigma Y Vec.", { units: "MM", path: "measUVEC/i/target/sigmaCombinedY" }), // standard deviation
     CALCYV: fieldGen("CALCYV", "Calculated Y Vec.", {
-      flex: 0.8,
-      minWidth: 100,
-      numDecs: 5,
+      units: "M",
       path: "!measUVEC/i/vector/fVector/1!+!measUVEC/i/YcompResidual!",
     }), // calculated
-    RESYV: fieldGen("RESYV", "Residual Y Vec.", {
-      numDecs: 1,
-      path: "measUVEC/i/YcompResidual",
-      unitConv: distM2MMf,
-    }), // residual
+    RESYV: fieldGen("RESYV", "Residual Y Vec.", { units: "MM", path: "measUVEC/i/YcompResidual" }), // residual
     RESSIGYV: fieldGen("RESSIGYV", "Res./Sig. Y Vec.", {
-      numDecs: 2,
+      units: "-",
       path: "!measUVEC/i/YcompResidual!/!measUVEC/i/target/sigmaCombinedY!",
     }), // RES/SIGMA
 
     // ========== TGT DATA ========== //
-    OBSEX: fieldGen("OBSEX", "Observed Sig. X", {
-      numDecs: 2,
-      path: "measUVEC/i/target/sigmaX",
-    }), // RES/SIGMA
-    OBSEY: fieldGen("OBSEY", "Observed Sig. Y", {
-      flex: 1,
-      minWidth: 200,
-      path: "measUVEC/i/target/sigmaY",
-    }), // target
-    TCSE: fieldGen("TCSE", "Tgt. centering Sig.", {
-      numDecs: 2,
-      path: "measUVEC/i/target/sigmaTargetCentering",
-      unitConv: distM2MMf,
-    }), // standard deviation
+    OBSEX: fieldGen("OBSEX", "Observed Sig. X", { units: "MM", path: "measUVEC/i/target/sigmaX" }), // RES/SIGMA
+    OBSEY: fieldGen("OBSEY", "Observed Sig. Y", { units: "MM", path: "measUVEC/i/target/sigmaY" }), // target
+    TCSE: fieldGen("TCSE", "Tgt. centering Sig.", { units: "MM", path: "measUVEC/i/target/sigmaTargetCentering" }), // standard deviation
   }; // residuals data
 };
 
