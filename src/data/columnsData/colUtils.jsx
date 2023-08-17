@@ -1,5 +1,5 @@
 import { pointTypes, DP } from "../constants";
-import { linkPathPlaceholder } from "../constants";
+import { distM2HMMf, distM2MMf, angleRad2CCf, angleRad2GONf, angleRad2GONPosf } from "../constants";
 
 import { SPLink, InstrumentTooltip } from "../../components";
 
@@ -40,9 +40,9 @@ function fixedValueDecoder(params, value, cellStyle) {
   let fixed = false;
   if (params.colDef.fixator) {
     fixed =
-      (params.colDef.fixator[0] === "-" || params.colDef.fixator[0] === "y" )
+      params.colDef.fixator[0] === "-" || params.colDef.fixator[0] === "y"
         ? params.row[params.colDef.fixator.slice(1)] === false
-        : params.colDef.fixator[0] === "x" 
+        : params.colDef.fixator[0] === "x"
         ? params.row[params.colDef.fixator.slice(1)]
         : params.row[params.colDef.fixator];
   }
@@ -112,13 +112,9 @@ function cellRenderer(params) {
 
 function decodeSize(size, args) {
   switch (size) {
-    case "XS":
+    case "S":
       args.flex = 0.6;
       args.minWidth = 70;
-      return args;
-    case "S":
-      args.flex = 0.8;
-      args.minWidth = 80;
       return args;
     case "M":
       args.flex = 1;
@@ -141,6 +137,38 @@ function decodeSize(size, args) {
   }
 }
 
+function sizeFromUnit(unit) {
+  switch (unit) {
+    case "M":
+    case "GON":
+      return "M";
+    case "MM":
+    case "CC":
+    case "-": // for res/sig
+    case "MM/CM":
+    case "MM/KM":
+      return "S";
+  }
+}
+
+function unitConvFromUnit(unit) {
+  switch (unit) {
+    case "GON":
+      return angleRad2GONPosf;
+    case "MM":
+      return distM2MMf;
+    case "CC":
+      return angleRad2CCf;
+    case "MM/CM":
+    case "MM/KM":
+      return distM2MMf;
+    case "M":
+    case "-": // for res/sig
+    default:
+      return (x) => x;
+  }
+}
+
 export function fieldGen(field, headerName, args = {}) {
   // function generating template for DataGrid column definition
   let defaultArgs = {
@@ -155,7 +183,7 @@ export function fieldGen(field, headerName, args = {}) {
     renderHeader: (params) => (
       <>
         <strong>{params.colDef.headerName}</strong>
-        <span>{params.colDef.units == "" ? "" : "(" + params.colDef.units.toLowerCase() + ")"}</span>
+        <span>{params.colDef.units === "" ? "" : "(" + params.colDef.units.toLowerCase() + ")"}</span>
       </>
     ),
     renderCell: cellRenderer,
@@ -166,7 +194,7 @@ export function fieldGen(field, headerName, args = {}) {
       defaultArgs.valueFormatter = generateNumFormatter(args[key], 1);
       defaultArgs.align = "right";
       defaultArgs.type = "number";
-    } else if (key === "units" && args[key] != "") {
+    } else if (key === "units" && args[key] !== "") {
       defaultArgs.valueFormatter = generateNumFormatter(decGen(args[key]), 1);
       defaultArgs.align = "right";
       defaultArgs.type = "number";
@@ -176,6 +204,14 @@ export function fieldGen(field, headerName, args = {}) {
     }
     defaultArgs[key] = args[key];
   });
+
+  if (!("unitConv" in args) && args["units"] !== "") {
+    defaultArgs.unitConv = unitConvFromUnit(args["units"]);
+  }
+
+  if (!("size" in args) && args["units"] !== "") {
+    defaultArgs = decodeSize(sizeFromUnit(args["units"]), defaultArgs);
+  }
 
   return defaultArgs;
 }

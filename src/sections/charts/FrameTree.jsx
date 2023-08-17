@@ -2,7 +2,9 @@ import React from "react";
 import Tree from "react-d3-tree";
 import Title from "../../components/Title";
 
-const FrameTree = ({ tree }) => {
+const FrameTree = ({ tree, numNodes }) => {
+  console.log(tree, numNodes);
+  console.log(Math.min(1, 2 / Math.sqrt(numNodes)), Math.sqrt(numNodes), 2 / Math.sqrt(numNodes));
   return (
     <>
       {" "}
@@ -29,8 +31,9 @@ const FrameTree = ({ tree }) => {
             pathFunc={"straight"}
             separation={{ nonSiblings: 1, siblings: 0.5 }}
             depthFactor={350}
-            translate={{ x: 400, y: 600 }}
-            zoom={0.2}
+            translate={{ x: window.innerWidth / 5, y: window.innerHeight / 2 }}
+            zoom={2 / Math.sqrt(numNodes)}
+            scaleExtent={{ max: 2, min: 0.1 }}
           />
         </div>
       </div>

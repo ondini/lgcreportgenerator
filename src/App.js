@@ -17,7 +17,7 @@ import { styled } from "@mui/material/styles";
 import { useState, useMemo } from "react";
 import { getData, get3DPointData, getFrames } from "./data_processing/processing";
 
-const dataFile = "SUS-1895_26465_TT2-radial_calage-FTN.json" //"SUS-1895_26465_TT2-radial_calage-FTN.json";
+const dataFile = "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json";
 const GMData = require(`./jsons_tmp/${dataFile}`);
 
 const MainLayoutStyle = styled("div")(({ theme }) => ({
@@ -58,7 +58,7 @@ function App() {
         <Histogram residuals={observations} />
         <ObservationsTable observations={observations} />
         <FrameTable frameData={frames} />
-        <FrameTree tree={frames.tree} />
+        <FrameTree tree={frames.tree} numNodes={frames.data.length} />
         <Plot3D pointsCoords={points3D.coords} />
       </MainLayoutStyle>
     </div>

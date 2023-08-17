@@ -18,7 +18,7 @@ import { measurementTypes, pointTypes } from "../data/constants";
 // ============== UTILITY FUNCTIONS ================ //
 // ================================================= //
 
-const getFromDict = (data, path, iteratorVals, unitConv, lookupTab={}, subresult = false) => {
+const getFromDict = (data, path, iteratorVals, unitConv, lookupTab = {}, subresult = false) => {
   // function used to get data from neseted dictionaries using path where each key is separated by "/"
   // if key is "i" then it is replaced by value from iterator array
   // if "!" is present in path, then the paths are interpreted as values to be used in expression resulting after splitting on ! and replacing the paths
@@ -37,12 +37,9 @@ const getFromDict = (data, path, iteratorVals, unitConv, lookupTab={}, subresult
       }
     }, "");
     return unitConv(eval(expr));
-  } else if (path.startsWith("lkp:")){
+  } else if (path.startsWith("lkp:")) {
     const key = getFromDict(data, path.slice(4), iteratorVals, unitConv, lookupTab, true); // slice 4, becasuse that is the lkp: offset
-    if (path.indexOf("ECHO") !== -1){
-      console.log(key, lookupTab[key], lookupTab)
-    }
-    return lookupTab[key]
+    return lookupTab[key];
   } else {
     // gettin data from path
     let pathArr = path.split("/");
@@ -415,7 +412,7 @@ const getNTObsRows = (measurement, measType) => {
     // reduce over all measurements
     for (const key of Object.keys(cols)) {
       // get all data defined in cols
-      colsData[key].push(getFromDict(curr, cols[key].path, [], cols[key].unitConv));
+      colsData[key].push(getFromDict(curr, cols[key].path, [], cols[key].unitConv, measurement.lookup));
     }
 
     return acc;
@@ -438,7 +435,7 @@ const getCAMDRows = (measurement) => {
       // get all data defined in cols
       for (const key of Object.keys(cols)) {
         if (key !== "TYPE") {
-          columns[key].push(getFromDict(curr, cols[key].path, [j], cols[key].unitConv));
+          columns[key].push(getFromDict(curr, cols[key].path, [j], cols[key].unitConv, measurement.lookup));
         }
       }
       columns["TYPE"].push("UVD");
@@ -448,7 +445,7 @@ const getCAMDRows = (measurement) => {
       for (const key of Object.keys(cols)) {
         if (key !== "TYPE") {
           if (key in cols2) {
-            columns[key].push(getFromDict(curr, cols2[key].path, [j], cols[key].unitConv));
+            columns[key].push(getFromDict(curr, cols2[key].path, [j], cols[key].unitConv, measurement.lookup));
           } else {
             columns[key].push(undefined);
           }
@@ -563,8 +560,8 @@ export const get3DPointData = (data, colNames) => {
       let val = getFromDict(curr, cols[key].path, [], cols[key].unitConv);
       columns[key].push(val);
     }
-    lookupTable[columns["NAME"].slice(-1)[0]] = columns["LINE"].slice(-1)[0] > 0 ? columns["LINE"].slice(-1)[0]: 0;
-    
+    lookupTable[columns["NAME"].slice(-1)[0]] = columns["LINE"].slice(-1)[0] > 0 ? columns["LINE"].slice(-1)[0] : 0;
+
     return acc;
   }, columns);
 
