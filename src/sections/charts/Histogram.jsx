@@ -108,10 +108,11 @@ const makeNormPlotLayout = (residuals) => {
 const makePlotData = (residuals, measType, key, nbinsx, filterInstruments) => {
   // function that creates array of data objects for a histogram, which is then
   // directly passed to a Plotly component
-
+  const replacementValue = 0;
   // craete bins(the same for all instrument positions, so that they are stackable)
-  const maxVal = Math.max(...residuals[key]);
-  const minVal = Math.min(...residuals[key]);
+  const cleanRes = residuals[key].map((value) => (value === undefined || isNaN(value) ? replacementValue : value));
+  const maxVal = Math.max(...cleanRes);
+  const minVal = Math.min(...cleanRes);
   const binSize = (maxVal - minVal) / nbinsx;
   let xbins = {
     end: maxVal,
@@ -151,12 +152,6 @@ const handleHistogramClick = (event) => {
     const tgtLine = firstObs[firstObs.length === 3 ? 2 : 1];
 
     window.location.href = `surveypad://link//${linkPathPlaceholder},${tgtLine}`;
-
-    // const link = document.createElement("a");
-    // link.href = `surveypad://link//${linkPathPlaceholder},${tgtLine}`;
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
   }
 };
 
