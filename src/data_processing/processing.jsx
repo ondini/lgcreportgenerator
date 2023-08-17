@@ -154,8 +154,8 @@ const statTypeSelector = (measurement, type) => {
   ];
 
   const fECWIPaths = [
-    ["X", "ecwiSummary_", "XObsSum"],
-    ["Z", "ecwiSummary_", "ZObsSum"],
+    ["X", "ecwiSummary_", "xObsSum"],
+    ["Z", "ecwiSummary_", "zObsSum"],
   ];
 
   const UVDPaths = [
@@ -175,7 +175,7 @@ const statTypeSelector = (measurement, type) => {
     case "fOBSXYZ":
       return getNestedMeasurementRows(measurement, fOBSXYZPaths);
     case "fECWI":
-      return getNestedMeasurementRows(measurement, fECWIPaths);
+      return getECWIMeasurementRows(measurement, fECWIPaths);
     case "fECHO":
       return getXMeasurementRows(measurement, ["fECHO", "echoSummary_"]);
     case "fORIE":
@@ -328,6 +328,30 @@ const getNestedMeasurementRows = (measurement, paths) => {
     }
     columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase() + ":" + obsName);
     columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
+  });
+
+  return makeGridData(cols, columns);
+};
+
+const getECWIMeasurementRows = (measurement, paths) => {
+  // function that gets data for observation table for measType,
+  // OBSXYZ, ECWI
+  let cols = generateMeasurementsCols();
+  let columns = generateColsData(cols);
+
+  paths.forEach(([obsName, sumPath, sumType]) => {
+    // obsName is the name of the observation, X, Y ..
+    // sumPath is the path to the observation summary, uvdSummary_
+    // sumType is summary type name, yVectorCompObsSum ...
+    measurement.fECWI.forEach((curr) => {
+      for (const key of Object.keys(cols)) {
+        if (key !== "TYPE" && key !== "MMT_LINE") {
+          columns[key].push(curr[sumPath][sumType][cols[key].keyword]);
+        }
+      }
+      columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase() + ":" + obsName);
+      columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
+    });
   });
 
   return makeGridData(cols, columns);
