@@ -17,8 +17,8 @@ import { styled } from "@mui/material/styles";
 import { useState, useMemo } from "react";
 import { getData, get3DPointData, getFrames } from "./data_processing/processing";
 
-const dataFile = "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json";
-const GMData = require( `./jsons_tmp/${dataFile}`);
+const dataFile = "SUS-1895_26465_TT2-radial_calage-FTN.json";
+const GMData = require(`./jsons_tmp/${dataFile}`);
 
 const MainLayoutStyle = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -32,7 +32,7 @@ function App() {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  
+
   const points3D = useMemo(() => {
     return get3DPointData(GMData.LGC_DATA);
   }, []);
@@ -45,14 +45,40 @@ function App() {
     return getFrames(GMData.LGC_DATA);
   }, []);
 
+  const unknownPars = useMemo(() => {
+    let uknonwnAngles = 0;
+    GMData.LGC_DATA.angles.forEach((angle) => (uknonwnAngles += angle.isFixed ? 0 : 1));
+
+    let uknonwnDists = 0;
+    GMData.LGC_DATA.lengths.forEach((dist) => (uknonwnDists += dist.isFixed ? 0 : 1));
+
+    let uknownPlanes = 0;
+    GMData.LGC_DATA.planes.forEach((plane) => {
+      uknownPlanes += plane.fPhiFixed ? 0 : 1;
+      uknownPlanes += plane.fRefPtDistFixed ? 0 : 1;
+      uknownPlanes += plane.fThetaFixed ? 0 : 1;
+      plane.fReferencePoint.fixedState.forEach((curr) => (uknownPlanes += curr ? 0 : 1));
+      // uknonwnPlanes += plane.fThetaFixed ? 0 : 1
+      // uknonwnPlanes += plane.fThetaFixed ? 0 : 1
+    });
+
+    return {
+      p3D: points3D.unknownPars,
+      frames: frames.unknownPars,
+      angles: uknonwnAngles,
+      dists: uknonwnDists,
+      planes: uknownPlanes,
+    };
+  }, [points3D, frames]);
+
   return (
     <div className="app">
       <Navbar mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
       <MainLayoutStyle>
-        <Header data={GMData} fName={dataFile} />
+        <Header data={GMData} unknownPars={unknownPars} />
         <Point3DTable pointsData={points3D} />
         {/* <Point3DTable2 data={GMData} /> */}
-        <MeasurementsTable data={GMData} lookupTab3D={points3D.lookup}/>
+        <MeasurementsTable data={GMData} lookupTab3D={points3D.lookup} />
         <Histogram residuals={observations} />
         <ObservationsTable observations={observations} />
         <FrameTable frameData={frames} />

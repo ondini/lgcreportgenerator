@@ -3,7 +3,7 @@ import { measurementTypes } from "../data/constants";
 import { numFormatter } from "../data/columnsData/colUtils";
 import { linkPathPlaceholder } from "../data/constants";
 
-const Header = ({ data, fName }) => {
+const Header = ({ data, unknownPars }) => {
   const date_options = {
     year: "numeric",
     month: "long",
@@ -57,30 +57,29 @@ const Header = ({ data, fName }) => {
         <div className="info">
           <p className="title">Dataset</p>
           <p> Number of frames: {data.LGC_DATA.tree.length}</p>
-          <p> Unknown frames introduced: {} </p>
+          <p> Unknowns in frames introduced: {unknownPars.frames} </p>
           {data.LGC_DATA.points && (
             <>
               <p> Number of points: {data.LGC_DATA.points.length} </p>
-              <p> Unknown points introduced: {}</p>
+              <p> Unknowns in points introduced: {unknownPars.p3D}</p>
             </>
           )}
-          {/* -- compute fixed state false in points.{" "} */}
           {data.LGC_DATA.angles && (
             <>
               <p> Number of angles: {data.LGC_DATA.angles.length} </p>
-              <p> Unknown angles introduced: {}</p>
+              <p> Unknowns in angles introduced: {unknownPars.angles}</p>
             </>
           )}
           {data.LGC_DATA.distances && (
             <>
               <p> Number of distances: {data.LGC_DATA.distances.length} </p>
-              <p> Unknown distances introduced: {}</p>
+              <p> Unknowns in distances introduced: {unknownPars.dists}</p>
             </>
           )}
           {data.LGC_DATA.planes.length > 0 && (
             <>
               <p> Number of planes: {data.LGC_DATA.planes.length} </p>
-              <p> Unknown planes introduced: {}</p>
+              <p> Unknowns in planes introduced: {unknownPars.planes}</p>
             </>
           )}
           {/* -- compute fixed state false in all fixed fields plues reference point fixed.*/}

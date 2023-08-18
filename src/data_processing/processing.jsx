@@ -515,6 +515,7 @@ export const getFrames = (data) => {
   let columns = generateColsData(cols);
 
   var tree = [];
+  let unknownPars = 0;
 
   data.tree.forEach((frame, index) => {
     // create tree structure
@@ -536,9 +537,11 @@ export const getFrames = (data) => {
       // get all data defined in cols
       columns[key].push(getFromDict(frame, cols[key].path, [], cols[key].unitConv));
     }
+
+    frame.frame.fixedTranfParam.forEach((curr) => (unknownPars += curr ? 0 : 1));
   });
 
-  return { tree: tree, ...makeGridData(cols, columns) };
+  return { tree: tree, ...makeGridData(cols, columns), unknownPars: unknownPars };
 };
 
 // ================================================= //
@@ -550,20 +553,25 @@ export const get3DPointData = (data, colNames) => {
   let cols = generatePoint3DCols();
   let columns = generateColsData(cols);
   let lookupTable = {};
+  let unknownPars = 0;
 
-  var obsData = data.points.reduce((acc, curr) => {
+  data.points.forEach((curr) => {
     // reduce over all frames
     for (const key of Object.keys(cols)) {
       // get all data defined in cols
       let val = getFromDict(curr, cols[key].path, [], cols[key].unitConv);
       columns[key].push(val);
     }
+    curr.fixedState.forEach((curr) => (unknownPars += curr ? 0 : 1));
     lookupTable[columns["NAME"].slice(-1)[0]] = columns["LINE"].slice(-1)[0] > 0 ? columns["LINE"].slice(-1)[0] : 0;
+  });
 
-    return acc;
-  }, columns);
-
-  return { ...makeGridData(cols, obsData), lookup: lookupTable, coords: { X: columns.X, Y: columns.Y, Z: columns.Z } };
+  return {
+    ...makeGridData(cols, columns),
+    lookup: lookupTable,
+    coords: { X: columns.X, Y: columns.Y, Z: columns.Z },
+    unknownPars: unknownPars,
+  };
 };
 
 // 3D points for table

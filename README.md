@@ -69,13 +69,15 @@ you will obtain self standing **index.html** file in the build/ folder.
 Header
 
 - ~~! add the contents of the collapsible header part, and call the section metadata~~
+- ! add the missing computable values to header
+- !! sort header
 
 Histograms:
 
 - ~~CTRL + CLICK on cell -> go to the first observations in input file (is useful mainly if there is only one obs in the cell)~~
 - ~~! Normalize all residuals values by SIGMA (=RES/SIG col), and plot it in separate histogram~~
 - ~~! Changing number of bins~~
-- ! observation type and line number on normalized join histogram hover
+- ~~! observation type and line number on normalized join histogram hover~~
 - !! apriori sigma for the observation
 - !!! gaussian curve -> the data are in res file, center of gaussian is result, and the span is in ECART-TYPE
 
@@ -89,7 +91,7 @@ Stations Table:
 - ~~! take Sigma data from diagonal ~~
 - ~~! 0 padding for columns (trailing zeros)~~
 - ! export to csv perhaps
-- ! mark columns by categories (vertical line)
+- ~~ ! mark columns by categories (vertical line)~~
 - ~~! take sigmas from fCovarianceMatrixInRoot~~
 - !! hidden columns with the value in subframe (add hidden 6 columns to 3D pts table (3x coords + 3x uncertainties from diagonal!))
 - !!! leave empty cells if there is nothing - discuss with Guillaume since it depends if it is defined in FRAME (only CALA in root)
@@ -108,7 +110,7 @@ Observation Table:
 - !! build a list of togglable stations+line, that they can toggle (for all tables with stations)
 - !!! filter icon on the header (search field) (maybe add another header with filet icons)
 
-Instrument positions overview:
+Measurement statistics overview:
 
 - !! filtering by units ?
 - !! is any of (any of types - so that they can see either ANGL or ZEND) filtering ?
@@ -156,10 +158,12 @@ General stuff:
 
 - ~~!! reorder~~
 - !! maybe lets add styling for the next user testing
+- !! ASK users if they want translated names of columns or the ids from input file (TCSE vs target centering sigma)
 
 3D part
 
-- make sure X and Y are linked on 3d Plot, not Z
+- ! make sure X and Y are linked on 3d Plot, not Z
+
 - ! 2D plot (views per axis)
 - ! tooltip: they don't care about xyz, they care about name
 - ! highlight all the point lines measuring the point on hover
@@ -168,5 +172,3 @@ General stuff:
 - !!! color code per type (DIST, TSTN, PLR3D), if we have fully constrained put the solid color, if not put the dashed (maybe circle if sitance, horizontal angle triangle, etc. )
 - !!! DX DY DZ, put it in the general 3D plot, add magnification factor since it might be not visible
 - !!! Should all graphic stuff be in QGis or in LGC Report?
-
-- ASK users if they want translated names of columns or the ids from input file (TCSE vs target centering sigma)
