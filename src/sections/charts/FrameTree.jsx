@@ -29,9 +29,9 @@ const FrameTree = ({ tree, numNodes }) => {
             pathFunc={"straight"}
             separation={{ nonSiblings: 1, siblings: 0.5 }}
             depthFactor={350}
-            translate={{ x: window.innerWidth / 5, y: window.innerHeight / 2 }}
+            translate={{ x: 400, y: 600 }}
             zoom={2 / Math.sqrt(numNodes)}
-            scaleExtent={{ max: 2, min: 0.1 }}
+            scaleExtent={{ max: 2, min: 0.05 }}
           />
         </div>
       </div>

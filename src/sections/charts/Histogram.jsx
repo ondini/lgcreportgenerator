@@ -19,17 +19,52 @@ const makeBinDescs = (data, key, nbinsx, binsx) => {
   for (let i = 0; i < data[key].length; i++) {
     // loop over all observations
     const value = data[key][i];
-    const binIndex = Math.floor((value - binsx.start) / binsx.size); // index of the bin where the observation belongs
+    if (value !== undefined) {
+      const binIndex = Math.floor((value - binsx.start) / binsx.size); // index of the bin where the observation belongs
 
-    binsCounts[binIndex] += 1;
-    let src = "INSPOS" in data ? data["INSPOS"][i] + ":" + data["INSLINE"][i] + " -> " : "";
-    binsDescs[binIndex] =
-      binsDescs[binIndex] +
-      (binsCounts[binIndex] < maxBinDescCount
-        ? "<br>" + src + data["TGTPOS"][i] + ":" + data["TGTLINE"][i]
-        : binsCounts[binIndex] === maxBinDescCount
-        ? "<br>  ....  "
-        : "");
+      binsCounts[binIndex] += 1;
+      let src = "INSPOS" in data ? data["INSPOS"][i] + ":" + data["INSLINE"][i] + " -> " : "";
+      binsDescs[binIndex] =
+        binsDescs[binIndex] +
+        (binsCounts[binIndex] < maxBinDescCount
+          ? "<br>" + src + data["TGTPOS"][i] + ":" + data["TGTLINE"][i]
+          : binsCounts[binIndex] === maxBinDescCount
+          ? "<br>  ....  "
+          : "");
+    }
+  }
+
+  let i = 0; // skip empty bins, as it would shift the histogram descriptions
+  while (binsCounts[i] === 0) {
+    i++;
+  }
+  return binsDescs.slice(i);
+};
+
+const makeBinDescsNorm = (data, key, nbinsx, binsx) => {
+  // function that creates descriptions for each bin
+  // the description is a string with the instrument position and line number,
+  // followed by the target position and line number of each observation in the bin
+
+  let binsDescs = Array(nbinsx).fill(""); // array of description strings, one for each bin
+  let binsCounts = Array(nbinsx).fill(0); // array of counts, one for each bin (just to count and then limit lines)
+  const maxBinDescCount = 20; // maximum number of lines in the description string
+
+  for (let i = 0; i < data[key].length; i++) {
+    // loop over all observations
+    const value = data[key][i];
+    if (value !== undefined) {
+      const binIndex = Math.floor((value - binsx.start) / binsx.size); // index of the bin where the observation belongs
+
+      binsCounts[binIndex] += 1;
+      binsDescs[binIndex] =
+        binsDescs[binIndex] +
+        (binsCounts[binIndex] < maxBinDescCount
+          ? "<br>" + data["TYPE"][i] + "::" + data["TGTPOS"][i] + ":" + data["TGTLINE"][i]
+          : binsCounts[binIndex] === maxBinDescCount
+          ? "<br>  ....  "
+          : "");
+    }
   }
 
   let i = 0; // skip empty bins, as it would shift the histogram descriptions
@@ -85,33 +120,13 @@ const makePlotLayout = (residuals, key, nbinsx, binsx, name) => {
   };
 };
 
-const makeNormPlotLayout = (residuals) => {
-  // function that creates the data object for a histogram, which is then
-  // usable by Plotly, possibly as one of many traces in a plot
-
-  return {
-    x: residuals,
-    type: "histogram",
-    autobinx: false,
-    name: "RESSIG",
-    marker: {
-      opacity: 0.75,
-      line: {
-        width: 1,
-      },
-    },
-    opacity: 0.75,
-    hovertemplate: "<b> Count: %{y} </b>",
-  };
-};
-
 const makePlotData = (residuals, measType, key, nbinsx, filterInstruments) => {
   // function that creates array of data objects for a histogram, which is then
   // directly passed to a Plotly component
   const replacementValue = 0;
   // craete bins(the same for all instrument positions, so that they are stackable)
   const cleanRes = residuals[key].map((value) => (value === undefined || isNaN(value) ? replacementValue : value));
-  const maxVal = Math.max(...cleanRes);
+  const maxVal = Math.max(...cleanRes) * 1.01;
   const minVal = Math.min(...cleanRes);
   const binSize = (maxVal - minVal) / nbinsx;
   let xbins = {
@@ -132,24 +147,64 @@ const makePlotData = (residuals, measType, key, nbinsx, filterInstruments) => {
   return plotData;
 };
 
-const makeNormPlotData = (measTypes, residuals) => {
-  let plotData = []; // array of data objects for the histogram
+const makeNormPlotData = (measTypes, residuals, nbinsx) => {
+  let plotData = {
+    RESSIG: [],
+    TGTLINE: [],
+    TGTPOS: [],
+    TYPE: [],
+  }; // array of data objects for the histogram
   measTypes.forEach((measType) => {
     if ("residualsData" in residuals[measType]) {
       Object.keys(residuals[measType].residualsData).forEach((key) => {
         if (key.indexOf("RESSIG") !== -1) {
-          plotData = plotData.concat(residuals[measType].residualsData[key]);
+          plotData["RESSIG"] = plotData.RESSIG.concat(residuals[measType].residualsData[key]);
+          plotData["TGTLINE"] = plotData.TGTLINE.concat(residuals[measType].residualsData["TGTLINE"]);
+          plotData["TGTPOS"] = plotData.TGTPOS.concat(residuals[measType].residualsData["TGTPOS"]);
+          plotData["TYPE"] = plotData.TYPE.concat(Array(residuals[measType].residualsData[key].length).fill(measType));
         }
       });
     }
   });
-  return plotData;
+
+  const replacementValue = 0;
+
+  // craete bins(the same for all instrument positions, so that they are stackable)
+  const cleanRes = plotData.RESSIG.map((value) => (value === undefined || isNaN(value) ? replacementValue : value));
+  const maxVal = Math.max(...cleanRes) * 1.01; // *1.01 to include the max value
+  const minVal = Math.min(...cleanRes);
+  const binSize = (maxVal - minVal) / nbinsx;
+  let xbins = {
+    end: maxVal,
+    size: binSize,
+    start: minVal,
+  };
+
+  let resBinData = makeBinDescsNorm(plotData, "RESSIG", nbinsx, xbins);
+  return [
+    {
+      x: cleanRes,
+      customdata: resBinData,
+      xbins: xbins,
+      type: "histogram",
+      autobinx: false,
+      name: "RESSIG",
+      marker: {
+        opacity: 0.75,
+        line: {
+          width: 1,
+        },
+      },
+      opacity: 0.75,
+      hovertemplate: "<b> Count: %{y} </b> %{customdata} <extra></extra>",
+    },
+  ];
 };
 
 const handleHistogramClick = (event) => {
   if (event.event.ctrlKey) {
     let firstObs = event.points[0].customdata.split("<br>")[1].split(":");
-    const tgtLine = firstObs[firstObs.length === 3 ? 2 : 1];
+    const tgtLine = firstObs.slice(-1);
 
     window.location.href = `surveypad://link//${linkPathPlaceholder},${tgtLine}`;
   }
@@ -160,9 +215,6 @@ const Histogram = ({ residuals }) => {
   // It is a Plotly component with a button menu to select the measurement type and turn off the filter by instrument
 
   const measTypes = Object.keys(residuals); // get all the used measurement types from the residuals data
-
-  const normalizedResiduals = makeNormPlotData(measTypes, residuals);
-  const normLayout = [makeNormPlotLayout(normalizedResiduals)];
 
   const createHists = (measType, filterInstr, nbinsx) => {
     // function that creates the histogram components for each of the residuals of the selected measurement type
@@ -217,6 +269,8 @@ const Histogram = ({ residuals }) => {
     );
   });
 
+  const normLayout = makeNormPlotData(measTypes, residuals, 30);
+
   return (
     <div>
       <Title title="Histograms" id="histograms" />
@@ -241,7 +295,7 @@ const Histogram = ({ residuals }) => {
               shrink: true,
             }}
             onChange={(v) => {
-              setNBinsInput(v.target.value);
+              setNBinsInput(Number(v.target.value));
             }}
             margin="normal"
             defaultValue={nBins}
@@ -253,7 +307,7 @@ const Histogram = ({ residuals }) => {
             sx={{ marginLeft: "1rem" }}
             onClick={() => {
               setNBinsInput(nBinsInput < 1 ? 1 : nBinsInput > 200 ? 200 : nBinsInput);
-              setNBins(nBinsInput);
+              setNBins(Number(nBinsInput));
             }}
           >
             Submit
@@ -264,7 +318,11 @@ const Histogram = ({ residuals }) => {
       <Title title="Normalized joint histogram" id="histogramNorm" />
       <div className="histsec-plots">
         <div className="histsec-plots-plot">
-          <Plot data={normLayout} layout={{ title: "RES/SIG", bargroupgap: 0.2, barmode: "stack" }} />
+          <Plot
+            data={normLayout}
+            layout={{ title: "RES/SIG", bargroupgap: 0.2, barmode: "stack" }}
+            onClick={handleHistogramClick}
+          />
         </div>
       </div>
     </div>

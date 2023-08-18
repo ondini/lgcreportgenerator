@@ -23,7 +23,7 @@ export const linkPathPlaceholder = "linkPathPlaceholder";
 // ======= DISPLAY CONSTANTS =======
 
 export const NAVBAR_WIDTH_WIDE = "200px";
-export const PLOT_3D_WIDTH = 1100;
+export const PLOT_3D_WIDTH = 1000;
 export const PLOT_3D_HEIGHT = 1000;
 
 // ======= UNIT CONVERSION FACTORS =======

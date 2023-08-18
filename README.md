@@ -99,13 +99,13 @@ Observation Table:
 
 - ~~! Add formatting - when there is no value, make the field gray~~
 - ! display only some columns by default, the others will be turned on with switcehs (they need to agree on what is displayed, most of it should be available though)
-- ! height and header data -> Tooltip ok, but with the link to LGC input file
+- ~~! height and header data -> Tooltip ok, but with the link to LGC input file~~
 - ! highlights -> RES/SIG over 3 should be highlighted
 - ~~! alltogether PLRD3 and ANGLE/ZEND/DIST~~
 - ! copy from cells problem (cannot copy it from clickable tooltip)
-- ! build a list of togglable stations+line, that they can toggle (for all tables with stations)
 - ! residuals and sigma columns should be sorted by the absolute value - add column with abs values(Res/Sig)
 - ! add column saying the frame where it was defined
+- !! build a list of togglable stations+line, that they can toggle (for all tables with stations)
 - !!! filter icon on the header (search field) (maybe add another header with filet icons)
 
 Instrument positions overview:
@@ -118,15 +118,18 @@ Frames:
 - ~~! one table with all frames with their parameters~~
 - ~~! tree diagram of frames with transformation information on edges~~
 - ~~ ! tree plot collapsible ~~
+- ~~ !TX calculated - it can be `FIXED` there, but even if the value is fixed, that value should be shown ~~
 - ! tree plot line to jump to frame definition (link) from node
-- ! resolve zooming
+- ~~! resolve zooming~~
 - ~~! table fixedTranfParams should be visible in table - color tx ty etc, + make sigmas no_value if it is fixed + legend for colors~~
 - ~~! add line column into table (with link)~~
 
 General stuff:
 
+- ! add the column with index (row number) + how many lines are displayed?
 - ~~! navigation bar~~
 - ! filter numerical values
+- ~~! links!!! All the links (like RADI)~~
 - ~~! formatting~~
 - ~~! add table resume de mesures~~
 - ! put units everywhere it is possible
@@ -154,25 +157,9 @@ General stuff:
 - ~~!! reorder~~
 - !! maybe lets add styling for the next user testing
 
-Notes:
-
-- Both work for constant (fixed) - word fixed is better
-  - TX calculated - it can be `FIXED` there
-  - even if the value is fixed, that value should be shown
-  - in TSTN as well?
-- the target link is not critical
-- in the links they prefer CTRL
-- links!!! All the links (like RADI)
-- remove fTSTN
-- missing observations !!!
-- add the column with index (row number) + how many lines are displayed?
-- make sure X and Y are linked on 3d Plot, not Z
-- in CSV more data than they see in the columns
-- when sorting columns, some rows in table dissapear?
-- something list was in the wrong order
-
 3D part
 
+- make sure X and Y are linked on 3d Plot, not Z
 - ! 2D plot (views per axis)
 - ! tooltip: they don't care about xyz, they care about name
 - ! highlight all the point lines measuring the point on hover

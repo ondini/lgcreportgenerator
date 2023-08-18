@@ -18,7 +18,7 @@ import { useState, useMemo } from "react";
 import { getData, get3DPointData, getFrames } from "./data_processing/processing";
 
 const dataFile = "21517v2_mx_TSTN.json";
-const GMData = require(`./jsons_tmp/${dataFile}`);
+const GMData = require( `./jsons_tmp/${dataFile}`);
 
 const MainLayoutStyle = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {

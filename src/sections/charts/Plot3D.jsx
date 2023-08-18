@@ -22,7 +22,7 @@ const Plot3D = ({ pointsCoords }) => {
       <Title title="3D Plot" id="plotPt3D" />
       <div
         style={{
-          width: "70vw",
+          width: PLOT_3D_WIDTH,
           height: PLOT_3D_WIDTH,
           border: "1px solid #e0e0e0",
           borderRadius: "5px",
