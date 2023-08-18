@@ -17,7 +17,7 @@ import { styled } from "@mui/material/styles";
 import { useState, useMemo } from "react";
 import { getData, get3DPointData, getFrames } from "./data_processing/processing";
 
-const dataFile = "21517v2_mx_TSTN.json";
+const dataFile = "LB_calcul_3D_CCS_IP_8_HLS_4_BF.json";
 const GMData = require( `./jsons_tmp/${dataFile}`);
 
 const MainLayoutStyle = styled("div")(({ theme }) => ({
