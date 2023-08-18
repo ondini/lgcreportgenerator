@@ -19,7 +19,6 @@ import {
   generateMeasurementsCols,
     generateFrameCols,
     generatePoint3DCols,
-    generatePoint3DCols2
  } from './otherColumns.jsx';
 
 
@@ -31,7 +30,6 @@ export {
     generateMeasurementsCols,
     generateFrameCols,
     generatePoint3DCols,
-    generatePoint3DCols2
 };
 
 export const generateObsCols = (type) => {

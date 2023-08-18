@@ -1,4 +1,4 @@
-import { fieldGen, getVarTypeFromFixed, fieldGene } from "./colUtils";
+import { fieldGen, getVarTypeFromFixed } from "./colUtils";
 import { distM2MMf } from "../constants";
 import { linkPathPlaceholder } from "../constants";
 
@@ -36,42 +36,6 @@ export const generatePoint3DCols = () => {
     DZ: fieldGen("DZ", "DZ", {
       path: "!fEstimatedValueInRoot/fVector/2!-!fProvisionalValueInRoot/fVector/2!",
       units: "MM",
-    }),
-  };
-};
-
-export const generatePoint3DCols2 = () => {
-  return {
-    id: fieldGene("id", "Name", { flex: 1.3, minWidth: 130, path: "fName" }),
-    TYPE: fieldGene("TYPE", "Type", { path: "fixedState", unitConv: getVarTypeFromFixed, show: false }),
-    FRAME: fieldGene("FRAME", "Frame", { flex: 0.4, minWidth: 50, path: "fFramePosition_Name", border: true }),
-    X: fieldGene("X", "X", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedValueInRoot/fVector/0" }),
-    Y: fieldGene("Y", "Y", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedValueInRoot/fVector/1" }),
-    Z: fieldGene("Z", "Z", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedValueInRoot/fVector/2" }),
-    H: fieldGene("H", "H", { flex: 1, minWidth: 100, numDecs: 5, path: "fEstimatedHeightInRoot/fValue", border: true }),
-    SX: fieldGene("SX", "SX", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fCovarianceMatrixInRoot/0/0" }),
-    SY: fieldGene("SY", "SY", { flex: 0.4, minWidth: 50, numDecs: 2, path: "fCovarianceMatrixInRoot/1/1" }),
-    SZ: fieldGene("SZ", "SZ", {
-      flex: 0.4,
-      minWidth: 50,
-      numDecs: 2,
-      path: "fCovarianceMatrixInRoot/2/2",
-      border: true,
-    }),
-    DX: fieldGene("DX", "DX", {
-      unitConv: distM2MMf,
-      path: "!fEstimatedValueInRoot/fVector/0!-!fProvisionalValueInRoot/fVector/0!",
-      units: "MM",
-    }),
-    DY: fieldGene("DY", "DY", {
-      numDecs: 2,
-      unitConv: distM2MMf,
-      path: "!fEstimatedValueInRoot/fVector/1!-!fProvisionalValueInRoot/fVector/1!",
-    }),
-    DZ: fieldGene("DZ", "DZ", {
-      numDecs: 2,
-      unitConv: distM2MMf,
-      path: "!fEstimatedValueInRoot/fVector/2!-!fProvisionalValueInRoot/fVector/2!",
     }),
   };
 };
@@ -156,11 +120,11 @@ export const generateFrameCols = () => {
     RX_SIG: fieldGen("RX_SIG", "RX sigma", { units: "CC", path: "frame/fEstPrecision/3", fixator: "xRX_FIXED" }),
     RY_SIG: fieldGen("RY_SIG", "RY sigma", { units: "CC", path: "frame/fEstPrecision/4", fixator: "xRY_FIXED" }),
     RZ_SIG: fieldGen("RZ_SIG", "RZ sigma", { units: "CC", path: "frame/fEstPrecision/5", fixator: "xRZ_FIXED" }),
-    TX_FIXED: fieldGene("TX_FIXED", "TX_FIXED", { path: "frame/fixedTranfParam/0", show: false }),
-    TY_FIXED: fieldGene("TY_FIXED", "TY_FIXED", { path: "frame/fixedTranfParam/1", show: false }),
-    TZ_FIXED: fieldGene("TZ_FIXED", "TZ_FIXED", { path: "frame/fixedTranfParam/2", show: false }),
-    RX_FIXED: fieldGene("RX_FIXED", "RX_FIXED", { path: "frame/fixedTranfParam/3", show: false }),
-    RY_FIXED: fieldGene("RY_FIXED", "RY_FIXED", { path: "frame/fixedTranfParam/4", show: false }),
-    RZ_FIXED: fieldGene("RZ_FIXED", "RZ_FIXED", { path: "frame/fixedTranfParam/5", show: false }),
+    TX_FIXED: fieldGen("TX_FIXED", "TX_FIXED", { path: "frame/fixedTranfParam/0", show: false }),
+    TY_FIXED: fieldGen("TY_FIXED", "TY_FIXED", { path: "frame/fixedTranfParam/1", show: false }),
+    TZ_FIXED: fieldGen("TZ_FIXED", "TZ_FIXED", { path: "frame/fixedTranfParam/2", show: false }),
+    RX_FIXED: fieldGen("RX_FIXED", "RX_FIXED", { path: "frame/fixedTranfParam/3", show: false }),
+    RY_FIXED: fieldGen("RY_FIXED", "RY_FIXED", { path: "frame/fixedTranfParam/4", show: false }),
+    RZ_FIXED: fieldGen("RZ_FIXED", "RZ_FIXED", { path: "frame/fixedTranfParam/5", show: false }),
   };
 };

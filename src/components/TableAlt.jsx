@@ -1,20 +1,17 @@
 import React, { useMemo } from "react";
 import { MaterialReactTable } from "material-react-table";
-import { get3DPointEstData2 } from "../../data_processing/processing";
 
-const Point3DTable2 = ({ data }) => {
-  const pointsData = get3DPointEstData2(data.LGC_DATA);
-  const columns = useMemo(() => {
-    return pointsData.data;
-  }, []);
+const TableAlt = ({ columns, rows }) => {
   return (
     <MaterialReactTable
-      columns={pointsData.columnDetails}
-      data={columns}
+      columns={columns}
+      data={rows}
       enableBottomToolbar={false}
       enableColumnFilterModes
       enableRowVirtualization
-      enableColumnResizing
+      enableRowNumbers
+      //   enableColumnResizing
+      enableStickyHeader={true}
       enablePagination={false}
       initialState={{ showColumnFilters: true }}
       muiTableBodyProps={{
@@ -35,6 +32,7 @@ const Point3DTable2 = ({ data }) => {
           borderRadius: 5,
         },
       }}
+      muiTableContainerProps={{ sx: { maxHeight: "900px", maxWidth: "90vw" } }}
       muiTableProps={{
         sx: {
           tableLayout: "fixed",
@@ -46,4 +44,4 @@ const Point3DTable2 = ({ data }) => {
   );
 };
 
-export default Point3DTable2;
+export default TableAlt;

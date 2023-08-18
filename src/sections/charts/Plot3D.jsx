@@ -10,7 +10,7 @@ const Plot3D = ({ pointsCoords }) => {
     scene: {
       xaxis: { title: "X" },
       yaxis: { title: "Y", scaleanchor: "x" },
-      zaxis: { title: "Z", scaleanchor: "x" },
+      zaxis: { title: "Z" },
     },
     showlegend: false,
     border: "1px solid #e0e0e0",

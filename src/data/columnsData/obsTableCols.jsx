@@ -177,7 +177,6 @@ export const generateTSTNObsCols = () => {
     // ========== DIST EXTENSION ========== //
 
     // SENSI: fieldGen("SENSI", "Sensitivity", {
-    //   numDecs: 2,
     //   path: "roms/i/measPLR3D/i/target/sigmaCombinedPLRDist",
     // }), // Sensitivity
     CONST: fieldGen("CONST", "Constant", {
@@ -564,9 +563,7 @@ export const generateDSPTObsCols = () => {
     }), // calculated dist
     RES: fieldGen("RES", "Residual", { units: "MM", path: "measDSPT/i/distancesResiduals/0/fValue" }), // dist residual
     // SENSI: fieldGen("SENSI", "Sensitivity", {
-    //   numDecs: 2,
     //   path: "measDSPT/i/distancesResiduals/0/fValue",
-    //   unitConv: distM2MMf,
     // }), //
     RESSIG: fieldGen("RESSIG", "Res./Sig.", {
       units: "-",

@@ -20,7 +20,7 @@ export default function MeasurementsTable({ data, lookupTab3D }) {
   }, [data.LGC_DATA]);
 
   return (
-    <div style={{ height: "900px", marginBottom: "4rem" }}>
+    <div>
       <Title title={"Measurement statistics"} id="measurements" />
       <Table
         getRowId={(row) => {

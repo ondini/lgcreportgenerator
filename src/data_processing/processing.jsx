@@ -574,23 +574,6 @@ export const get3DPointData = (data, colNames) => {
   };
 };
 
-// 3D points for table
-export const get3DPointEstData2 = (data, colNames) => {
-  let cols = generatePoint3DCols2();
-  let columns = generateColsData(cols);
-
-  var obsData = data.points.reduce((acc, curr) => {
-    // reduce over all frames
-    for (const key of Object.keys(cols)) {
-      // get all data defined in cols
-      columns[key].push(getFromDict(curr, cols[key].path, [], cols[key].unitConv));
-    }
-    return acc;
-  }, columns);
-
-  return makeGridData(cols, obsData);
-};
-
 // 3D points for 3D plot
 const estCoordSelector = (point) => {
   return point.fEstimatedValueInRoot.fVector;

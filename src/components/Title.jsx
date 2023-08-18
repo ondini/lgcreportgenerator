@@ -1,7 +1,7 @@
 import React from "react";
 
 const titleStyle = {
-  marginTop: "4rem",
+  marginTop: "3rem",
 };
 
 const Title = ({ title, id }) => {

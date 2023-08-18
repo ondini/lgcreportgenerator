@@ -2,7 +2,7 @@ import { Table, Title } from "../../components";
 
 export default function Point3DTable({ pointsData }) {
   return (
-    <div style={{ height: "900px", marginBottom: "4rem" }}>
+    <div>
       <Title title="3D Points overview" id="tablePt3D" />
       <Table
         getRowId={(row) => {

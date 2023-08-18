@@ -8,7 +8,6 @@ import {
   MeasurementsTable,
   FrameTable,
   FrameTree,
-  Point3DTable2,
 } from "./sections";
 import Navbar from "./components/Navbar";
 import { NAVBAR_WIDTH_WIDE } from "./data/constants";

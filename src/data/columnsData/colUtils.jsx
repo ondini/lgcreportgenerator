@@ -36,6 +36,10 @@ function addTrailingZeros(num, numDecs) {
   return str.padEnd(numDecs + decs[0].length + 1, "0");
 }
 
+// ========================================================================
+// ============= DECODERS FROM SYMB VALUES TO TABLE VALUES  ===============
+// ========================================================================
+
 function fixedValueDecoder(params, value, cellStyle) {
   let fixed = false;
   if (params.colDef.fixator) {
@@ -75,41 +79,6 @@ function decGen(unit) {
   }
 }
 
-// ========================================================================
-// ============= COLUMNS RENDERING AND DEFINITION FUNCTIONS ===============
-// ========================================================================
-
-function cellRenderer(params) {
-  if (params.colDef.tooltip) {
-    return (
-      <InstrumentTooltip
-        title={params.value}
-        details={params.colDef.tooltip(params)}
-        line={params.colDef.link ? params.row[params.colDef.link] : undefined}
-      />
-    );
-  }
-
-  let cellStyle = { padding: "0.5rem" }; // base style for cell
-
-  let value = params.value === undefined || isNaN(params.value) ? params.value : params.formattedValue;
-
-  if (typeof params.value != "string" && (params.value === undefined || isNaN(params.value))) {
-    cellStyle = { padding: 0, backgroundColor: "#f0ebeb", width: "100%", height: "100%", margin: "0px" };
-  } else if (typeof params.value != "string" && !isNaN(params.value) && params.value != undefined) {
-    value = addTrailingZeros(params.formattedValue, decGen(params.colDef.units));
-  }
-
-  [value, cellStyle] = fixedValueDecoder(params, value, cellStyle);
-
-  if (params.colDef.link) {
-    const TGTLINE = params.row[params.colDef.link];
-    return <SPLink title={value} line={TGTLINE} style={cellStyle} />;
-  }
-
-  return <span style={cellStyle}>{value}</span>;
-}
-
 function decodeSize(size, args) {
   switch (size) {
     case "S":
@@ -131,6 +100,28 @@ function decodeSize(size, args) {
     case "XXL":
       args.flex = 1.5;
       args.minWidth = 250;
+      return args;
+    default:
+      return args;
+  }
+}
+
+function decodeSizeAlt(size, args) {
+  switch (size) {
+    case "S":
+      args.size = 85;
+      return args;
+    case "M":
+      args.size = 110;
+      return args;
+    case "L":
+      args.size = 150;
+      return args;
+    case "XL":
+      args.size = 200;
+      return args;
+    case "XXL":
+      args.size = 250;
       return args;
     default:
       return args;
@@ -169,7 +160,42 @@ function unitConvFromUnit(unit) {
   }
 }
 
-export function fieldGen(field, headerName, args = {}) {
+// ========================================================================
+// ============= COLUMNS RENDERING AND DEFINITION FUNCTIONS ===============
+// ========================================================================
+
+function cellRenderer(params) {
+  if (params.colDef.tooltip) {
+    return (
+      <InstrumentTooltip
+        title={params.value}
+        details={params.colDef.tooltip(params)}
+        line={params.colDef.link ? params.row[params.colDef.link] : undefined}
+      />
+    );
+  }
+
+  let cellStyle = { padding: "0.5rem" }; // base style for cell
+
+  let value = params.value === undefined || isNaN(params.value) ? params.value : params.formattedValue;
+
+  if (typeof params.value != "string" && (params.value === undefined || isNaN(params.value))) {
+    cellStyle = { padding: 0, backgroundColor: "#f0ebeb", width: "100%", height: "100%", margin: "0px" };
+  } else if (typeof params.value != "string" && !isNaN(params.value) && params.value != undefined) {
+    value = addTrailingZeros(params.formattedValue, decGen(params.colDef.units));
+  }
+
+  [value, cellStyle] = fixedValueDecoder(params, value, cellStyle);
+
+  if (params.colDef.link) {
+    const TGTLINE = params.row[params.colDef.link];
+    return <SPLink title={value} line={TGTLINE} style={cellStyle} />;
+  }
+
+  return <span style={cellStyle}>{value}</span>;
+}
+
+export function fieldGenAlt(field, headerName, args = {}) {
   // function generating template for DataGrid column definition
   let defaultArgs = {
     field: field,
@@ -190,11 +216,7 @@ export function fieldGen(field, headerName, args = {}) {
   };
 
   Object.keys(args).forEach((key) => {
-    if (key === "numDecs") {
-      defaultArgs.valueFormatter = generateNumFormatter(args[key], 1);
-      defaultArgs.align = "right";
-      defaultArgs.type = "number";
-    } else if (key === "units" && args[key] !== "") {
+    if (key === "units" && args[key] !== "") {
       defaultArgs.valueFormatter = generateNumFormatter(decGen(args[key]), 1);
       defaultArgs.align = "right";
       defaultArgs.type = "number";
@@ -216,55 +238,95 @@ export function fieldGen(field, headerName, args = {}) {
   return defaultArgs;
 }
 
-export function fieldGene(field, headerName, args = {}) {
+function cellRendererAlt(params) {
+  //console.log(params);
+  if (params.column.columnDef.tooltip) {
+    console.log(params.formattedValue, params.cell.getValue());
+    // return (
+    //   <InstrumentTooltip
+    //     title={params.value}
+    //     details={params.column.columnDef.tooltip(params)}
+    //     line={params.column.columnDef.link ? params.row[params.column.columnDef.link] : undefined}
+    //   />
+    // );
+  }
+
+  let cellStyle = {}; // base style for cell
+
+  let value = params.renderedCellValue === undefined ? "aaa" : params.formattedValue;
+
+  if (
+    typeof params.renderedCellValue != "string" &&
+    (params.renderedCellValue === undefined || isNaN(params.renderedCellValue))
+  ) {
+    cellStyle = { padding: 0, backgroundColor: "#f0ebeb", width: "100%", height: "100%", margin: "0px" };
+  } else if (
+    typeof params.renderedCellValue != "string" &&
+    !isNaN(params.renderedCellValue) &&
+    params.renderedCellValue != undefined
+  ) {
+    value = addTrailingZeros(params.renderedCellValue, decGen(params.column.columnDef.units));
+  }
+
+  // [value, cellStyle] = fixedValueDecoder(params, value, cellStyle);
+
+  // if (params.colDef.link) {
+  //   const TGTLINE = params.row[params.colDef.link];
+  //   return <SPLink title={value} line={TGTLINE} style={cellStyle} />;
+  // }
+
+  return <span style={cellStyle}>{value}</span>;
+}
+
+export function fieldGen(field, headerName, args = {}) {
   // function generating template for DataGrid column definition
   let defaultArgs = {
     accessorKey: field,
     header: headerName,
-    flex: 0.5,
-    size: 100,
+    size: 85,
     show: true,
     sortable: true,
     units: "",
-    muiTableHeadCellProps: {
-      align: "center",
-    },
+    // muiTableHeadCellProps: {
+    //   align: "center",
+    // },
     unitConv: (x) => x,
 
     Header: ({ column }) => {
       return (
         <div style={{ display: "flex", flexDirection: "column" }}>
           {" "}
-          <strong>{column.columnDef.header}</strong>
-          <span>{column.columnDef.units == "" ? "-" : " (" + column.columnDef.units + ")"}</span>
+          <span>{column.columnDef.header}</span>
+          <span>{column.columnDef.units == "" ? "-" : " (" + column.columnDef.units.toLowerCase() + ")"}</span>
         </div>
       );
     },
-
-    Cell: (params) => {
-      let cellStyle = {};
-      let value = params.renderedCellValue === undefined ? "aaa" : params.renderedCellValue;
-      if (params.renderedCellValue === undefined || isNaN(params.renderedCellValue)) {
-        cellStyle = { backgroundColor: "#f0ebeb", width: "100%" };
-      } else if (typeof params.renderedCellValue != "string") {
-        cellStyle = { ...cellStyle, textAlign: "right" };
-        value = addTrailingZeros(
-          numFormatter(params.renderedCellValue, params.column.columnDef.numDecs),
-          params.column.columnDef.numDecs
-        );
-      }
-      return <span style={cellStyle}>{value}</span>;
-    },
+    renderCell: cellRenderer,
+    Cell: cellRendererAlt,
   };
 
   Object.keys(args).forEach((key) => {
-    if (key === "numDecs") {
+    if (key === "units" && args[key] !== "") {
       defaultArgs["muiTableBodyCellProps"] = {
         align: "right",
       };
+      defaultArgs.valueFormatter = generateNumFormatter(decGen(args[key]), 1);
+    } else if (key === "border" && args[key] === true) {
+      defaultArgs.cellClassName = "border-right--cell";
     }
-    defaultArgs[key] = args[key];
+    if (key === "size") defaultArgs = decodeSizeAlt(args[key], defaultArgs);
+    else {
+      defaultArgs[key] = args[key];
+    }
   });
+
+  if (!("unitConv" in args) && args["units"] !== "") {
+    defaultArgs.unitConv = unitConvFromUnit(args["units"]);
+  }
+
+  if (!("size" in args) && args["units"] !== "") {
+    defaultArgs = decodeSizeAlt(sizeFromUnit(args["units"]), defaultArgs);
+  }
 
   return defaultArgs;
 }

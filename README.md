@@ -69,7 +69,7 @@ you will obtain self standing **index.html** file in the build/ folder.
 Header
 
 - ~~! add the contents of the collapsible header part, and call the section metadata~~
-- ! add the missing computable values to header
+- ~~ ! add the missing computable values to header ~~
 - !! sort header
 
 Histograms:
