@@ -1,6 +1,5 @@
 import { List, ListItemButton, ListItemText, Drawer, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import mainLogo from "../data/imgs/GM.png";
 import LogoSection from "../data/imgs/Logo";
 
 import { NAVBAR_WIDTH_WIDE } from "../data/constants";

@@ -32,7 +32,7 @@ const TableAlt = ({ columns, rows }) => {
           borderRadius: 5,
         },
       }}
-      muiTableContainerProps={{ sx: { maxHeight: "900px", maxWidth: "90vw" } }}
+      muiTableContainerProps={{ sx: { maxHeight: "900px", maxWidth: "90vw", height: "900px" } }}
       muiTableProps={{
         sx: {
           tableLayout: "fixed",
