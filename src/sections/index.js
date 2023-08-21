@@ -1,4 +1,5 @@
 export { default as Point3DTable } from "./tables/Point3DTable.jsx";
+
 // export { default as Point3DTable2 } from "./tables/Point3DTable2.jsx";
 export { default as Header } from "./Header.jsx";
 export { default as Histogram } from "./charts/Histogram.jsx";

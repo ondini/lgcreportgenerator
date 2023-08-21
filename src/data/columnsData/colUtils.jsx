@@ -17,6 +17,7 @@ export const getVarTypeFromFixed = (fixedState) => {
 export function generateNumFormatter(decimals, factor) {
   // function for generating other function which serves as number formatter for the DataGrid
   return (params) => {
+    console.log(params);
     const roundedValue = Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
     return roundedValue;
   };
@@ -24,6 +25,10 @@ export function generateNumFormatter(decimals, factor) {
 
 export function numFormatter(number, decimals) {
   return Math.round(number * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
+}
+
+function addTrailingZerosAndFormat(number, decimals) {
+  return addTrailingZeros(numFormatter(number, decimals), decimals);
 }
 
 function addTrailingZeros(num, numDecs) {
@@ -240,8 +245,8 @@ export function fieldGenAlt(field, headerName, args = {}) {
 
 function cellRendererAlt(params) {
   //console.log(params);
+  // console.log(params);
   if (params.column.columnDef.tooltip) {
-    console.log(params.formattedValue, params.cell.getValue());
     // return (
     //   <InstrumentTooltip
     //     title={params.value}
@@ -253,7 +258,7 @@ function cellRendererAlt(params) {
 
   let cellStyle = {}; // base style for cell
 
-  let value = params.renderedCellValue === undefined ? "aaa" : params.formattedValue;
+  let value = params.renderedCellValue;
 
   if (
     typeof params.renderedCellValue != "string" &&
@@ -265,7 +270,7 @@ function cellRendererAlt(params) {
     !isNaN(params.renderedCellValue) &&
     params.renderedCellValue != undefined
   ) {
-    value = addTrailingZeros(params.renderedCellValue, decGen(params.column.columnDef.units));
+    value = addTrailingZerosAndFormat(params.renderedCellValue, decGen(params.column.columnDef.units));
   }
 
   // [value, cellStyle] = fixedValueDecoder(params, value, cellStyle);
@@ -291,6 +296,7 @@ export function fieldGen(field, headerName, args = {}) {
     //   align: "center",
     // },
     unitConv: (x) => x,
+    valueFormatter: (x) => x,
 
     Header: ({ column }) => {
       return (
@@ -310,7 +316,6 @@ export function fieldGen(field, headerName, args = {}) {
       defaultArgs["muiTableBodyCellProps"] = {
         align: "right",
       };
-      defaultArgs.valueFormatter = generateNumFormatter(decGen(args[key]), 1);
     } else if (key === "border" && args[key] === true) {
       defaultArgs.cellClassName = "border-right--cell";
     }

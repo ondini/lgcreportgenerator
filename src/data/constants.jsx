@@ -26,6 +26,8 @@ export const NAVBAR_WIDTH_WIDE = "200px";
 export const PLOT_3D_WIDTH = 1000;
 export const PLOT_3D_HEIGHT = 1000;
 
+export const MAIN_COLOR = "#1038a2";
+
 // ======= UNIT CONVERSION FACTORS =======
 
 const angleRad2GON = 63.6619772368; // radians to gon conv. factor
