@@ -57,8 +57,6 @@ function App() {
       uknownPlanes += plane.fRefPtDistFixed ? 0 : 1;
       uknownPlanes += plane.fThetaFixed ? 0 : 1;
       plane.fReferencePoint.fixedState.forEach((curr) => (uknownPlanes += curr ? 0 : 1));
-      // uknonwnPlanes += plane.fThetaFixed ? 0 : 1
-      // uknonwnPlanes += plane.fThetaFixed ? 0 : 1
     });
 
     return {
@@ -69,6 +67,8 @@ function App() {
       planes: uknownPlanes,
     };
   }, [points3D, frames]);
+
+  console.log(observations);
 
   return (
     <div className="app">

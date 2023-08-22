@@ -70,7 +70,7 @@ Header
 
 - ~~! add the contents of the collapsible header part, and call the section metadata~~
 - ~~ ! add the missing computable values to header ~~
-- !! sort header
+- !!! sort header
 
 Histograms:
 
@@ -95,7 +95,7 @@ Stations Table:
 - ~~! take sigmas from fCovarianceMatrixInRoot~~
 - !! hidden columns with the value in subframe (add hidden 6 columns to 3D pts table (3x coords + 3x uncertainties from diagonal!))
 - !!! leave empty cells if there is nothing - discuss with Guillaume since it depends if it is defined in FRAME (only CALA in root)
-- !!! copy from report to excel !
+- ~~!!! copy from report to excel !~~
 
 Observation Table:
 
@@ -104,11 +104,11 @@ Observation Table:
 - ~~! height and header data -> Tooltip ok, but with the link to LGC input file~~
 - ! highlights -> RES/SIG over 3 should be highlighted
 - ~~! alltogether PLRD3 and ANGLE/ZEND/DIST~~
-- ! copy from cells problem (cannot copy it from clickable tooltip)
-- ! residuals and sigma columns should be sorted by the absolute value - add column with abs values(Res/Sig)
+- ~~! copy from cells problem (cannot copy it from clickable tooltip)~~
+- ! residuals and sigma columns should be sortable by the absolute value - add column with abs values(Res/Sig)
 - ! add column saying the frame where it was defined
 - !! build a list of togglable stations+line, that they can toggle (for all tables with stations)
-- !!! filter icon on the header (search field) (maybe add another header with filet icons)
+- ~~!!! filter icon on the header (search field) (maybe add another header with filet icons)~~
 
 Measurement statistics overview:
 
@@ -134,7 +134,7 @@ General stuff:
 - ~~! links!!! All the links (like RADI)~~
 - ~~! formatting~~
 - ~~! add table resume de mesures~~
-- ! put units everywhere it is possible
+- ~~ ! put units everywhere it is possible ~~
 - ~~! remove f from fTSTN everywhere possible on frontend~~
 - ~~! add support for more types~~
 

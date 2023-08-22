@@ -38,9 +38,6 @@ const InstrumentTooltip = ({ title, details, line = undefined }) => {
       <ClickAwayListener onClickAway={handleTooltipClose}>
         <div>
           <StyledTooltip
-            PopperProps={{
-              disablePortal: true,
-            }}
             onClose={handleTooltipClose}
             open={open}
             disableFocusListener

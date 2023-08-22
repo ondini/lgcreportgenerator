@@ -1,45 +1,64 @@
 import React, { useMemo } from "react";
 import { MaterialReactTable } from "material-react-table";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import { IconButton } from "@mui/material";
+
+import { ExportToCsv } from "export-to-csv"; //or use your library of choice here
 
 const TableAlt = ({ columns, rows }) => {
+  const csvOptions = {
+    fieldSeparator: ",",
+    quoteStrings: '"',
+    decimalSeparator: ".",
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: false,
+    headers: columns.map((c) => c.header),
+  };
+  const csvExporter = new ExportToCsv(csvOptions);
+
+  const handleExportData = () => {
+    csvExporter.generateCsv(rows);
+  };
   return (
     <MaterialReactTable
       columns={columns}
       data={rows}
-      enableBottomToolbar={false}
+      enableBottomToolbar
       enableColumnFilterModes
       enableRowVirtualization
       enableRowNumbers
-      //   enableColumnResizing
-      enableStickyHeader={true}
+      enableColumnResizing
+      enableStickyHeader
       enablePagination={false}
-      initialState={{ showColumnFilters: true }}
-      muiTableBodyProps={{
-        sx: {
-          border: "1px solid #eeeeee",
-          borderRadius: 5,
-        },
+      // enableDensityToggle={false}
+      initialState={{ showColumnFilters: true, density: "compact" }}
+      muiTopToolbarProps={{
+        sx: { backgroundColor: "transparent" },
       }}
-      muiTableHeadProps={{
-        sx: {
-          border: "1px solid #eeeeee",
-          borderRadius: 5,
-        },
+      muiTableBodyCellProps={{
+        sx: { padding: "0.15rem 0.5rem" },
       }}
       muiBottomToolbarProps={{
         sx: {
-          border: "1px solid #eeeeee",
-          borderRadius: 5,
+          minHeight: "8px",
+          height: "8px",
+          backgroundColor: "transparent",
         },
       }}
-      muiTableContainerProps={{ sx: { maxHeight: "900px", maxWidth: "90vw", height: "900px" } }}
-      muiTableProps={{
-        sx: {
-          tableLayout: "fixed",
-          borderRadius: 7,
-        },
+      muiTableContainerProps={{ sx: { maxWidth: "90vw", height: "900px" } }}
+      muiTableProps={{ sx: { tableLayout: "fixed" } }}
+      muiTablePaperProps={{
+        sx: { boxShadow: 0, borderRadius: 3, border: "1px solid #e0e0e0" },
       }}
-      muiTablePaperProps={{ sx: { boxShadow: 0, borderRadius: 5, border: "1px solid #e0e0e0" } }}
+      renderTopToolbarCustomActions={({ table }) => (
+        <div style={{ display: "flex", width: "100%", justifyContent: "flex-end" }}>
+          <IconButton onClick={handleExportData}>
+            <FileDownloadIcon />
+          </IconButton>
+        </div>
+      )}
+      positionGlobalFilter="left"
     />
   );
 };

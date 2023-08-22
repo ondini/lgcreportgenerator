@@ -1,7 +1,7 @@
 import InstrumentTooltip from "../../components/InstrumentTooltip";
 import { angleRad2CCf, angleRad2GONf, distM2HMMf, distM2MMf, angleRad2GONPosf } from "../../data/constants";
 
-import { numFormatter, fieldGen } from "./colUtils";
+import { numFormatter, numFormatterUnits, fieldGen } from "./colUtils";
 import { linkPathPlaceholder } from "../../data/constants";
 
 // =======================================================
@@ -52,16 +52,16 @@ export const generateTSTNObsCols = () => {
       size: "XXL",
       path: "instrumentPos",
       link: "INSLINE",
-      tooltip: (params) => {
+      tooltip: ({ row }) => {
         return (
           <>
             <div>
-              <b>Position data:</b> HI (M): {numFormatter(params.row.HI, 5)} SHI (MM): {numFormatter(params.row.SHI, 2)}{" "}
-              ROT3D: {params.row.ROT3D ? "true" : "false"}
+              <b>Position data:</b> HI (M): {numFormatter(row.HI, 5)} SHI (MM): {numFormatter(row.SHI, 2)} ROT3D:{" "}
+              {row.ROT3D ? "true" : "false"}
             </div>
             <div>
-              <b>Rom data:</b> ACST (GON): {numFormatter(params.row.ACST, 5)} V0 (GON): {numFormatter(params.row.V0, 5)}{" "}
-              SV0 (CC): {numFormatter(params.row.SV0, 1)}
+              <b>Rom data:</b> ACST (GON): {numFormatter(row.ACST, 5)} V0 (GON): {numFormatter(row.V0, 5)} SV0 (CC):{" "}
+              {numFormatter(row.SV0, 1)}
             </div>
           </>
         );
@@ -537,7 +537,7 @@ export const generateDSPTObsCols = () => {
     // ========== OBS DATA ========== //
     INSID: fieldGen("INSID", "Instrument", { size: "M", border: true, path: "instrument/ID", link: "INSIDLINE" }), // instrument id
     INSPOS: fieldGen("INSPOS", "Instr. Pos.", {
-      size: "XL",
+      size: "XXL",
       path: "instrumentPos",
       link: "INSLINE",
       tooltip: ({ row }) => {
@@ -555,7 +555,7 @@ export const generateDSPTObsCols = () => {
     OBSLINE: fieldGen("OBSLINE", "OLine", { path: "measDSPT/i/line", show: false }), // target line
 
     // ========== DSPT ========== //
-    OBS: fieldGen("OBS", "Observed", { size: "M", units: "M", path: "measDSPT/i/distances/0/fValue", link: "OBSLINE" }), // angle observations
+    OBS: fieldGen("OBS", "Observed", { units: "M", path: "measDSPT/i/distances/0/fValue", link: "OBSLINE" }), // angle observations
     SIG: fieldGen("SIG", "Sigma", { units: "MM", path: "measDSPT/i/target/sigmaCombinedDist" }), // standard deviation
     CALC: fieldGen("CALC", "Calculated", {
       units: "M",
@@ -590,9 +590,9 @@ export const generateDSPTObsCols = () => {
     // TGTIDLINE: fieldGen("TGTIDLINE", "Tgt. Line.", {
     //   path: "measDSPT/i/target/line",
     // }), // target instr ID
-    HTGT: fieldGen("HTGT", "Tgt. height", { units: "M", size: "M", path: "measDSPT/i/target/targetHt" }), // target height
+    HTGT: fieldGen("HTGT", "Tgt. height", { units: "M", path: "measDSPT/i/target/targetHt" }), // target height
     OBSE: fieldGen("OBSE", "Observ. Sig.", { untis: "MM", path: "measDSPT/i/target/sigmaDSpt" }), // target
-    PPM: fieldGen("PPM", "Tgt. observed", { units: "MM/KM", path: "measDSPT/i/target/ppmDSpt" }), // target
+    PPM: fieldGen("PPM", "PPM", { units: "MM/KM", path: "measDSPT/i/target/ppmDSpt" }), // target
     TCSE: fieldGen("TCSE", "Tgt. centering Sig.", { units: "MM", path: "measDSPT/i/target/sigmaTargetCentering" }), // target
     THSE: fieldGen("THSE", "Tgt. height. Sig", { units: "MM", path: "measDSPT/i/target/sigmaTargetHt" }), // target
   }; // residuals data
@@ -768,7 +768,7 @@ export const generateECHOObsCols = () => {
       path: "fMeasuredPlane/fReferencePoint/fName",
       link: "INSLINE",
       border: true,
-      tooltip: (row) => {
+      tooltip: ({ row }) => {
         return (
           <>
             <div>
@@ -808,6 +808,7 @@ export const generateECHOObsCols = () => {
     RESSIG: fieldGen("RESSIG", "Res./Sig.", {
       units: "-",
       path: "!measECHO/i/distancesResiduals/0/fValue!/!measECHO/i/target/sigmaCombinedDist!",
+      border: true,
     }), // RES/SIGMA
 
     // ========== INSTR DATA ========== //
@@ -821,7 +822,7 @@ export const generateECHOObsCols = () => {
       unitConv: distM2MMf,
     }), // observation sigma
     PPM: fieldGen("PPM", "PPM", { units: "MM/KM", path: "measECHO/i/target/ppmD" }), // ppm
-    ICSE: fieldGen("ICSE", "Inst. Centering Sig.", {
+    ICSE: fieldGen("ICSE", "ICSE", {
       units: "MM",
       path: "measECHO/i/target/sigmaInstrCentering",
       unitConv: distM2MMf,
@@ -925,9 +926,9 @@ export const generateECWSObsCols = () => {
       border: true,
     }), // angle RES/SIGMA
     OBSE: fieldGen("OBSE", "Observ. Sig.", { units: "MM", path: "measECWS/i/target/sigmaDist" }), // target line
-    IHSE: fieldGen("IHSE", "Inst. Heigh Sig.", { units: "MM", path: "measECWS/i/target/sigmaInstrHeight" }), // target line
-    ICSE: fieldGen("ICSE", "Inst. Centering Sig.", { units: "MM", path: "measECWS/i/target/sigmaInstrCentering" }), // target line
-    WSSE: fieldGen("WSSE", "Water Surf. Sig.", { units: "MM", path: "measECWS/i/target/sigmaWS" }), // target line
+    IHSE: fieldGen("IHSE", "I. Heigh Sig.", { units: "MM", path: "measECWS/i/target/sigmaInstrHeight" }), // target line
+    ICSE: fieldGen("ICSE", "ICSE", { units: "MM", path: "measECWS/i/target/sigmaInstrCentering" }), // target line
+    WSSE: fieldGen("WSSE", "WSSE", { units: "MM", path: "measECWS/i/target/sigmaWS" }), // target line
     HLSRID: fieldGen("HLSRID", "HLSR ID", { path: "measECWS/i/target/ID" }), // target ID
     // HLSRLINE: fieldGen("HLSRLINE", "HLSR Line", {
     //   path: "measECWS/i/target/line",

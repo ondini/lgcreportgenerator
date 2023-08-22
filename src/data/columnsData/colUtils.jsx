@@ -17,13 +17,17 @@ export const getVarTypeFromFixed = (fixedState) => {
 export function generateNumFormatter(decimals, factor) {
   // function for generating other function which serves as number formatter for the DataGrid
   return (params) => {
-    console.log(params);
     const roundedValue = Math.round(params.value * factor * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
     return roundedValue;
   };
 }
 
 export function numFormatter(number, decimals) {
+  return Math.round(number * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
+}
+
+export function numFormatterUnits(number, units) {
+  let decimals = decGen(units);
   return Math.round(number * 10 ** decimals + Number.EPSILON) / 10 ** decimals;
 }
 
@@ -58,6 +62,28 @@ function fixedValueDecoder(params, value, cellStyle) {
 
   if (fixed) {
     if (params.colDef.fixator[0] === "x" || params.colDef.fixator[0] === "y") {
+      value = "FIXED";
+      cellStyle = { ...cellStyle, color: "blue" };
+    } else {
+      cellStyle = { ...cellStyle, color: "#c2c2c2" };
+    }
+  }
+  return [value, cellStyle];
+}
+
+function fixedValueDecoderAlt(params, value, cellStyle) {
+  let fixed = false;
+  if (params.column.columnDef.fixator) {
+    fixed =
+      params.column.columnDef.fixator[0] === "-" || params.column.columnDef.fixator[0] === "y"
+        ? params.row.original[params.column.columnDef.fixator.slice(1)] === false
+        : params.column.columnDef.fixator[0] === "x"
+        ? params.row.original[params.column.columnDef.fixator.slice(1)]
+        : params.row.original[params.column.columnDef.fixator];
+  }
+
+  if (fixed) {
+    if (params.column.columnDef.fixator[0] === "x" || params.column.columnDef.fixator[0] === "y") {
       value = "FIXED";
       cellStyle = { ...cellStyle, color: "blue" };
     } else {
@@ -114,7 +140,7 @@ function decodeSize(size, args) {
 function decodeSizeAlt(size, args) {
   switch (size) {
     case "S":
-      args.size = 85;
+      args.size = 90;
       return args;
     case "M":
       args.size = 110;
@@ -123,7 +149,7 @@ function decodeSizeAlt(size, args) {
       args.size = 150;
       return args;
     case "XL":
-      args.size = 200;
+      args.size = 210;
       return args;
     case "XXL":
       args.size = 250;
@@ -244,25 +270,22 @@ export function fieldGenAlt(field, headerName, args = {}) {
 }
 
 function cellRendererAlt(params) {
-  //console.log(params);
-  // console.log(params);
   if (params.column.columnDef.tooltip) {
-    // return (
-    //   <InstrumentTooltip
-    //     title={params.value}
-    //     details={params.column.columnDef.tooltip(params)}
-    //     line={params.column.columnDef.link ? params.row[params.column.columnDef.link] : undefined}
-    //   />
-    // );
+    return (
+      <InstrumentTooltip
+        title={params.renderedCellValue}
+        details={params.column.columnDef.tooltip({ row: params.row.original })}
+        line={params.column.columnDef.link ? params.row.original[params.column.columnDef.link] : undefined}
+      />
+    );
   }
 
   let cellStyle = {}; // base style for cell
 
   let value = params.renderedCellValue;
-
   if (
     typeof params.renderedCellValue != "string" &&
-    (params.renderedCellValue === undefined || isNaN(params.renderedCellValue))
+    (params.renderedCellValue === undefined || params.renderedCellValue === null || isNaN(params.renderedCellValue))
   ) {
     cellStyle = { padding: 0, backgroundColor: "#f0ebeb", width: "100%", height: "100%", margin: "0px" };
   } else if (
@@ -273,12 +296,12 @@ function cellRendererAlt(params) {
     value = addTrailingZerosAndFormat(params.renderedCellValue, decGen(params.column.columnDef.units));
   }
 
-  // [value, cellStyle] = fixedValueDecoder(params, value, cellStyle);
+  [value, cellStyle] = fixedValueDecoderAlt(params, value, cellStyle);
 
-  // if (params.colDef.link) {
-  //   const TGTLINE = params.row[params.colDef.link];
-  //   return <SPLink title={value} line={TGTLINE} style={cellStyle} />;
-  // }
+  if (params.column.columnDef.link) {
+    const TGTLINE = params.row.original[params.column.columnDef.link];
+    return <SPLink title={value} line={TGTLINE} style={cellStyle} />;
+  }
 
   return <span style={cellStyle}>{value}</span>;
 }
@@ -288,13 +311,11 @@ export function fieldGen(field, headerName, args = {}) {
   let defaultArgs = {
     accessorKey: field,
     header: headerName,
-    size: 85,
+    size: 90,
     show: true,
     sortable: true,
+    enableFilterMatchHighlighting: false,
     units: "",
-    // muiTableHeadCellProps: {
-    //   align: "center",
-    // },
     unitConv: (x) => x,
     valueFormatter: (x) => x,
 
@@ -313,11 +334,14 @@ export function fieldGen(field, headerName, args = {}) {
 
   Object.keys(args).forEach((key) => {
     if (key === "units" && args[key] !== "") {
-      defaultArgs["muiTableBodyCellProps"] = {
+      defaultArgs.muiTableBodyCellProps = {
         align: "right",
+        sx: { marginRigth: "0.2rem" },
       };
     } else if (key === "border" && args[key] === true) {
-      defaultArgs.cellClassName = "border-right--cell";
+      defaultArgs.muiTableBodyCellProps = {
+        sx: { borderRight: "1px solid #e0e0e0" },
+      };
     }
     if (key === "size") defaultArgs = decodeSizeAlt(args[key], defaultArgs);
     else {
