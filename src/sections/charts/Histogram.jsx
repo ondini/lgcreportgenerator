@@ -203,7 +203,7 @@ const Histogram = ({ residuals }) => {
     let histograms = [];
     if (measType) {
       Object.keys(residuals[measType].residualsData).forEach((key) => {
-        if (nonResKeys.includes(key) || key.indexOf("RESSIG") !== -1) return;
+        if (nonResKeys.includes(key) || key.indexOf("RESSIG") !== -1 || key.indexOf("ABS") !== -1) return;
         //const units = residuals[measType].columnDetails.find((obj) => obj.field === key).units;
         histograms.push(
           <div className="histsec-plots-plot" key={measType + key}>

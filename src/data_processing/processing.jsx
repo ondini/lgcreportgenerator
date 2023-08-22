@@ -4,7 +4,6 @@ import {
   generateMeasurementsCols,
   generateFrameCols,
   generatePoint3DCols,
-  generatePoint3DCols2,
   generateObsCols,
 } from "../data/columnsData";
 import { measurementTypes, pointTypes } from "../data/constants";
@@ -17,6 +16,18 @@ import { measurementTypes, pointTypes } from "../data/constants";
 // ================================================= //
 // ============== UTILITY FUNCTIONS ================ //
 // ================================================= //
+
+const functionsSwitch = (value, fun) => {
+  switch (fun) {
+    case "abs":
+      return Math.abs(value);
+    case "sqrt":
+      return Math.sqrt(value);
+    default:
+      return value;
+  }
+};
+const functionsSupported = ["abs", "sqrt"];
 
 const getFromDict = (data, path, iteratorVals, unitConv, lookupTab = {}, subresult = false) => {
   // function used to get data from neseted dictionaries using path where each key is separated by "/"
@@ -31,6 +42,11 @@ const getFromDict = (data, path, iteratorVals, unitConv, lookupTab = {}, subresu
     let expr = exprArr.reduce((acc, curr) => {
       if (["", "+", "-", "*", "/"].includes(curr)) {
         return acc + curr;
+      } else if (functionsSupported.some((fun) => curr.includes(fun))) {
+        let vals = curr.split("(");
+        let fun = vals[0];
+        let val = getFromDict(data, vals[1].slice(0, -1), iteratorVals, unitConv, lookupTab, true); // slice to remove second bracket
+        return acc + functionsSwitch(val, fun);
       } else {
         let val = getFromDict(data, curr, iteratorVals, unitConv, lookupTab, true);
         return acc + (typeof val === "number" && val < 0 ? "(" + val + ")" : val);
@@ -225,7 +241,7 @@ export const getData = (data, dataType, lookup = {}) => {
       // get measurement data for each measurement type
       if (measurementTypes.includes(measType)) {
         // this filters measurement types from other attributess
-        let obsData = dataTypeSelector(dataType)({ ...curr.measurements, lookup }, measType);
+        let obsData = dataTypeSelector(dataType)({ ...curr.measurements, lookup, frame: curr.frame }, measType);
         acc = mergeRowsData(measType, acc, obsData);
       }
     });
@@ -386,18 +402,22 @@ const getXObsRows = (measurement, measType) => {
   let columns = generateColsData(cols);
 
   const path = [measType, cols.TGTPOS.path.split("/")[0]];
-  let obsData = measurement[path[0]].reduce((acc, curr) => {
+  measurement[path[0]].forEach((curr) => {
     // reduce over all measurements
     for (let j = 0; j < curr[path[1]].length; j++) {
       // get all data defined in cols
       for (const key of Object.keys(cols)) {
-        columns[key].push(getFromDict(curr, cols[key].path, [j], cols[key].unitConv, measurement.lookup));
+        if (key !== "FRAME" && key !== "FRAMELINE") {
+          columns[key].push(getFromDict(curr, cols[key].path, [j], cols[key].unitConv, measurement.lookup));
+        }
       }
-    }
-    return acc;
-  }, columns);
 
-  return makeGridData(cols, obsData, true);
+      columns["FRAME"].push(measurement.frame.name);
+      columns["FRAMELINE"].push(measurement.frame.line);
+    }
+  });
+
+  return makeGridData(cols, columns, true);
 };
 
 const getNTObsRows = (measurement, measType) => {
@@ -406,17 +426,19 @@ const getNTObsRows = (measurement, measType) => {
   let cols = generateObsCols(measType);
   let colsData = generateColsData(cols);
 
-  let obsData = measurement[measType].reduce((acc, curr) => {
+  measurement[measType].forEach((curr) => {
     // reduce over all measurements
     for (const key of Object.keys(cols)) {
       // get all data defined in cols
-      colsData[key].push(getFromDict(curr, cols[key].path, [], cols[key].unitConv, measurement.lookup));
+      if (key !== "FRAME" && key !== "FRAMELINE") {
+        colsData[key].push(getFromDict(curr, cols[key].path, [], cols[key].unitConv, measurement.lookup));
+      }
+      colsData["FRAME"].push(measurement.frame.name);
+      colsData["FRAMELINE"].push(measurement.frame.line);
     }
+  });
 
-    return acc;
-  }, colsData);
-
-  return makeGridData(cols, obsData, true);
+  return makeGridData(cols, colsData, true);
 };
 
 const getCAMDRows = (measurement) => {
@@ -427,16 +449,18 @@ const getCAMDRows = (measurement) => {
   let cols2 = generateObsCols("UVEC");
   let columns = generateColsData(cols);
 
-  let obsData = measurement.fCAM.reduce((acc, curr) => {
+  measurement.fCAM.forEach((curr) => {
     // reduce over all measurements
     for (let j = 0; j < curr.measUVD.length; j++) {
       // get all data defined in cols
       for (const key of Object.keys(cols)) {
-        if (key !== "TYPE") {
+        if (key !== "TYPE" && key !== "FRAME" && key !== "FRAMELINE") {
           columns[key].push(getFromDict(curr, cols[key].path, [j], cols[key].unitConv, measurement.lookup));
         }
       }
       columns["TYPE"].push("UVD");
+      columns["FRAME"].push(measurement.frame.name);
+      columns["FRAMELINE"].push(measurement.frame.line);
     }
 
     for (let j = 0; j < curr.measUVEC.length; j++) {
@@ -450,11 +474,12 @@ const getCAMDRows = (measurement) => {
         }
       }
       columns["TYPE"].push("UVEC");
+      columns["FRAME"].push(measurement.frame.name);
+      columns["FRAMELINE"].push(measurement.frame.line);
     }
-    return acc;
-  }, columns);
+  });
 
-  return makeGridData(cols, obsData, true);
+  return makeGridData(cols, columns, true);
 };
 
 const getTSTNObsRows = (measurement) => {
@@ -477,7 +502,7 @@ const getTSTNObsRows = (measurement) => {
     }
   };
 
-  let obsData = measurement.fTSTN.reduce((acc, curr) => {
+  measurement.fTSTN.forEach((curr) => {
     // reduce over all measurements
     for (let i = 0; i < curr.roms.length; i++) {
       let rom = curr.roms[i]; // current rom
@@ -489,19 +514,20 @@ const getTSTNObsRows = (measurement) => {
             // reduce over all observations
             for (const key of Object.keys(cols)) {
               // check all data defined in cols
-              if (key !== "TYPE") {
+              if (key !== "TYPE" && key !== "FRAME" && key !== "FRAMELINE") {
                 columns[key].push(getTSTNRowVal(allColPaths, curr, cols, [i, j], measName, key, measurement.lookup));
               }
             }
             columns["TYPE"].push(measName.slice(4));
+            columns["FRAME"].push(measurement.frame.name);
+            columns["FRAMELINE"].push(measurement.frame.line);
           }
         }
       });
     }
-    return acc;
-  }, columns);
+  });
 
-  return makeGridData(cols, obsData, true);
+  return makeGridData(cols, columns, true);
 };
 
 // ================================================= //

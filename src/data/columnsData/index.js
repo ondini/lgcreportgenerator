@@ -16,7 +16,7 @@ import {
  } from './obsTableCols.jsx';
 
  import {
-  generateMeasurementsCols,
+    generateMeasurementsCols,
     generateFrameCols,
     generatePoint3DCols,
  } from './otherColumns.jsx';

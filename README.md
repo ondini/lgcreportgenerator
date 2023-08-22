@@ -105,7 +105,7 @@ Observation Table:
 - ! highlights -> RES/SIG over 3 should be highlighted
 - ~~! alltogether PLRD3 and ANGLE/ZEND/DIST~~
 - ~~! copy from cells problem (cannot copy it from clickable tooltip)~~
-- ! residuals and sigma columns should be sortable by the absolute value - add column with abs values(Res/Sig)
+- ~~! residuals and sigma columns should be sortable by the absolute value - add column with abs values(Res/Sig)~~
 - ! add column saying the frame where it was defined
 - !! build a list of togglable stations+line, that they can toggle (for all tables with stations)
 - ~~!!! filter icon on the header (search field) (maybe add another header with filet icons)~~

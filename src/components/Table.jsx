@@ -30,6 +30,7 @@ const TableAlt = ({ columns, rows }) => {
       enableRowNumbers
       enableColumnResizing
       enableStickyHeader
+      enableFullScreenToggle={false}
       enablePagination={false}
       // enableDensityToggle={false}
       initialState={{ showColumnFilters: true, density: "compact" }}

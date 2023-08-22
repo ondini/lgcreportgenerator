@@ -22,9 +22,9 @@ export const generatePoint3DCols = () => {
       units: "M",
       border: true,
     }),
-    SX: fieldGen("SX", "SX", { path: "fCovarianceMatrixInRoot/0/0", units: "MM" }),
-    SY: fieldGen("SY", "SY", { path: "fCovarianceMatrixInRoot/1/1", units: "MM" }),
-    SZ: fieldGen("SZ", "SZ", { path: "fCovarianceMatrixInRoot/2/2", units: "MM", border: true }),
+    SX: fieldGen("SX", "SX", { path: "!sqrt(fCovarianceMatrixInRoot/0/0)!", units: "MM" }),
+    SY: fieldGen("SY", "SY", { path: "!sqrt(fCovarianceMatrixInRoot/1/1)!", units: "MM" }),
+    SZ: fieldGen("SZ", "SZ", { path: "!sqrt(fCovarianceMatrixInRoot/2/2)!", units: "MM", border: true }),
     DX: fieldGen("DX", "DX", {
       path: "!fEstimatedValueInRoot/fVector/0!-!fProvisionalValueInRoot/fVector/0!",
       units: "MM",

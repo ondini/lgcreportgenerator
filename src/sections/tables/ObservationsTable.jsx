@@ -6,15 +6,7 @@ export default function ObservationsTable({ observations }) {
 
   const createTable = (measType) => {
     // function that creates the histogram components for each of the residuals of the selected measurement type
-    return (
-      <Table
-        rows={observations[measType].data}
-        columns={observations[measType].columnDetails}
-        getRowId={(row) => {
-          return row.TGTPOS + row.TGTLINE;
-        }}
-      />
-    );
+    return <Table rows={observations[measType].data} columns={observations[measType].columnDetails} />;
   };
 
   let [table, setTable] = useState([]);
