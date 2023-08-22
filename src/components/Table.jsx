@@ -1,70 +1,66 @@
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Box } from "@mui/system";
+import React, { useMemo } from "react";
+import { MaterialReactTable } from "material-react-table";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import { IconButton } from "@mui/material";
 
-const generateTableStyle = () => {
-  return {
-    height: "900px",
-    marginBottom: "4rem",
-    width: "100%",
-    // boxShadow: theme.customShadows.Card,
-    "& .MuiDataGrid-root": {
-      // position: "relative",
-      zIndex: 0, // Fix Safari overflow: hidden with border radius
-      backgroundColor: "transparent",
-      // border: "none",
-    },
-    "& .MuiDataGrid-cell": {
-      // borderBottom: "dashed  1px",
-      // borderColor: theme.palette.border.main,
-      padding: "0rem",
-    },
-    "& .border-right--cell": {
-      borderRight: "solid  1px #e0e0e0",
-    },
-    "& .name-column--cell": {
-      color: "#20c99a",
-    },
-    "& .MuiDataGrid-columnHeaders": {
-      // borderBottom: "dashed  1px",
-      // borderColor: theme.palette.border.main,
-    },
-    "& .MuiDataGrid-footerContainer": {
-      // borderTop: "dashed  1px",
-      // borderColor: theme.palette.border.main,
-    },
+import { ExportToCsv } from "export-to-csv"; //or use your library of choice here
+
+const TableAlt = ({ columns, rows }) => {
+  const csvOptions = {
+    fieldSeparator: ",",
+    quoteStrings: '"',
+    decimalSeparator: ".",
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: false,
+    headers: columns.map((c) => c.header),
   };
-};
+  const csvExporter = new ExportToCsv(csvOptions);
 
-// const generateTableInitState = (hiddenFields) => {
-//   let hiddenCols = {};
-//   hiddenFields.forEach((field) => {
-//     if (field !== "__row_group_by_columns_group__") {
-//       hiddenCols[field] = false;
-//     }
-//   });
-//   return {
-//     columns: {
-//       columnVisibilityModel: hiddenCols,
-//     },
-//   };
-// };
-
-const Table = ({ columns, rows, getRowId }) => {
-  // const init = generateTableInitState(observations[measType].hideCols);
+  const handleExportData = () => {
+    csvExporter.generateCsv(rows);
+  };
   return (
-    <Box sx={generateTableStyle()}>
-      <DataGrid
-        getRowId={() => {
-          return Math.floor(Math.random() * 100000000000);
-        }}
-        rows={rows}
-        columns={columns}
-        pagination
-        disableRowSelectionOnClick
-        slots={{ toolbar: GridToolbar }}
-      />
-    </Box>
+    <MaterialReactTable
+      columns={columns}
+      data={rows}
+      enableBottomToolbar
+      enableColumnFilterModes
+      enableRowVirtualization
+      enableRowNumbers
+      enableColumnResizing
+      enableStickyHeader
+      enablePagination={false}
+      // enableDensityToggle={false}
+      initialState={{ showColumnFilters: true, density: "compact" }}
+      muiTopToolbarProps={{
+        sx: { backgroundColor: "transparent" },
+      }}
+      muiTableBodyCellProps={{
+        sx: { padding: "0.15rem 0.5rem" },
+      }}
+      muiBottomToolbarProps={{
+        sx: {
+          minHeight: "8px",
+          height: "8px",
+          backgroundColor: "transparent",
+        },
+      }}
+      muiTableContainerProps={{ sx: { maxWidth: "90vw", height: "900px" } }}
+      muiTableProps={{ sx: { tableLayout: "fixed" } }}
+      muiTablePaperProps={{
+        sx: { boxShadow: 0, borderRadius: 3, border: "1px solid #e0e0e0" },
+      }}
+      renderTopToolbarCustomActions={({ table }) => (
+        <div style={{ display: "flex", width: "100%", justifyContent: "flex-end" }}>
+          <IconButton onClick={handleExportData}>
+            <FileDownloadIcon />
+          </IconButton>
+        </div>
+      )}
+      positionGlobalFilter="left"
+    />
   );
 };
 
-export default Table;
+export default TableAlt;

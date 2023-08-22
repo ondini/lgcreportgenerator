@@ -51,28 +51,6 @@ function addTrailingZeros(num, numDecs) {
 
 function fixedValueDecoder(params, value, cellStyle) {
   let fixed = false;
-  if (params.colDef.fixator) {
-    fixed =
-      params.colDef.fixator[0] === "-" || params.colDef.fixator[0] === "y"
-        ? params.row[params.colDef.fixator.slice(1)] === false
-        : params.colDef.fixator[0] === "x"
-        ? params.row[params.colDef.fixator.slice(1)]
-        : params.row[params.colDef.fixator];
-  }
-
-  if (fixed) {
-    if (params.colDef.fixator[0] === "x" || params.colDef.fixator[0] === "y") {
-      value = "FIXED";
-      cellStyle = { ...cellStyle, color: "blue" };
-    } else {
-      cellStyle = { ...cellStyle, color: "#c2c2c2" };
-    }
-  }
-  return [value, cellStyle];
-}
-
-function fixedValueDecoderAlt(params, value, cellStyle) {
-  let fixed = false;
   if (params.column.columnDef.fixator) {
     fixed =
       params.column.columnDef.fixator[0] === "-" || params.column.columnDef.fixator[0] === "y"
@@ -111,33 +89,6 @@ function decGen(unit) {
 }
 
 function decodeSize(size, args) {
-  switch (size) {
-    case "S":
-      args.flex = 0.6;
-      args.minWidth = 70;
-      return args;
-    case "M":
-      args.flex = 1;
-      args.minWidth = 110;
-      return args;
-    case "L":
-      args.flex = 1.1;
-      args.minWidth = 150;
-      return args;
-    case "XL":
-      args.flex = 1.3;
-      args.minWidth = 200;
-      return args;
-    case "XXL":
-      args.flex = 1.5;
-      args.minWidth = 250;
-      return args;
-    default:
-      return args;
-  }
-}
-
-function decodeSizeAlt(size, args) {
   switch (size) {
     case "S":
       args.size = 90;
@@ -196,80 +147,6 @@ function unitConvFromUnit(unit) {
 // ========================================================================
 
 function cellRenderer(params) {
-  if (params.colDef.tooltip) {
-    return (
-      <InstrumentTooltip
-        title={params.value}
-        details={params.colDef.tooltip(params)}
-        line={params.colDef.link ? params.row[params.colDef.link] : undefined}
-      />
-    );
-  }
-
-  let cellStyle = { padding: "0.5rem" }; // base style for cell
-
-  let value = params.value === undefined || isNaN(params.value) ? params.value : params.formattedValue;
-
-  if (typeof params.value != "string" && (params.value === undefined || isNaN(params.value))) {
-    cellStyle = { padding: 0, backgroundColor: "#f0ebeb", width: "100%", height: "100%", margin: "0px" };
-  } else if (typeof params.value != "string" && !isNaN(params.value) && params.value != undefined) {
-    value = addTrailingZeros(params.formattedValue, decGen(params.colDef.units));
-  }
-
-  [value, cellStyle] = fixedValueDecoder(params, value, cellStyle);
-
-  if (params.colDef.link) {
-    const TGTLINE = params.row[params.colDef.link];
-    return <SPLink title={value} line={TGTLINE} style={cellStyle} />;
-  }
-
-  return <span style={cellStyle}>{value}</span>;
-}
-
-export function fieldGenAlt(field, headerName, args = {}) {
-  // function generating template for DataGrid column definition
-  let defaultArgs = {
-    field: field,
-    headerName: headerName,
-    flex: 0.6,
-    minWidth: 70,
-    show: true,
-    sortable: true,
-    units: "",
-    unitConv: (x) => x,
-    renderHeader: (params) => (
-      <>
-        <strong>{params.colDef.headerName}</strong>
-        <span>{params.colDef.units === "" ? "" : "(" + params.colDef.units.toLowerCase() + ")"}</span>
-      </>
-    ),
-    renderCell: cellRenderer,
-  };
-
-  Object.keys(args).forEach((key) => {
-    if (key === "units" && args[key] !== "") {
-      defaultArgs.valueFormatter = generateNumFormatter(decGen(args[key]), 1);
-      defaultArgs.align = "right";
-      defaultArgs.type = "number";
-    } else if (key === "size") defaultArgs = decodeSize(args[key], defaultArgs);
-    else if (key === "border" && args[key] === true) {
-      defaultArgs.cellClassName = "border-right--cell";
-    }
-    defaultArgs[key] = args[key];
-  });
-
-  if (!("unitConv" in args) && args["units"] !== "") {
-    defaultArgs.unitConv = unitConvFromUnit(args["units"]);
-  }
-
-  if (!("size" in args) && args["units"] !== "") {
-    defaultArgs = decodeSize(sizeFromUnit(args["units"]), defaultArgs);
-  }
-
-  return defaultArgs;
-}
-
-function cellRendererAlt(params) {
   if (params.column.columnDef.tooltip) {
     return (
       <InstrumentTooltip
@@ -296,7 +173,7 @@ function cellRendererAlt(params) {
     value = addTrailingZerosAndFormat(params.renderedCellValue, decGen(params.column.columnDef.units));
   }
 
-  [value, cellStyle] = fixedValueDecoderAlt(params, value, cellStyle);
+  [value, cellStyle] = fixedValueDecoder(params, value, cellStyle);
 
   if (params.column.columnDef.link) {
     const TGTLINE = params.row.original[params.column.columnDef.link];
@@ -329,7 +206,7 @@ export function fieldGen(field, headerName, args = {}) {
       );
     },
     renderCell: cellRenderer,
-    Cell: cellRendererAlt,
+    Cell: cellRenderer,
   };
 
   Object.keys(args).forEach((key) => {
@@ -343,7 +220,7 @@ export function fieldGen(field, headerName, args = {}) {
         sx: { borderRight: "1px solid #e0e0e0" },
       };
     }
-    if (key === "size") defaultArgs = decodeSizeAlt(args[key], defaultArgs);
+    if (key === "size") defaultArgs = decodeSize(args[key], defaultArgs);
     else {
       defaultArgs[key] = args[key];
     }
@@ -354,7 +231,7 @@ export function fieldGen(field, headerName, args = {}) {
   }
 
   if (!("size" in args) && args["units"] !== "") {
-    defaultArgs = decodeSizeAlt(sizeFromUnit(args["units"]), defaultArgs);
+    defaultArgs = decodeSize(sizeFromUnit(args["units"]), defaultArgs);
   }
 
   return defaultArgs;

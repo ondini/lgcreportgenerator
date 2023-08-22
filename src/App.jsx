@@ -76,7 +76,6 @@ function App() {
       <MainLayoutStyle>
         <Header data={GMData} unknownPars={unknownPars} />
         <Point3DTable pointsData={points3D} />
-        {/* <Point3DTable2 data={GMData} /> */}
         <MeasurementsTable data={GMData} lookupTab3D={points3D.lookup} />
         <Histogram residuals={observations} />
         <ObservationsTable observations={observations} />
