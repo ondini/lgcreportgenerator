@@ -22,7 +22,8 @@ export const linkPathPlaceholder = "linkPathPlaceholder";
 
 // ======= DISPLAY CONSTANTS =======
 
-export const NAVBAR_WIDTH_WIDE = "200px";
+export const NAVBAR_WIDTH_WIDE = 200;
+
 export const PLOT_3D_WIDTH = 1000;
 export const PLOT_3D_HEIGHT = 1000;
 

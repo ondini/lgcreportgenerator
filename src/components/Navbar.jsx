@@ -59,28 +59,9 @@ function NavItem({ item }) {
   );
 }
 
-const Navbar = ({ mobileOpen, handleDrawerToggle }) => {
+const Navbar = ({ open }) => {
   return (
     <Box component="nav" aria-label="nav links">
-      {/* MOBILE DRAWER */}
-      {/* <Drawer
-        variant="temporary"
-        open={mobileOpen}
-        onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true,
-        }}
-        sx={{
-          display: { xs: "block", sm: "none" },
-          "& .MuiDrawer-paper": {
-            boxSizing: "border-box",
-            width: NAVBAR_WIDTH_WIDE,
-          },
-        }}
-      >
-        {sidebarWideContent}
-      </Drawer> */}
-
       {/* DESKTOP DRAWER WIDE */}
       <Drawer
         variant="persistent"
@@ -95,7 +76,7 @@ const Navbar = ({ mobileOpen, handleDrawerToggle }) => {
             borderColor: "#e0e0e0",
           },
         }}
-        open
+        open={open}
       >
         {sidebarWideContent}
       </Drawer>

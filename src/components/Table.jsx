@@ -47,10 +47,10 @@ const TableAlt = ({ columns, rows }) => {
           backgroundColor: "transparent",
         },
       }}
-      muiTableContainerProps={{ sx: { maxWidth: "90vw", height: "900px" } }}
+      muiTableContainerProps={{ sx: { maxWidth: "100%", height: "900px" } }}
       muiTableProps={{ sx: { tableLayout: "fixed" } }}
       muiTablePaperProps={{
-        sx: { boxShadow: 0, borderRadius: 3, border: "1px solid #e0e0e0" },
+        sx: { boxShadow: 0, borderRadius: 3, maxWidth: "100%", border: "1px solid #e0e0e0" },
       }}
       renderTopToolbarCustomActions={({ table }) => (
         <div style={{ display: "flex", width: "100%", justifyContent: "flex-end" }}>

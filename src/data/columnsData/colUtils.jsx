@@ -180,6 +180,14 @@ function cellRenderer(params) {
     return <SPLink title={value} line={TGTLINE} style={cellStyle} />;
   }
 
+  if (params.column.id.indexOf("RESSIG") !== -1) {
+    if (Math.abs(params.renderedCellValue) > 3) {
+      cellStyle = { ...cellStyle, color: "orange" };
+    } else if (Math.abs(params.renderedCellValue) > 5) {
+      cellStyle = { ...cellStyle, color: "red" };
+    }
+  }
+
   return <span style={cellStyle}>{value}</span>;
 }
 

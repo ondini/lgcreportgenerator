@@ -90,7 +90,7 @@ Stations Table:
 
 - ~~! take Sigma data from diagonal ~~
 - ~~! 0 padding for columns (trailing zeros)~~
-- ! export to csv perhaps
+- ~~! export to csv perhaps~~
 - ~~ ! mark columns by categories (vertical line)~~
 - ~~! take sigmas from fCovarianceMatrixInRoot~~
 - !! hidden columns with the value in subframe (add hidden 6 columns to 3D pts table (3x coords + 3x uncertainties from diagonal!))
@@ -106,7 +106,7 @@ Observation Table:
 - ~~! alltogether PLRD3 and ANGLE/ZEND/DIST~~
 - ~~! copy from cells problem (cannot copy it from clickable tooltip)~~
 - ~~! residuals and sigma columns should be sortable by the absolute value - add column with abs values(Res/Sig)~~
-- ! add column saying the frame where it was defined
+- ~~ ! add column saying the frame where it was defined ~~
 - !! build a list of togglable stations+line, that they can toggle (for all tables with stations)
 - ~~!!! filter icon on the header (search field) (maybe add another header with filet icons)~~
 
@@ -128,15 +128,16 @@ Frames:
 
 General stuff:
 
-- ! add the column with index (row number) + how many lines are displayed?
+- ~~ ! add the column with index (row number) ~~
 - ~~! navigation bar~~
-- ! filter numerical values
+- ~~ ! filter numerical values ~~
 - ~~! links!!! All the links (like RADI)~~
 - ~~! formatting~~
 - ~~! add table resume de mesures~~
 - ~~ ! put units everywhere it is possible ~~
 - ~~! remove f from fTSTN everywhere possible on frontend~~
 - ~~! add support for more types~~
+- !! show how many lines are displayed?
 
   - ~~PL3D~~
   - ~~ANGL~~

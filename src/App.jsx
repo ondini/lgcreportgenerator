@@ -9,8 +9,8 @@ import {
   FrameTable,
   FrameTree,
 } from "./sections";
-import Navbar from "./components/Navbar";
-import { NAVBAR_WIDTH_WIDE } from "./data/constants";
+import { Navbar, NavbarToggle } from "./components";
+import { NAVBAR_WIDTH_WIDE, drawerWidth } from "./data/constants";
 import { styled } from "@mui/material/styles";
 
 import { useState, useMemo } from "react";
@@ -19,17 +19,20 @@ import { getData, get3DPointData, getFrames } from "./data_processing/processing
 const dataFile = "21517v2_mx_TSTN.json";
 const GMData = require(`./jsons_tmp/${dataFile}`);
 
-const MainLayoutStyle = styled("div")(({ theme }) => ({
-  [theme.breakpoints.up("sm")]: {
+const MainLayoutStyle = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(({ theme, open }) => ({
+  flexGrow: 1,
+  marginLeft: 0,
+  ...(open && {
     marginLeft: NAVBAR_WIDTH_WIDE,
-  },
+  }),
 }));
 
 function App() {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+    console.log("handleDrawerToggle", open);
+    setOpen(!open);
   };
 
   const points3D = useMemo(() => {
@@ -72,8 +75,9 @@ function App() {
 
   return (
     <div className="app">
-      <Navbar mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
-      <MainLayoutStyle>
+      <Navbar open={open} handleDrawerToggle={handleDrawerToggle} />
+      <MainLayoutStyle open={open}>
+        <NavbarToggle open={open} handleClick={handleDrawerToggle} />
         <Header data={GMData} unknownPars={unknownPars} />
         <Point3DTable pointsData={points3D} />
         <MeasurementsTable data={GMData} lookupTab3D={points3D.lookup} />
