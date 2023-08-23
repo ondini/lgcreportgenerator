@@ -1,11 +1,12 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { MaterialReactTable } from "material-react-table";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { IconButton } from "@mui/material";
 
-import { ExportToCsv } from "export-to-csv"; //or use your library of choice here
+import { ExportToCsv } from "export-to-csv";
 
-const TableAlt = ({ columns, rows }) => {
+const Table = ({ columns, rows }) => {
+  // create csv exporter
   const csvOptions = {
     fieldSeparator: ",",
     quoteStrings: '"',
@@ -20,6 +21,7 @@ const TableAlt = ({ columns, rows }) => {
   const handleExportData = () => {
     csvExporter.generateCsv(rows);
   };
+
   return (
     <MaterialReactTable
       columns={columns}
@@ -64,4 +66,4 @@ const TableAlt = ({ columns, rows }) => {
   );
 };
 
-export default TableAlt;
+export default Table;

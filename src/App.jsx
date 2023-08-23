@@ -10,13 +10,14 @@ import {
   FrameTree,
 } from "./sections";
 import { Navbar, NavbarToggle } from "./components";
-import { NAVBAR_WIDTH_WIDE, drawerWidth } from "./data/constants";
+import { NAVBAR_WIDTH_WIDE } from "./data/constants";
 import { styled } from "@mui/material/styles";
 
 import { useState, useMemo } from "react";
-import { getData, get3DPointData, getFrames } from "./data_processing/processing";
 
-const dataFile = "21517v2_mx_TSTN.json";
+import getAllData from "./data_processing/getAllData";
+
+const dataFile = "SUS-1895_26465_TT2-radial_calage-FTN.json";
 const GMData = require(`./jsons_tmp/${dataFile}`);
 
 const MainLayoutStyle = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(({ theme, open }) => ({
@@ -31,61 +32,26 @@ function App() {
   const [open, setOpen] = useState(true);
 
   const handleDrawerToggle = () => {
-    console.log("handleDrawerToggle", open);
     setOpen(!open);
   };
 
-  const points3D = useMemo(() => {
-    return get3DPointData(GMData.LGC_DATA);
+  let reportData = useMemo(() => {
+    return getAllData(GMData);
   }, []);
-
-  const observations = useMemo(() => {
-    return getData(GMData.LGC_DATA, "OBS", points3D.lookup);
-  }, [points3D.lookup]);
-
-  const frames = useMemo(() => {
-    return getFrames(GMData.LGC_DATA);
-  }, []);
-
-  const unknownPars = useMemo(() => {
-    let uknonwnAngles = 0;
-    GMData.LGC_DATA.angles.forEach((angle) => (uknonwnAngles += angle.isFixed ? 0 : 1));
-
-    let uknonwnDists = 0;
-    GMData.LGC_DATA.lengths.forEach((dist) => (uknonwnDists += dist.isFixed ? 0 : 1));
-
-    let uknownPlanes = 0;
-    GMData.LGC_DATA.planes.forEach((plane) => {
-      uknownPlanes += plane.fPhiFixed ? 0 : 1;
-      uknownPlanes += plane.fRefPtDistFixed ? 0 : 1;
-      uknownPlanes += plane.fThetaFixed ? 0 : 1;
-      plane.fReferencePoint.fixedState.forEach((curr) => (uknownPlanes += curr ? 0 : 1));
-    });
-
-    return {
-      p3D: points3D.unknownPars,
-      frames: frames.unknownPars,
-      angles: uknonwnAngles,
-      dists: uknonwnDists,
-      planes: uknownPlanes,
-    };
-  }, [points3D, frames]);
-
-  console.log(observations);
 
   return (
     <div className="app">
-      <Navbar open={open} handleDrawerToggle={handleDrawerToggle} />
+      <Navbar open={open} />
+      <NavbarToggle open={open} handleClick={handleDrawerToggle} />
       <MainLayoutStyle open={open}>
-        <NavbarToggle open={open} handleClick={handleDrawerToggle} />
-        <Header data={GMData} unknownPars={unknownPars} />
-        <Point3DTable pointsData={points3D} />
-        <MeasurementsTable data={GMData} lookupTab3D={points3D.lookup} />
-        <Histogram residuals={observations} />
-        <ObservationsTable observations={observations} />
-        <FrameTable frameData={frames} />
-        <FrameTree tree={frames.tree} numNodes={frames.data.length} />
-        <Plot3D pointsCoords={points3D.coords} />
+        <Header data={GMData} unknownPars={reportData.unknownPars} />
+        <Point3DTable pointsData={reportData.points3D} />
+        <MeasurementsTable measStats={reportData.measStats} />
+        <Histogram residuals={reportData.observations} />
+        <ObservationsTable observations={reportData.observations} />
+        <FrameTable frameData={reportData.frames} />
+        <FrameTree tree={reportData.frames.tree} numNodes={reportData.frames.data.length} />
+        <Plot3D pointsCoords={reportData.points3D.coords} />
       </MainLayoutStyle>
     </div>
   );

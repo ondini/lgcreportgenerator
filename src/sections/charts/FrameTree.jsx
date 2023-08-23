@@ -1,8 +1,9 @@
 import React from "react";
 import Tree from "react-d3-tree";
-import Title from "../../components/Title";
+import { Title } from "../../components";
 
 const FrameTree = ({ tree, numNodes }) => {
+  // initial zoom is computed as 2 / sqrt(numNodes) to fit the tree in the svg
   return (
     <>
       {" "}

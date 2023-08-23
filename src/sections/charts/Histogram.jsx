@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import Plot from "react-plotly.js";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Title } from "../../components";
 import "./Histogram.css";
 import { Switch, TextField, Button } from "@mui/material";
 import { noSrcMeasTypes } from "../../data/constants";
 import { linkPathPlaceholder } from "../../data/constants";
 
-const makeBinDescs = (data, key, nbinsx, binsx) => {
+const makeBinDescriptions = (data, key, nbinsx, binsx) => {
   // function that creates descriptions for each bin
   // the description is a string with the instrument position and line number (if there is some)
   // followed by the target position and line number of each observation in the bin
@@ -41,7 +41,7 @@ const makeBinDescs = (data, key, nbinsx, binsx) => {
   return binsDescs.slice(i);
 };
 
-const makeBinDescsNorm = (data, key, nbinsx, binsx) => {
+const makeBinDescriptionsNorm = (data, key, nbinsx, binsx) => {
   // function that creates descriptions for each bin
   // the description is a string with the type followed by the
   // target position and line number of each observation in the bin
@@ -122,7 +122,7 @@ const makePlotLayout = (residuals, resBinData, binsx, name) => {
 const createCleanBins = (residuals, nbinsx) => {
   // make bins and filter undefined
   const replacementValue = 0;
-  // craete bins(the same for all instrument positions, so that they are stackable)
+  // create bins (the same for all instrument positions, so that they are stackable)
   const cleanRes = residuals.map((value) => (value === undefined || isNaN(value) ? replacementValue : value));
   const maxVal = Math.max(...cleanRes) * 1.01;
   const minVal = Math.min(...cleanRes);
@@ -139,7 +139,7 @@ const createCleanBins = (residuals, nbinsx) => {
 const makePlotData = (residuals, measType, key, nbinsx, filterInstruments) => {
   // function that creates array of data objects for a histogram, which is then
   // directly passed to a Plotly component
-  const [xbins, _] = createCleanBins(residuals[key], nbinsx);
+  const bins = createCleanBins(residuals[key], nbinsx);
   const filterInstr = noSrcMeasTypes.includes(measType) ? false : filterInstruments; // filter by instrument is not available for some measurement types
   const traces = filterInstr // separate data by instrument if filter is on
     ? separateDataByInstrument(residuals, key, nbinsx)
@@ -147,8 +147,8 @@ const makePlotData = (residuals, measType, key, nbinsx, filterInstruments) => {
 
   let plotData = []; // array of data objects for the histogram
   Object.keys(traces).forEach((key2) => {
-    let resBinData = makeBinDescs(traces[key2], key, nbinsx, xbins);
-    plotData.push(makePlotLayout(traces[key2][key], resBinData, xbins, key2));
+    let resBinData = makeBinDescriptions(traces[key2], key, nbinsx, bins[0]);
+    plotData.push(makePlotLayout(traces[key2][key], resBinData, bins[0], key2));
   });
   return plotData;
 };
@@ -177,7 +177,7 @@ const makeNormPlotData = (measTypes, residuals, nbinsx) => {
   });
 
   const [xbins, cleanRes] = createCleanBins(plotData.RESSIG, nbinsx);
-  let resBinData = makeBinDescsNorm(plotData, "RESSIG", nbinsx, xbins);
+  let resBinData = makeBinDescriptionsNorm(plotData, "RESSIG", nbinsx, xbins);
   return [makePlotLayout(cleanRes, resBinData, xbins, "RESSIG")];
 };
 
@@ -196,30 +196,33 @@ const Histogram = ({ residuals }) => {
 
   const measTypes = Object.keys(residuals); // get all the used measurement types from the residuals data
 
-  const createHists = (measType, filterInstr, nbinsx) => {
-    // function that creates the histogram components for each of the residuals of the selected measurement type
-    const nonResKeys = ["TGTPOS", "TGTLINE", "INSPOS", "INSLINE"]; // keys that are not residuals
+  const createHists = useCallback(
+    (measType, filterInstr, nbinsx) => {
+      // function that creates the histogram components for each of the residuals of the selected measurement type
+      const nonResKeys = ["TGTPOS", "TGTLINE", "INSPOS", "INSLINE"]; // keys that are not residuals
 
-    let histograms = [];
-    if (measType) {
-      Object.keys(residuals[measType].residualsData).forEach((key) => {
-        if (nonResKeys.includes(key) || key.indexOf("RESSIG") !== -1 || key.indexOf("ABS") !== -1) return;
-        //const units = residuals[measType].columnDetails.find((obj) => obj.field === key).units;
-        histograms.push(
-          <div className="histsec-plots-plot" key={measType + key}>
-            <Plot
-              data={makePlotData(residuals[measType].residualsData, measType, key, nbinsx, filterInstr)}
-              layout={{ title: key, bargroupgap: 0.2, barmode: "stack" }}
-              onClick={handleHistogramClick}
-            />
-          </div>
-        );
-      });
-    }
-    return histograms;
-  };
+      let histograms = [];
+      if (measType) {
+        Object.keys(residuals[measType].residualsData).forEach((key) => {
+          if (nonResKeys.includes(key) || key.indexOf("RESSIG") !== -1 || key.indexOf("ABS") !== -1) return;
+          // const units = residuals[measType].columnDetails.find((obj) => obj.field === key).units;
+          histograms.push(
+            <div className="histsec-plots-plot" key={measType + key}>
+              <Plot
+                data={makePlotData(residuals[measType].residualsData, measType, key, nbinsx, filterInstr)}
+                layout={{ title: key, bargroupgap: 0.2, barmode: "stack" }}
+                onClick={handleHistogramClick}
+              />
+            </div>
+          );
+        });
+      }
+      return histograms;
+    },
+    [residuals]
+  );
 
-  const createNormHist = (measTypes, residuals, nBins) => {
+  const createNormHist = useCallback((measTypes, residuals, nBins) => {
     const normLayout = makeNormPlotData(measTypes, residuals, nBins);
     return (
       <Plot
@@ -228,7 +231,7 @@ const Histogram = ({ residuals }) => {
         onClick={handleHistogramClick}
       />
     );
-  };
+  }, []);
 
   let [filterInstr, setFilterInstr] = useState(true); // state of the filter by instrument
   let [nBins, setNBins] = useState(30); // state of the number of bins
@@ -240,11 +243,11 @@ const Histogram = ({ residuals }) => {
   useEffect(() => {
     // update and re-render the histogram components when the filter measurement type, or nBins changes
     setHistList(createHists(key, filterInstr, nBins));
-  }, [filterInstr, key, nBins]);
+  }, [filterInstr, key, nBins, createHists]);
   useEffect(() => {
     // update and re-render nromalized histogram components when nBins changes
     setNormHist(createNormHist(measTypes, residuals, nBins));
-  }, [nBins]);
+  }, [nBins, measTypes, residuals, createNormHist]);
 
   let measTypeButtons = measTypes.map((key) => {
     // create the measurement type buttons

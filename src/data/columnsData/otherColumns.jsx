@@ -1,6 +1,4 @@
 import { fieldGen, getVarTypeFromFixed } from "./colUtils";
-import { distM2MMf } from "../constants";
-import { linkPathPlaceholder } from "../constants";
 
 // =======================================================
 // =============== POINT3D TABLE COLUMNS =================
@@ -46,8 +44,6 @@ export const generatePoint3DCols = () => {
 
 export const generateMeasurementsCols = () => {
   return {
-    // ================== TOOLTIP INFO ==================
-
     // ================== STATION INFO ==================
     MMT_POS: fieldGen("MMT_POS", "Msmt. position", {
       size: "L",

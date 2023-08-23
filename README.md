@@ -13,6 +13,8 @@ Notes -> supported measurement types are defined in constants -> each of them mu
 -> How fixed arguments work
 -> How link arguments & lookup table work, + instrument tooltip
 -> How computations with ! work
+-> lkp, abs
+-> sizes, units
 
 #### Single file compilation
 
@@ -112,7 +114,7 @@ Observation Table:
 
 Measurement statistics overview:
 
-- !! filtering by units ?
+- ! filtering by units
 - !! is any of (any of types - so that they can see either ANGL or ZEND) filtering ?
 
 Frames:
@@ -137,7 +139,7 @@ General stuff:
 - ~~ ! put units everywhere it is possible ~~
 - ~~! remove f from fTSTN everywhere possible on frontend~~
 - ~~! add support for more types~~
-- !! show how many lines are displayed?
+- !! show how many lines are displayed
 
   - ~~PL3D~~
   - ~~ANGL~~
@@ -158,7 +160,6 @@ General stuff:
   - ~~OBSXYZ~~
 
 - ~~!! reorder~~
-- !! maybe lets add styling for the next user testing
 - !! ASK users if they want translated names of columns or the ids from input file (TCSE vs target centering sigma)
 
 3D part

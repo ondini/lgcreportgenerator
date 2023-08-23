@@ -5,6 +5,7 @@ import { MAIN_COLOR } from "../data/constants";
 import { NAVBAR_WIDTH_WIDE } from "../data/constants";
 
 const NavbarToggle = ({ open, handleClick }) => {
+  // toggle fixed floating button for the navbar
   const style = {
     position: "fixed",
     top: "5px",

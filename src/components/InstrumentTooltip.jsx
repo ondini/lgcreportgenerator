@@ -1,10 +1,8 @@
 import { useState } from "react";
-import Button from "@mui/material/Button";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import { styled } from "@mui/material/styles";
 import Fade from "@mui/material/Fade";
-import SPLink from "./SPLink";
 import { linkPathPlaceholder } from "../data/constants";
 
 const StyledTooltip = styled(({ className, ...props }) => <Tooltip {...props} classes={{ popper: className }} />)(
@@ -20,6 +18,7 @@ const StyledTooltip = styled(({ className, ...props }) => <Tooltip {...props} cl
 );
 
 const InstrumentTooltip = ({ title, details, line = undefined }) => {
+  // Tooltip for instrument data in observation table
   const [open, setOpen] = useState(false);
   const handleTooltipClose = () => {
     setOpen(false);

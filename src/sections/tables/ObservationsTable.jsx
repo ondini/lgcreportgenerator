@@ -1,22 +1,25 @@
 import { Title, Table } from "../../components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export default function ObservationsTable({ observations }) {
-  const measTypes = Object.keys(observations); // get all the used measurement types from the residuals data
-
-  const createTable = (measType) => {
-    // function that creates the histogram components for each of the residuals of the selected measurement type
-    return <Table rows={observations[measType].data} columns={observations[measType].columnDetails} />;
-  };
+  const measTypes = Object.keys(observations); // get all the used measurement types from the observations data
 
   let [table, setTable] = useState([]);
   let [key, setKey] = useState(measTypes[0]); // state of the currently active measurement type
+
+  const createTable = useCallback(
+    (measType) => {
+      // function that creates a table component based on currently selected meas type
+      return <Table rows={observations[measType].data} columns={observations[measType].columnDetails} />;
+    },
+    [observations]
+  );
 
   useEffect(() => {
     if (key) {
       setTable(createTable(key));
     }
-  }, [key]);
+  }, [key, createTable]);
 
   let measTypeButtons = measTypes.map((key) => {
     // create the measurement type buttons

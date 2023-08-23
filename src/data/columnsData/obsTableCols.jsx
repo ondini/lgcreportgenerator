@@ -1,8 +1,6 @@
-import InstrumentTooltip from "../../components/InstrumentTooltip";
-import { angleRad2CCf, angleRad2GONf, distM2HMMf, distM2MMf, angleRad2GONPosf } from "../../data/constants";
+import { angleRad2CCf, angleRad2GONf, distM2MMf, angleRad2GONPosf } from "../../data/constants";
 
 import { numFormatter, numFormatterUnits, fieldGen } from "./colUtils";
-import { linkPathPlaceholder } from "../../data/constants";
 
 // =======================================================
 // ============= OBSERVATIONS TABLE COLUMNS ==============

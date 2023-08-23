@@ -27,12 +27,11 @@ const sidebarWideContent = (
   <ListStyled>
     <Box sx={{ p: 4 }}>
       <a href="#top">
-        {/* <img src={mainLogo} alt="GM logo" width={"100%"} /> */}
         <LogoSection sx={{ p: 2, mt: 2, mr: 1 }} />
       </a>
     </Box>
     <List sx={{ p: 1 }}>
-      {sidebarItems.map((item, index) => (
+      {sidebarItems.map((item) => (
         <NavItem key={item.title} item={item} />
       ))}
     </List>
@@ -41,7 +40,7 @@ const sidebarWideContent = (
 );
 
 function NavItem({ item }) {
-  const { title, url, icon, info } = item;
+  const { title, url } = item;
 
   return (
     <ListItemButton
@@ -62,7 +61,6 @@ function NavItem({ item }) {
 const Navbar = ({ open }) => {
   return (
     <Box component="nav" aria-label="nav links">
-      {/* DESKTOP DRAWER WIDE */}
       <Drawer
         variant="persistent"
         sx={{

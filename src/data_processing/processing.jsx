@@ -6,18 +6,21 @@ import {
   generatePoint3DCols,
   generateObsCols,
 } from "../data/columnsData";
-import { measurementTypes, pointTypes } from "../data/constants";
+import { measurementTypes } from "../data/constants";
 
 // ================== DESCRIPTION ================== //
-// This file contains functions that are used to process data from LGC_DATA
-// the paths to the data are specified in the columns files
+// This file contains functions that are used to process data from LGC_DATA json
+// the paths to the data are specified in the columns files in src/data/columnsData
 // ================================================== //
 
 // ================================================= //
 // ============== UTILITY FUNCTIONS ================ //
 // ================================================= //
 
+const sumPathOffset = 8; // this is the length of the string "Summary_" in the end of the name of the summary
+
 const functionsSwitch = (value, fun) => {
+  /** function used to parse function from text in path  */
   switch (fun) {
     case "abs":
       return Math.abs(value);
@@ -30,46 +33,54 @@ const functionsSwitch = (value, fun) => {
 const functionsSupported = ["abs", "sqrt"];
 
 const getFromDict = (data, path, iteratorVals, unitConv, lookupTab = {}, subresult = false) => {
-  // function used to get data from neseted dictionaries using path where each key is separated by "/"
-  // if key is "i" then it is replaced by value from iterator array
-  // if "!" is present in path, then the paths are interpreted as values to be used in expression resulting after splitting on ! and replacing the paths
-  // if lkp: is prefix of the path, use lookupTab to look for the value based on value following the prefix -> This is used for valus, which are not present
-  //     in the passed data and need to be obtained from different parts of JSON, preprocessed and passed separately like this.
+  /** function used to get data from neseted dictionaries using path where each key is separated by "/"
+   * if key is "i" then it is replaced by value from iterator array
+   *  if "!" is present in path, then the paths are interpreted as values to be used in expression resulting after splitting on ! and replacing the paths
+   * "!" can be combined also with a name of a function such as abs() or sqrt()
+   * if lkp: is prefix of the path, use lookupTab to look for the value based on value following the prefix -> This is used for valus, which are not present
+   *     in the passed data and need to be obtained from different parts of JSON, preprocessed and passed separately like this.
+   */
 
   if (path.startsWith("!")) {
     // expression evaluation part
     let exprArr = path.split("!");
     let expr = exprArr.reduce((acc, curr) => {
       if (["", "+", "-", "*", "/"].includes(curr)) {
+        // math operation
         return acc + curr;
       } else if (functionsSupported.some((fun) => curr.includes(fun))) {
+        // function call
         let vals = curr.split("(");
         let fun = vals[0];
         let val = getFromDict(data, vals[1].slice(0, -1), iteratorVals, unitConv, lookupTab, true); // slice to remove second bracket
         return acc + functionsSwitch(val, fun);
       } else {
+        // get result from path
         let val = getFromDict(data, curr, iteratorVals, unitConv, lookupTab, true);
         return acc + (typeof val === "number" && val < 0 ? "(" + val + ")" : val);
       }
     }, "");
     return unitConv(eval(expr));
   } else if (path.startsWith("lkp:")) {
+    // lookup part
     const key = getFromDict(data, path.slice(4), iteratorVals, unitConv, lookupTab, true); // slice 4, becasuse that is the lkp: offset
     return lookupTab[key];
   } else {
-    // gettin data from path
+    // getting data from path
     let pathArr = path.split("/");
     let res = data;
     let itIndex = 0;
     pathArr.forEach((key) => {
       if (key === "i") {
+        // iterator part
         key = iteratorVals[itIndex++];
       } else if (["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"].includes(key)) {
+        // index part
         key = parseInt(key);
       }
       if (!(key in res)) {
         console.log("Error: path not found: " + path);
-        return undefined;
+        return null;
       }
       res = res[key];
     });
@@ -78,7 +89,7 @@ const getFromDict = (data, path, iteratorVals, unitConv, lookupTab = {}, subresu
 };
 
 const makeGridData = (cols, data, makeResiduals = false) => {
-  // this function prepars data to be processed by dataGrid
+  /** this function prepares the data to be processed by dataGrid  */
 
   // get column details for columns that are to be shown and prepare for grid
   let colNames = Object.keys(cols);
@@ -89,7 +100,7 @@ const makeGridData = (cols, data, makeResiduals = false) => {
     }
   }
 
-  // convert array of values to dictionary with keys from colNames, so thtat this can be used as rows in grid
+  // convert array of values to dictionary with keys from colNames, so that this can be used as rows in grid
   let rowData = data[colNames[0]].map((value, index) => {
     return colNames.reduce((acc, key) => {
       acc[key] = data[key][index];
@@ -113,6 +124,7 @@ const makeGridData = (cols, data, makeResiduals = false) => {
 };
 
 const mergeRowsData = (measType, acc, obsData) => {
+  /** function that merges data from different frames into one object */
   if (!(measType in acc)) {
     acc[measType] = obsData;
   } else {
@@ -127,6 +139,7 @@ const mergeRowsData = (measType, acc, obsData) => {
 };
 
 const generateColsData = (cols) => {
+  /** function that generates empty columns data object */
   let columns = {};
   Object.keys(cols).forEach((key) => {
     columns[key] = [];
@@ -138,7 +151,7 @@ const generateColsData = (cols) => {
 // ============ DATA SERVING FUNCTIONS ============= //
 // ================================================= //
 
-// --- MEASUREMENT TYPE SELECTORS FOR VARIOUS TABLES --- //
+// --- MEASUREMENT TYPE SELECTORS FOR OBSERVATION TABLES --- //
 const obsTypeSelector = (measurement, type) => {
   switch (type) {
     case "fTSTN":
@@ -162,6 +175,7 @@ const obsTypeSelector = (measurement, type) => {
   }
 };
 
+// --- MEASUREMENT TYPE SELECTORS FOR MEASUREMENT STATISTICS TABLES --- //
 const statTypeSelector = (measurement, type) => {
   const fOBSXYZPaths = [
     ["X", "obsxyzSummary_", "obsXObsSum"],
@@ -224,9 +238,9 @@ const statTypeSelector = (measurement, type) => {
 // --- FUNCTION SELECTING CORRECT ROW GETTER BASED ON TABLE TYPE --- //
 const dataTypeSelector = (type) => {
   switch (type) {
-    case "OBS":
+    case "OBS": // observations table
       return obsTypeSelector;
-    case "STAT":
+    case "STAT": // measurement statistics table
       return statTypeSelector;
     default:
       return () => {};
@@ -235,12 +249,19 @@ const dataTypeSelector = (type) => {
 
 // --- MAIN FUNCTION FOR DATA SERVING --- //
 export const getData = (data, dataType, lookup = {}) => {
+  /** function that gets data for observation table for all measurement types
+   * data is the LGC_DATA json
+   * dataType is the type of the table, OBS or STAT
+   * lookup is the lookup table for 3D points
+   * */
+
   return data.tree.reduce((acc, curr) => {
     // reduce over all frames
     Object.keys(curr.measurements).forEach((measType) => {
       // get measurement data for each measurement type
       if (measurementTypes.includes(measType)) {
         // this filters measurement types from other attributess
+        // select correct data type selector and add lookup of 3D points -> lines and frame data to the data passed down
         let obsData = dataTypeSelector(dataType)({ ...curr.measurements, lookup, frame: curr.frame }, measType);
         acc = mergeRowsData(measType, acc, obsData);
       }
@@ -254,6 +275,8 @@ export const getData = (data, dataType, lookup = {}) => {
 // ================================================= //
 
 const getTSTNMeasurementRows = (measurement) => {
+  /** function that gets data for measurement statistics table for TSTN  */
+
   let cols = generateMeasurementsCols();
   let columns = generateColsData(cols);
 
@@ -272,7 +295,7 @@ const getTSTNMeasurementRows = (measurement) => {
             }
           }
           columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
-          columns["TYPE"].push(measName.slice(0, -8).toUpperCase());
+          columns["TYPE"].push(measName.slice(0, -sumPathOffset).toUpperCase());
         }
       });
 
@@ -283,15 +306,13 @@ const getTSTNMeasurementRows = (measurement) => {
           ["ZEND", "zendObsSum"],
           ["DIST", "distObsSum"],
         ].forEach(([key, path]) => {
-          if ("plr3dSummary_" in rom) {
-            for (const key of Object.keys(cols)) {
-              if (key !== "TYPE" && key !== "MMT_LINE") {
-                columns[key].push(rom["plr3dSummary_"][path][cols[key].keyword]);
-              }
+          for (const key of Object.keys(cols)) {
+            if (key !== "TYPE" && key !== "MMT_LINE") {
+              columns[key].push(rom["plr3dSummary_"][path][cols[key].keyword]);
             }
-            columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
-            columns["TYPE"].push("PL3D:" + key);
           }
+          columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
+          columns["TYPE"].push("PL3D:" + key);
         });
       }
     }
@@ -301,7 +322,7 @@ const getTSTNMeasurementRows = (measurement) => {
 };
 
 const getNestedMeasurementRows = (measurement, paths, measType) => {
-  // function that gets data for observation table for ECWI, CAM
+  /** function that gets data for measurement statistics table for ECWI, CAM, as the data follow the same structure */
   let cols = generateMeasurementsCols();
   let columns = generateColsData(cols);
 
@@ -316,7 +337,7 @@ const getNestedMeasurementRows = (measurement, paths, measType) => {
             columns[key].push(curr[sumPath][sumType][cols[key].keyword]);
           }
         }
-        columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase() + ":" + obsName);
+        columns["TYPE"].push(sumPath.slice(0, -sumPathOffset).toUpperCase() + ":" + obsName);
         columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
       }
     });
@@ -326,7 +347,7 @@ const getNestedMeasurementRows = (measurement, paths, measType) => {
 };
 
 const getOBSXYZMeasurementRows = (measurement, paths) => {
-  // function that gets data for observation table for OBSXYZ
+  /** function that gets data for measurement statistics table for OBSXYZ  */
   let cols = generateMeasurementsCols();
   let columns = generateColsData(cols);
 
@@ -340,7 +361,7 @@ const getOBSXYZMeasurementRows = (measurement, paths) => {
         columns[key].push(measurement[sumPath][sumType][cols[key].keyword]);
       }
     }
-    columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase() + ":" + obsName);
+    columns["TYPE"].push(sumPath.slice(0, -sumPathOffset).toUpperCase() + ":" + obsName);
     columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
   });
 
@@ -348,7 +369,9 @@ const getOBSXYZMeasurementRows = (measurement, paths) => {
 };
 
 const getXMeasurementRows = (measurement, path) => {
-  // same for ECWS, ECHO echoSummary_, EDM dsptSummary_, ORIE orieSummary_,
+  /** function that gets data for measurement statistics table for ECHO, ECWS, EDM, ORIE, LEVEL, INCLY
+   * Thats why there is X in the name -> it stands for multiple types
+   */
   let cols = generateMeasurementsCols();
   let columns = generateColsData(cols);
 
@@ -361,7 +384,7 @@ const getXMeasurementRows = (measurement, path) => {
           columns[key].push(curr[sumPath][cols[key].keyword]);
         }
       }
-      columns["TYPE"].push(sumPath.slice(0, -8).toUpperCase());
+      columns["TYPE"].push(sumPath.slice(0, -sumPathOffset).toUpperCase());
       columns["MMT_LINE"].push(measurement.lookup[columns["MMT_POS"].slice(-1)]);
     }
   });
@@ -370,7 +393,7 @@ const getXMeasurementRows = (measurement, path) => {
 };
 
 const getNTMeasurementRows = (measurement, path) => {
-  // DVER, RADI is the same
+  /** function that gets data for measurement statistics table for NT = No type measurement types = RADI, DVER  */
   let cols = generateMeasurementsCols();
   let columns = generateColsData(cols);
 
@@ -392,11 +415,11 @@ const getNTMeasurementRows = (measurement, path) => {
 // ================================================= //
 
 // this is used jointly with residual data to get the data for the histogram,
-// since the data is already mined for observation table and it is uneffective to do it again
+// since the data is already mined for observation table and it is inefficient to do it again
 
 const getXObsRows = (measurement, measType) => {
-  // function that gets data for observation table for measType,
-  // this is joint function for ORI, ECHO, ECWS, EDM
+  /** function that gets data for observation table for multiple measTypes 
+     the X in name stands for ORIE, ECHO, ECWS, EDM, LEVEL, INCLY */
 
   let cols = generateObsCols(measType);
   let columns = generateColsData(cols);
@@ -421,7 +444,7 @@ const getXObsRows = (measurement, measType) => {
 };
 
 const getNTObsRows = (measurement, measType) => {
-  // function that gets data for observation table specifically for No Type measurements
+  /* function that gets data for observation table specifically for No Type measurements = RADI, DVER, OBSXYZ */
 
   let cols = generateObsCols(measType);
   let colsData = generateColsData(cols);
@@ -442,8 +465,7 @@ const getNTObsRows = (measurement, measType) => {
 };
 
 const getCAMDRows = (measurement) => {
-  // function that gets data for observation table for measType,
-  // this is joint function for ORI, ECHO, ECWS, EDM
+  /** function that gets data for observation table for CAM meas type */
 
   let cols = generateObsCols("UVD");
   let cols2 = generateObsCols("UVEC");
@@ -483,8 +505,8 @@ const getCAMDRows = (measurement) => {
 };
 
 const getTSTNObsRows = (measurement) => {
-  // function that gets data for observation table specifically for TSTN
-  // due to it special structure with roms and subtypes
+  /** function that gets data for observation table specifically for TSTN
+     due to it special structure with roms and subtypes  */
   let cols = generateTSTNObsCols();
   let columns = generateColsData(cols);
   let allColPaths = generateTSTNPaths();
@@ -493,7 +515,7 @@ const getTSTNObsRows = (measurement) => {
 
   const getTSTNRowVal = (allColPaths, curr, cols, iterationIndices, measName, key, lookupTab) => {
     // function that gets value for each row in TSTN
-    if (measName == "measPLR3D") {
+    if (measName === "measPLR3D") {
       return getFromDict(curr, cols[key].path, iterationIndices, cols[key].unitConv, lookupTab);
     } else if (key in allColPaths[measName]) {
       return getFromDict(curr, allColPaths[measName][key].path, iterationIndices, cols[key].unitConv, lookupTab);
@@ -535,8 +557,10 @@ const getTSTNObsRows = (measurement) => {
 // ================================================= //
 
 export const getFrames = (data) => {
-  // this function returns tree structure for react-d3-tree, structure is defined as nested dics
-  // each node has { name, children }, children is array of nodes
+  /** this function returns tree structure for react-d3-tree, structure is defined as nested dics
+   * each node has { name, children }, children is array of nodes
+   * it also returns rows for frames table and number of unknown pars introduced by frames
+   **/
   let cols = generateFrameCols();
   let columns = generateColsData(cols);
 
@@ -574,8 +598,11 @@ export const getFrames = (data) => {
 // ============= 3D POINTS SELECTION =============== //
 // ================================================= //
 
-// 3D points for table
 export const get3DPointData = (data, colNames) => {
+  /** this function returns 3D points rows data for table
+   *  it returns also the lookup table for 3D points mapping to line in input file
+   *  and coords of 3D points as well as number of unknown pars introduced by 3D points
+   **/
   let cols = generatePoint3DCols();
   let columns = generateColsData(cols);
   let lookupTable = {};
@@ -598,18 +625,4 @@ export const get3DPointData = (data, colNames) => {
     coords: { X: columns.X, Y: columns.Y, Z: columns.Z },
     unknownPars: unknownPars,
   };
-};
-
-// 3D points for 3D plot
-const estCoordSelector = (point) => {
-  return point.fEstimatedValueInRoot.fVector;
-};
-
-const initCoordSelector = (point) => {
-  return point.fProvisionalValueInRoot.fVector;
-};
-
-export const get3DPoints = (data, type) => {
-  // get array of 3D points coordinates - either estimated or initial based on type
-  return data.points.map(type === "est" ? estCoordSelector : initCoordSelector);
 };
