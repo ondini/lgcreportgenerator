@@ -1,32 +1,30 @@
 import { Title, Table } from "../../components";
 import { useState, useEffect, useCallback } from "react";
 
+import "./ObservationsTable.css";
+
 export default function ObservationsTable({ observations }) {
   const measTypes = Object.keys(observations); // get all the used measurement types from the observations data
 
   let [table, setTable] = useState([]);
   let [key, setKey] = useState(measTypes[0]); // state of the currently active measurement type
 
-  const createTable = useCallback(
-    (measType) => {
-      // function that creates a table component based on currently selected meas type
-      return <Table rows={observations[measType].data} columns={observations[measType].columnDetails} />;
-    },
-    [observations]
-  );
-
   useEffect(() => {
     if (key) {
-      setTable(createTable(key));
+      setTable(
+        <div key={key} className="obstable-table">
+          <Table rows={observations[key].data} columns={observations[key].columnDetails} />
+        </div>
+      );
     }
-  }, [key, createTable]);
+  }, [key, observations]);
 
   let measTypeButtons = measTypes.map((key) => {
     // create the measurement type buttons
     return (
       <button
         key={key}
-        className="histsec-nav-button"
+        className="obstable-nav-button"
         onClick={() => {
           setKey(key);
         }}
@@ -40,8 +38,8 @@ export default function ObservationsTable({ observations }) {
   return (
     <div>
       <Title title="Observations overview" id="observations" />
-      <div className="histsec">
-        <div className="histsec-nav">
+      <div className="obstable-container">
+        <div className="obstable-nav">
           {" "}
           <h4>Measurement type </h4>
           {measTypeButtons}

@@ -111,7 +111,7 @@ const makeGridData = (cols, data, makeResiduals = false) => {
   let returnData = { data: rowData, columnDetails: columnDetails };
   if (makeResiduals) {
     const residualsData = {};
-    const metaCols = ["TGTPOS", "TGTLINE", "INSPOS", "INSLINE"];
+    const metaCols = ["TGTPOS", "TGTLINE", "INSPOS", "INSLINE", "OBSLINE"];
     colNames.forEach((colName) => {
       if (colName.indexOf("RES") !== -1 || metaCols.includes(colName)) {
         residualsData[colName] = data[colName];
@@ -487,7 +487,7 @@ const getCAMDRows = (measurement) => {
 
     for (let j = 0; j < curr.measUVEC.length; j++) {
       for (const key of Object.keys(cols)) {
-        if (key !== "TYPE") {
+        if (key !== "TYPE" && key !== "FRAME" && key !== "FRAMELINE") {
           if (key in cols2) {
             columns[key].push(getFromDict(curr, cols2[key].path, [j], cols[key].unitConv, measurement.lookup));
           } else {

@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import Plot from "react-plotly.js";
-import { useState, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { Title } from "../../components";
 import "./Histogram.css";
 import { Switch, TextField, Button } from "@mui/material";
 import { noSrcMeasTypes } from "../../data/constants";
 import { linkPathPlaceholder } from "../../data/constants";
 
-const makeBinDescriptions = (data, key, nbinsx, binsx) => {
+const makeBinDescriptions = (data, key, nbinsx, binsx, type = "HIST") => {
   // function that creates descriptions for each bin
   // the description is a string with the instrument position and line number (if there is some)
   // followed by the target position and line number of each observation in the bin
@@ -23,44 +23,18 @@ const makeBinDescriptions = (data, key, nbinsx, binsx) => {
       const binIndex = Math.floor((value - binsx.start) / binsx.size); // index of the bin where the observation belongs
 
       binsCounts[binIndex] += 1;
-      let src = "INSPOS" in data ? data["INSPOS"][i] + ":" + data["INSLINE"][i] + " -> " : "";
+
+      let newDescLine = "";
+      if (type === "HIST") {
+        let src = "INSPOS" in data ? data["INSPOS"][i] + ":" + data["INSLINE"][i] + " -> " : "";
+        newDescLine = "<br>" + src;
+      } else if (type === "NORM") {
+        newDescLine = "<br>" + data["TYPE"][i] + "::";
+      }
       binsDescs[binIndex] =
         binsDescs[binIndex] +
         (binsCounts[binIndex] < maxBinDescCount
-          ? "<br>" + src + data["TGTPOS"][i] + ":" + data["TGTLINE"][i]
-          : binsCounts[binIndex] === maxBinDescCount
-          ? "<br>  ....  "
-          : "");
-    }
-  }
-
-  let i = 0; // skip empty bins, as it would shift the histogram descriptions
-  while (binsCounts[i] === 0) {
-    i++;
-  }
-  return binsDescs.slice(i);
-};
-
-const makeBinDescriptionsNorm = (data, key, nbinsx, binsx) => {
-  // function that creates descriptions for each bin
-  // the description is a string with the type followed by the
-  // target position and line number of each observation in the bin
-
-  let binsDescs = Array(nbinsx).fill(""); // array of description strings, one for each bin
-  let binsCounts = Array(nbinsx).fill(0); // array of counts, one for each bin (just to count and then limit lines)
-  const maxBinDescCount = 20; // maximum number of lines in the description string
-
-  for (let i = 0; i < data[key].length; i++) {
-    // loop over all observations
-    const value = data[key][i];
-    if (value !== undefined) {
-      const binIndex = Math.floor((value - binsx.start) / binsx.size); // index of the bin where the observation belongs
-
-      binsCounts[binIndex] += 1;
-      binsDescs[binIndex] =
-        binsDescs[binIndex] +
-        (binsCounts[binIndex] < maxBinDescCount
-          ? "<br>" + data["TYPE"][i] + "::" + data["TGTPOS"][i] + ":" + data["TGTLINE"][i]
+          ? newDescLine + data["TGTPOS"][i] + ":" + data["TGTLINE"][i] + "|" + data["OBSLINE"][i]
           : binsCounts[binIndex] === maxBinDescCount
           ? "<br>  ....  "
           : "");
@@ -120,7 +94,8 @@ const makePlotLayout = (residuals, resBinData, binsx, name) => {
 };
 
 const createCleanBins = (residuals, nbinsx) => {
-  // make bins and filter undefined
+  // make bins and filter out undefined values
+
   const replacementValue = 0;
   // create bins (the same for all instrument positions, so that they are stackable)
   const cleanRes = residuals.map((value) => (value === undefined || isNaN(value) ? replacementValue : value));
@@ -154,7 +129,7 @@ const makePlotData = (residuals, measType, key, nbinsx, filterInstruments) => {
 };
 
 const makeNormPlotData = (measTypes, residuals, nbinsx) => {
-  // function that creates array of data objects for a histogram, which is then
+  // function that creates array of data objects for a normalized histogram, which is then
   // directly passed to a Plotly component
   let plotData = {
     RESSIG: [],
@@ -169,6 +144,7 @@ const makeNormPlotData = (measTypes, residuals, nbinsx) => {
         if (key.indexOf("RESSIG") !== -1) {
           plotData["RESSIG"] = plotData.RESSIG.concat(residuals[measType].residualsData[key]);
           plotData["TGTLINE"] = plotData.TGTLINE.concat(residuals[measType].residualsData["TGTLINE"]);
+          plotData["OBSLINE"] = plotData.TGTLINE.concat(residuals[measType].residualsData["OBSLINE"]);
           plotData["TGTPOS"] = plotData.TGTPOS.concat(residuals[measType].residualsData["TGTPOS"]);
           plotData["TYPE"] = plotData.TYPE.concat(Array(residuals[measType].residualsData[key].length).fill(measType));
         }
@@ -177,93 +153,94 @@ const makeNormPlotData = (measTypes, residuals, nbinsx) => {
   });
 
   const [xbins, cleanRes] = createCleanBins(plotData.RESSIG, nbinsx);
-  let resBinData = makeBinDescriptionsNorm(plotData, "RESSIG", nbinsx, xbins);
+  let resBinData = makeBinDescriptions(plotData, "RESSIG", nbinsx, xbins, "NORM");
   return [makePlotLayout(cleanRes, resBinData, xbins, "RESSIG")];
 };
 
 const handleHistogramClick = (event) => {
   if (event.event.ctrlKey) {
-    let firstObs = event.points[0].customdata.split("<br>")[1].split(":");
-    const tgtLine = firstObs.slice(-1); // last element is tgt line
+    let firstObs = event.points[0].customdata.split("<br>")[1].split("|");
+    const tgtLine = firstObs.slice(-1); // last element is obs line
 
     window.location.href = `surveypad://link//${linkPathPlaceholder},${tgtLine}`;
   }
 };
 
+const createHists = (measType, filterInstr, nbinsx, residuals) => {
+  // function that creates the histogram components for each of the residuals of the selected measurement type
+  const nonResKeys = ["TGTPOS", "TGTLINE", "INSPOS", "INSLINE", "OBSLINE"]; // keys that are not residuals
+
+  let histograms = [];
+  if (measType) {
+    Object.keys(residuals[measType].residualsData).forEach((key) => {
+      if (nonResKeys.includes(key) || key.indexOf("RESSIG") !== -1 || key.indexOf("ABS") !== -1) return;
+      const units = residuals[measType].columnDetails.find((obj) => obj.accessorKey === key).units;
+      histograms.push(
+        <div className="histsec-plots-plot" key={measType + key}>
+          <Plot
+            data={makePlotData(residuals[measType].residualsData, measType, key, nbinsx, filterInstr)}
+            layout={{ title: key + ` (${units.toLowerCase()})`, bargroupgap: 0.2, barmode: "stack" }}
+            onClick={handleHistogramClick}
+          />
+        </div>
+      );
+    });
+  }
+  return histograms;
+};
+
+const createNormHist = (measTypes, nBins, residuals) => {
+  const normLayout = makeNormPlotData(measTypes, residuals, nBins);
+  return (
+    <Plot
+      data={normLayout}
+      layout={{ title: "RES/SIG (-)", bargroupgap: 0.2, barmode: "stack" }}
+      onClick={handleHistogramClick}
+    />
+  );
+};
+
 const Histogram = ({ residuals }) => {
   // Function representing the Histogram section of the app
-  // It is a Plotly component with a button menu to select the measurement type and turn off the filter by instrument
-
-  const measTypes = Object.keys(residuals); // get all the used measurement types from the residuals data
-
-  const createHists = useCallback(
-    (measType, filterInstr, nbinsx) => {
-      // function that creates the histogram components for each of the residuals of the selected measurement type
-      const nonResKeys = ["TGTPOS", "TGTLINE", "INSPOS", "INSLINE"]; // keys that are not residuals
-
-      let histograms = [];
-      if (measType) {
-        Object.keys(residuals[measType].residualsData).forEach((key) => {
-          if (nonResKeys.includes(key) || key.indexOf("RESSIG") !== -1 || key.indexOf("ABS") !== -1) return;
-          // const units = residuals[measType].columnDetails.find((obj) => obj.field === key).units;
-          histograms.push(
-            <div className="histsec-plots-plot" key={measType + key}>
-              <Plot
-                data={makePlotData(residuals[measType].residualsData, measType, key, nbinsx, filterInstr)}
-                layout={{ title: key, bargroupgap: 0.2, barmode: "stack" }}
-                onClick={handleHistogramClick}
-              />
-            </div>
-          );
-        });
-      }
-      return histograms;
-    },
-    [residuals]
-  );
-
-  const createNormHist = useCallback((measTypes, residuals, nBins) => {
-    const normLayout = makeNormPlotData(measTypes, residuals, nBins);
-    return (
-      <Plot
-        data={normLayout}
-        layout={{ title: "RES/SIG (-)", bargroupgap: 0.2, barmode: "stack" }}
-        onClick={handleHistogramClick}
-      />
-    );
-  }, []);
+  // It contains a Plotly components with a button menu to select the measurement type and turn off the filter by instrument
+  const measTypes = useMemo(() => {
+    return Object.keys(residuals);
+  }, [residuals]); // get all the used measurement types from the residuals data
 
   let [filterInstr, setFilterInstr] = useState(true); // state of the filter by instrument
   let [nBins, setNBins] = useState(30); // state of the number of bins
-  let [histList, setHistList] = useState(createHists(measTypes[0], filterInstr, nBins)); // state of the histogram components
-  let [normHist, setNormHist] = useState(createNormHist(measTypes, residuals, nBins));
+  let [histList, setHistList] = useState(createHists(measTypes[0], filterInstr, nBins, residuals)); // state of the histogram components
+  let [normHist, setNormHist] = useState(createNormHist(measTypes, nBins, residuals));
   let [key, setKey] = useState(measTypes[0]); // state of the currently active measurement type
   let [nBinsInput, setNBinsInput] = useState(nBins); // state of the number of bins input
 
   useEffect(() => {
     // update and re-render the histogram components when the filter measurement type, or nBins changes
-    setHistList(createHists(key, filterInstr, nBins));
-  }, [filterInstr, key, nBins, createHists]);
+    setHistList(createHists(key, filterInstr, nBins, residuals));
+  }, [filterInstr, key, nBins, residuals]);
+
   useEffect(() => {
     // update and re-render nromalized histogram components when nBins changes
-    setNormHist(createNormHist(measTypes, residuals, nBins));
-  }, [nBins, measTypes, residuals, createNormHist]);
+    setNormHist(createNormHist(measTypes, nBins, residuals));
+  }, [nBins, measTypes, residuals]);
 
-  let measTypeButtons = measTypes.map((key) => {
-    // create the measurement type buttons
-    return (
-      <button
-        key={key}
-        className="histsec-nav-button"
-        onClick={() => {
-          setKey(key);
-        }}
-      >
-        {/* slice to remove the first character which is f in e.g.'fTSTN' */}
-        {key.slice(1)}
-      </button>
-    );
-  });
+  let measTypeButtons = useMemo(() => {
+    return measTypes.map((key) => {
+      // create the measurement type buttons
+      return (
+        <button
+          key={key}
+          className="histsec-nav-button"
+          onClick={() => {
+            setKey(key);
+          }}
+        >
+          {/* slice to remove the first character which is f in e.g.'fTSTN' */}
+          {key.slice(1)}
+        </button>
+      );
+    });
+  }, [measTypes]);
 
   return (
     <div>

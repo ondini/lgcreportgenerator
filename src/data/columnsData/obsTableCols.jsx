@@ -1,6 +1,6 @@
-import { angleRad2CCf, angleRad2GONf, distM2MMf, angleRad2GONPosf } from "../../data/constants";
+import { angleRad2CCf, distM2MMf, angleRad2GONPosf } from "../../data/constants";
 
-import { numFormatter, numFormatterUnits, fieldGen } from "./colUtils";
+import { numFormatterUnits, fieldGen } from "./colUtils";
 
 // =======================================================
 // ============= OBSERVATIONS TABLE COLUMNS ==============
@@ -29,13 +29,11 @@ export const generateTSTNObsCols = () => {
     V0: fieldGen("V0", "V0", {
       show: false,
       path: "roms/i/v0/fEstimatedValue",
-      unitConv: angleRad2GONf,
       units: "GON",
     }), // v0
     SV0: fieldGen("SV0", "SV0", {
       show: false,
       path: "roms/i/v0/fEstimatedPrecision",
-      unitConv: angleRad2CCf,
       units: "CC",
     }), // Sigma. V0
 
@@ -54,12 +52,12 @@ export const generateTSTNObsCols = () => {
         return (
           <>
             <div>
-              <b>Position data:</b> HI (M): {numFormatter(row.HI, 5)} SHI (MM): {numFormatter(row.SHI, 2)} ROT3D:{" "}
-              {row.ROT3D ? "true" : "false"}
+              <b>Position data:</b> HI (M): {numFormatterUnits(row.HI, "M")} SHI (MM):{" "}
+              {numFormatterUnits(row.SHI, "MM")} ROT3D: {row.ROT3D ? "true" : "false"}
             </div>
             <div>
-              <b>Rom data:</b> ACST (GON): {numFormatter(row.ACST, 5)} V0 (GON): {numFormatter(row.V0, 5)} SV0 (CC):{" "}
-              {numFormatter(row.SV0, 1)}
+              <b>Rom data:</b> ACST (GON): {numFormatterUnits(row.ACST, "GON")} V0 (GON):{" "}
+              {numFormatterUnits(row.V0, "GON")} SV0 (CC): {numFormatterUnits(row.SV0, "CC")}
             </div>
           </>
         );
@@ -595,7 +593,7 @@ export const generateDSPTObsCols = () => {
       tooltip: ({ row }) => {
         return (
           <div>
-            <b>Position data:</b> HINSTR (M): {numFormatter(row.HI, 5)}
+            <b>Position data:</b> HINSTR (M): {numFormatterUnits(row.HI, "M")}
           </div>
         );
       },
@@ -697,12 +695,12 @@ export const generateDLEVObsCols = () => {
         return (
           <>
             <div>
-              <b>Ref. point:</b> X (M): {numFormatter(row.X, 5)} Y (M): {numFormatter(row.Y, 5)} Z (M):{" "}
-              {numFormatter(row.Z, 5)}
+              <b>Ref. point:</b> X (M): {numFormatterUnits(row.X, "M")} Y (M): {numFormatterUnits(row.Y, "M")} Z (M):{" "}
+              {numFormatterUnits(row.Z, "M")}
             </div>
             <div>
-              <b>Wire pars.:</b> Orient. (GON): {numFormatter(row.O, 5)} SOrient. (CC): {numFormatter(row.SO, 2)}{" "}
-              SNormale (MM): {numFormatter(row.SN, 2)}
+              <b>Wire pars.:</b> Orient. (GON): {numFormatterUnits(row.O, "GON")} SOrient. (CC):{" "}
+              {numFormatterUnits(row.SO, "CC")} SNormale (MM): {numFormatterUnits(row.SN, "MM")}
             </div>
           </>
         );
@@ -838,12 +836,12 @@ export const generateECHOObsCols = () => {
         return (
           <>
             <div>
-              <b>Ref. point:</b> X (M): {numFormatter(row.X, 5)} Y (M): {numFormatter(row.Y, 5)} Z (M):{" "}
-              {numFormatter(row.Z, 5)}
+              <b>Ref. point:</b> X (M): {numFormatterUnits(row.X, "M")} Y (M): {numFormatterUnits(row.Y, "M")} Z (M):{" "}
+              {numFormatterUnits(row.Z, "M")}
             </div>
             <div>
-              <b>Wire pars.:</b> Orient. (GON): {numFormatter(row.O, 5)} SOrient. (CC): {numFormatter(row.SO, 2)}{" "}
-              SNormale (MM): {numFormatter(row.SN, 2)}
+              <b>Wire pars.:</b> Orient. (GON): {numFormatterUnits(row.O, "GON")} SOrient. (CC):{" "}
+              {numFormatterUnits(row.SO, "CC")} SNormale (MM): {numFormatterUnits(row.SN, "MM")}
             </div>
           </>
         );
@@ -965,7 +963,8 @@ export const generateECWSObsCols = () => {
       tooltip: ({ row }) => {
         return (
           <div>
-            <b>Position data:</b> Surface height (M): {numFormatter(row.HI, 5)}, Sigma (MM): {numFormatter(row.PREC, 2)}
+            <b>Position data:</b> Surface height (M): {numFormatterUnits(row.HI, "M")}, Sigma (MM):{" "}
+            {numFormatterUnits(row.PREC, "MM")}
           </div>
         );
       },
@@ -1095,20 +1094,21 @@ export const generateECWIObsCols = () => {
         return (
           <>
             <div>
-              <b>Ref. point:</b> X (M): {numFormatter(row.X, 5)} Y (M): {numFormatter(row.Y, 5)} Z (M):{" "}
-              {numFormatter(row.Z, 5)}
+              <b>Ref. point:</b> X (M): {numFormatterUnits(row.X, "M")} Y (M): {numFormatterUnits(row.Y, "M")} Z (M):{" "}
+              {numFormatterUnits(row.Z, "M")}
             </div>
             <div>
-              <b>Wire pars.:</b> Bearing. (GON): {numFormatter(row.BEAR, 5)} SBear. (CC): {numFormatter(row.SBEAR, 2)}{" "}
-              Slope (GON): {numFormatter(row.SLOPE, 2)} SSlope (CC): {numFormatter(row.SSLOPE, 2)}
+              <b>Wire pars.:</b> Bearing. (GON): {numFormatterUnits(row.BEAR, "GON")} SBear. (CC):{" "}
+              {numFormatterUnits(row.SBEAR, "CC")} Slope (GON): {numFormatterUnits(row.SLOPE, "GON")} SSlope (CC):{" "}
+              {numFormatterUnits(row.SSLOPE, "CC")}
             </div>
             <div>
-              DX (M): {numFormatter(row.DX, 5)} SDX (MM): {numFormatter(row.SDX, 2)} DZ (M): {numFormatter(row.DZ, 2)}{" "}
-              SDZ (MM): {numFormatter(row.SDZ, 2)}
+              DX (M): {numFormatterUnits(row.DX, "M")} SDX (MM): {numFormatterUnits(row.SDX, "MM")} DZ (M):{" "}
+              {numFormatterUnits(row.DZ, "M")} SDZ (MM): {numFormatterUnits(row.SDZ, "MM")}
             </div>
             <div>
-              SAGFIX {row.SAGFIX ? "true" : "false"} SAG (M): {numFormatter(row.SAG, 5)} SSAG (MM):{" "}
-              {numFormatter(row.SSAG, 2)}
+              SAGFIX {row.SAGFIX ? "true" : "false"} SAG (M): {numFormatterUnits(row.SAG, "M")} SSAG (MM):{" "}
+              {numFormatterUnits(row.SSAG, "MM")}
             </div>
           </>
         );
@@ -1211,19 +1211,14 @@ export const generateRADIObsCols = () => {
     FRAMELINE: fieldGen("FRAMELINE", "Frame", { show: false }), // frame
 
     // ========== RADI DATA ========== //
-    BEAR: fieldGen("BEAR", "Bearing", {
-      link: "OBSLINE",
-      units: "GON",
-      path: "fAngleCnstr",
-      unitConv: angleRad2GONPosf,
-    }), // bearing
-    SIG: fieldGen("SIG", "Sigma", { units: "MM", path: "fSigmaObsVal", unitConv: distM2MMf }), // sigma
-    ABSSIG: fieldGen("ABSSIG", "ASigma", { units: "MM", path: "!abs(fSigmaObsVal)!", unitConv: distM2MMf }), // sigma abs
-    RES: fieldGen("RES", "Residual", { units: "MM", path: "fResidual", unitConv: distM2MMf }), // residual
-    ABSRES: fieldGen("ABSRES", "AResidual", { units: "MM", path: "!abs(fResidual)!", unitConv: distM2MMf }), // residual abs
+    BEAR: fieldGen("BEAR", "Bearing", { link: "OBSLINE", units: "GON", path: "fAngleCnstr" }), // bearing
+    SIG: fieldGen("SIG", "Sigma", { units: "MM", path: "fSigmaObsVal" }), // sigma
+    ABSSIG: fieldGen("ABSSIG", "ASigma", { units: "MM", path: "!abs(fSigmaObsVal)!" }), // sigma abs
+    RES: fieldGen("RES", "Residual", { units: "MM", path: "fResidual" }), // residual
+    ABSRES: fieldGen("ABSRES", "AResidual", { units: "MM", path: "!abs(fResidual)!" }), // residual abs
     RESSIG: fieldGen("RESSIG", "Res./Sig.", { units: "-", path: "!fResidual!/!fSigmaObsVal!" }), // residual/sigma
-    OBSE: fieldGen("OBSE", "Observ. Sig.", { units: "MM", path: "fSigmaObsVal", unitConv: distM2MMf }),
-    ACTS: fieldGen("ACTS", "ACTS", { units: "GON", path: "fConstAngleVal", unitConv: angleRad2GONf }),
+    OBSE: fieldGen("OBSE", "Observ. Sig.", { units: "MM", path: "fSigmaObsVal" }),
+    ACTS: fieldGen("ACTS", "ACTS", { units: "GON", path: "fConstAngleVal" }),
   };
 };
 
