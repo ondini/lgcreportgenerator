@@ -12,7 +12,7 @@ All the links in the document work only when used in SurveyPad and when CTRL+cli
 
 File structre with dependencies is as follows:
 
-![file structure](https://github.com/ondini/lgcreportgenerator/blob/master/fileStructure.png)
+![file structure](https://github.com/ondini/lgcreportgenerator/blob/master/fileStruct.png)
 
 Notes for code usage and orientation
 
