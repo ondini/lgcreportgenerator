@@ -44,7 +44,7 @@ Then run
 
 which should produce standalone file in build/ directory in the root of repository. The building process was already preconfigured for single file build. If you dont have it configured for some reason, follow the instructions in section **Single file compilation**.
 
-#### Single file compilation
+### Single file compilation
 
 In this part is explained, how to change (and how was changed) the react project from classical create-react-app template to template, which builds all the project into a single index.html.
 
