@@ -42,22 +42,41 @@ export const generatePoint3DCols = () => {
 // =============== STATIONS TABLE COLUMNS ================
 // =======================================================
 
-export const generateMeasurementsCols = () => {
+export const generateMeasurementsPaths = () => {
   return {
-    // ================== STATION INFO ==================
-    MMT_POS: fieldGen("MMT_POS", "Msmt. position", {
-      size: "L",
-      link: "MMT_LINE",
-      keyword: "fObsText",
-      border: true,
-    }),
-    MMT_LINE: fieldGen("MMT_LINE", "Msmt. line", { show: false }),
-    TYPE: fieldGen("TYPE", "Type", { keyword: "fObsText", border: true }), // temporary, is replaced individually
-    RES_MAX: fieldGen("RES_MAX", "Res. Max.", { units: "MM", keyword: "fResMax" }),
-    RES_MIN: fieldGen("RES_MIN", "Res. Min.", { units: "MM", keyword: "fResMin" }),
-    RES_AVG: fieldGen("RES_AVG", "Res. Avg.", { units: "MM", keyword: "fMean" }),
-    ECART_TYPE: fieldGen("ECART_TYPE", "Ecart-type", { units: "MM", keyword: "fStdev" }),
+    // ================== MSMT INFO ==================
+    MMT_POS: { keyword: "fObsText" },
+    MMT_LINE: {}, // keyword not needed, is filled from lookup
+    TYPE: {}, // keyword not needed, is replaced individually
+    RES_MAX: { keyword: "fResMax" },
+    RES_MIN: { keyword: "fResMin" },
+    RES_AVG: { keyword: "fMean" },
+    ECART_TYPE: { keyword: "fStdev" },
   };
+};
+
+export const generateMeasurementsMMCols = () => {
+  return [
+    // ================== MSMT INFO ==================
+    fieldGen("MMT_POS", "Msmt. position", { size: "L", link: "MMT_LINE", border: true }),
+    fieldGen("TYPE", "Type", { border: true }),
+    fieldGen("RES_MAX", "Res. Max.", { units: "MM" }),
+    fieldGen("RES_MIN", "Res. Min.", { units: "MM" }),
+    fieldGen("RES_AVG", "Res. Avg.", { units: "MM" }),
+    fieldGen("ECART_TYPE", "Ecart-type", { units: "MM" }),
+  ];
+};
+
+export const generateMeasurementsCCCols = () => {
+  return [
+    // ================== MSMT INFO ==================
+    fieldGen("MMT_POS", "Msmt. position", { size: "L", link: "MMT_LINE", border: true }),
+    fieldGen("TYPE", "Type", { border: true }),
+    fieldGen("RES_MAX", "Res. Max.", { units: "CC" }),
+    fieldGen("RES_MIN", "Res. Min.", { units: "CC" }),
+    fieldGen("RES_AVG", "Res. Avg.", { units: "CC" }),
+    fieldGen("ECART_TYPE", "Ecart-type", { units: "CC" }),
+  ];
 };
 
 // =======================================================

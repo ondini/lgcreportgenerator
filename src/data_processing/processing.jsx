@@ -1,12 +1,14 @@
 import {
   generateTSTNPaths,
   generateTSTNObsCols,
-  generateMeasurementsCols,
+  generateMeasurementsPaths,
   generateFrameCols,
   generatePoint3DCols,
   generateObsCols,
+  generateMeasurementsCCCols,
+  generateMeasurementsMMCols,
 } from "../data/columnsData";
-import { measurementTypes } from "../data/constants";
+import { measurementTypes, mmMeasTypes } from "../data/constants";
 
 // ================== DESCRIPTION ================== //
 // This file contains functions that are used to process data from LGC_DATA json
@@ -138,6 +140,19 @@ const mergeRowsData = (measType, acc, obsData) => {
   return acc;
 };
 
+const mergeMeasData = (mergedData, obsData) => {
+  /** function that merges data from different frames into one object */
+
+  obsData.forEach((row) => {
+    if (mmMeasTypes.some((type) => row.TYPE.indexOf(type) !== -1)) {
+      mergedData.MM.data.push(row);
+    } else {
+      mergedData.CC.data.push(row);
+    }
+  });
+  return mergedData;
+};
+
 const generateColsData = (cols) => {
   /** function that generates empty columns data object */
   let columns = {};
@@ -235,23 +250,10 @@ const statTypeSelector = (measurement, type) => {
   }
 };
 
-// --- FUNCTION SELECTING CORRECT ROW GETTER BASED ON TABLE TYPE --- //
-const dataTypeSelector = (type) => {
-  switch (type) {
-    case "OBS": // observations table
-      return obsTypeSelector;
-    case "STAT": // measurement statistics table
-      return statTypeSelector;
-    default:
-      return () => {};
-  }
-};
-
-// --- MAIN FUNCTION FOR DATA SERVING --- //
-export const getData = (data, dataType, lookup = {}) => {
+// --- MAIN FUNCTIONS FOR DATA SERVING --- //
+export const getData = (data, lookup = {}) => {
   /** function that gets data for observation table for all measurement types
    * data is the LGC_DATA json
-   * dataType is the type of the table, OBS or STAT
    * lookup is the lookup table for 3D points
    * */
 
@@ -262,12 +264,38 @@ export const getData = (data, dataType, lookup = {}) => {
       if (measurementTypes.includes(measType)) {
         // this filters measurement types from other attributess
         // select correct data type selector and add lookup of 3D points -> lines and frame data to the data passed down
-        let obsData = dataTypeSelector(dataType)({ ...curr.measurements, lookup, frame: curr.frame }, measType);
+        let obsData = obsTypeSelector({ ...curr.measurements, lookup, frame: curr.frame }, measType);
         acc = mergeRowsData(measType, acc, obsData);
       }
     });
     return acc;
   }, {});
+};
+
+export const getMeasData = (data, lookup = {}) => {
+  /** function that gets data for measurements table for all measurement types
+   * data is the LGC_DATA json
+   * lookup is the lookup table for 3D points
+   * */
+  let acc = {
+    CC: { data: [], columnDetails: generateMeasurementsCCCols() },
+    MM: { data: [], columnDetails: generateMeasurementsMMCols() },
+  };
+
+  data.tree.forEach((curr) => {
+    // reduce over all frames
+    Object.keys(curr.measurements).forEach((measType) => {
+      // get measurement data for each measurement type
+      if (measurementTypes.includes(measType)) {
+        // this filters measurement types from other attributess
+        // select correct data type selector and add lookup of 3D points -> lines and frame data to the data passed down
+        let obsData = statTypeSelector({ ...curr.measurements, lookup, frame: curr.frame }, measType);
+        acc = mergeMeasData(acc, obsData.data);
+      }
+    });
+  });
+
+  return acc;
 };
 
 // ================================================= //
@@ -277,7 +305,7 @@ export const getData = (data, dataType, lookup = {}) => {
 const getTSTNMeasurementRows = (measurement) => {
   /** function that gets data for measurement statistics table for TSTN  */
 
-  let cols = generateMeasurementsCols();
+  let cols = generateMeasurementsPaths();
   let columns = generateColsData(cols);
 
   let keys = ["anglSummary_", "zendSummary_", "distSummary_", "dhorSummary_"];
@@ -323,13 +351,13 @@ const getTSTNMeasurementRows = (measurement) => {
 
 const getNestedMeasurementRows = (measurement, paths, measType) => {
   /** function that gets data for measurement statistics table for ECWI, CAM, as the data follow the same structure */
-  let cols = generateMeasurementsCols();
+  let cols = generateMeasurementsPaths();
   let columns = generateColsData(cols);
 
   paths.forEach(([obsName, sumPath, sumType]) => {
     // obsName is the name of the observation, X, Y ..
     // sumPath is the path to the observation summary, uvdSummary_
-    // sumType is summary type name, yVectorCompObsSum ...
+    // sumType is summary type name, yVectorCompObsSum .(..
     measurement[measType].forEach((curr) => {
       if (sumType in curr[sumPath]) {
         for (const key of Object.keys(cols)) {
@@ -348,7 +376,7 @@ const getNestedMeasurementRows = (measurement, paths, measType) => {
 
 const getOBSXYZMeasurementRows = (measurement, paths) => {
   /** function that gets data for measurement statistics table for OBSXYZ  */
-  let cols = generateMeasurementsCols();
+  let cols = generateMeasurementsPaths();
   let columns = generateColsData(cols);
 
   paths.forEach(([obsName, sumPath, sumType]) => {
@@ -372,7 +400,7 @@ const getXMeasurementRows = (measurement, path) => {
   /** function that gets data for measurement statistics table for ECHO, ECWS, EDM, ORIE, LEVEL, INCLY
    * Thats why there is X in the name -> it stands for multiple types
    */
-  let cols = generateMeasurementsCols();
+  let cols = generateMeasurementsPaths();
   let columns = generateColsData(cols);
 
   const [obsType, sumPath] = path; // obsTyoe is e.g. fECHO.. , sumPath is echoSummary_
@@ -394,7 +422,7 @@ const getXMeasurementRows = (measurement, path) => {
 
 const getNTMeasurementRows = (measurement, path) => {
   /** function that gets data for measurement statistics table for NT = No type measurement types = RADI, DVER  */
-  let cols = generateMeasurementsCols();
+  let cols = generateMeasurementsPaths();
   let columns = generateColsData(cols);
 
   const [obsType, sumPath] = path;

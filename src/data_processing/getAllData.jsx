@@ -1,20 +1,9 @@
-import { getData, get3DPointData, getFrames } from "./processing";
-
-const mergeMeasTypesData = (data) => {
-  if (Object.keys(data).length === 0) {
-    return [[], []];
-  }
-  let mergedData = [];
-  Object.keys(data).forEach((measType) => {
-    mergedData = mergedData.concat(data[measType].data);
-  });
-  return { data: mergedData, columnDetails: data[Object.keys(data)[0]].columnDetails };
-};
+import { getData, get3DPointData, getFrames, getMeasData } from "./processing";
 
 function getAllData(GMData) {
   /** function that returns all the data needed for the report and putting them into a single object  */
   const points3D = get3DPointData(GMData.LGC_DATA);
-  const observations = getData(GMData.LGC_DATA, "OBS", points3D.lookup);
+  const observations = getData(GMData.LGC_DATA, points3D.lookup);
   const frames = getFrames(GMData.LGC_DATA);
 
   let uknonwnAngles = 0;
@@ -39,8 +28,7 @@ function getAllData(GMData) {
     planes: uknownPlanes,
   };
 
-  const measurements = getData(GMData.LGC_DATA, "STAT", points3D.lookup);
-  const measStats = mergeMeasTypesData(measurements);
+  const measStats = getMeasData(GMData.LGC_DATA, points3D.lookup);
 
   return { points3D, observations, frames, unknownPars, measStats };
 }

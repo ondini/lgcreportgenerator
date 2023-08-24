@@ -16,7 +16,10 @@ import {
  } from './obsTableCols.jsx';
 
  import {
-    generateMeasurementsCols,
+    generateMeasurementsPaths,
+    generateMeasurementsMMCols,
+    generateMeasurementsCCCols,
+
     generateFrameCols,
     generatePoint3DCols,
  } from './otherColumns.jsx';
@@ -26,8 +29,9 @@ export {
     generateTSTNPaths,
     generateTSTNObsCols, 
 
-    
-    generateMeasurementsCols,
+    generateMeasurementsPaths,
+    generateMeasurementsMMCols,
+    generateMeasurementsCCCols,
     generateFrameCols,
     generatePoint3DCols,
 };

@@ -13,6 +13,21 @@ export const measurementTypes = [
   "fCAM",
 ];
 
+export const mmMeasTypes = [
+  "DIST",
+  "DHOR",
+  "UVD",
+  "UVEC",
+  "DSPT",
+  "DLEV",
+  "ECHO",
+  "ECWS",
+  "ECWI",
+  "DVER",
+  "RADI",
+  "OBSXYZ",
+];
+
 export const pointTypes = ["POIN", "VXY", "VXZ", "VX", "VYZ", "VY", "VZ", "CALA"];
 
 export const noSrcMeasTypes = ["fOBSXYZ", "fRADI", "fDVER"]; // measurement types that do not have a source instrument

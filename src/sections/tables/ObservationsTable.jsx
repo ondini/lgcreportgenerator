@@ -1,5 +1,5 @@
 import { Title, Table } from "../../components";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 import "./ObservationsTable.css";
 

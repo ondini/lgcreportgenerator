@@ -5,7 +5,7 @@ import { IconButton } from "@mui/material";
 
 import { ExportToCsv } from "export-to-csv";
 
-const Table = ({ columns, rows }) => {
+const Table = ({ columns, rows, sx = {} }) => {
   // create csv exporter
   const csvOptions = {
     fieldSeparator: ",",
@@ -52,7 +52,7 @@ const Table = ({ columns, rows }) => {
       muiTableContainerProps={{ sx: { maxWidth: "100%", height: "900px" } }}
       muiTableProps={{ sx: { tableLayout: "fixed" } }}
       muiTablePaperProps={{
-        sx: { boxShadow: 0, borderRadius: 3, maxWidth: "100%", border: "1px solid #e0e0e0" },
+        sx: { ...sx, boxShadow: 0, borderRadius: 3, maxWidth: "100%", border: "1px solid #e0e0e0" },
       }}
       renderTopToolbarCustomActions={({ table }) => (
         <div style={{ display: "flex", width: "100%", justifyContent: "flex-end" }}>
