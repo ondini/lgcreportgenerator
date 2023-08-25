@@ -17,8 +17,7 @@ import { useState, useMemo } from "react";
 
 import getAllData from "./data_processing/getAllData";
 
-const dataFile = "26391 (11).json";
-const GMData = require(`./jsons_tmp/${dataFile}`);
+const GMData = require("./data/Placeholder.json");//"./jsons_tmp/26391 (11).json");
 
 const MainLayoutStyle = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(({ theme, open }) => ({
   flexGrow: 1,

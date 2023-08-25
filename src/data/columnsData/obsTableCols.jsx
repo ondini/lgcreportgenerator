@@ -1192,7 +1192,7 @@ export const generateDVERObsCols = () => {
     OBS: fieldGen("OBS", "Observed", { units: "M", path: "distances/0/fValue", link: "OBSLINE" }), // observed
     SIG: fieldGen("SIG", "Sigma", { units: "MM", path: "fSigmaObsVal" }), // standard deviation
     ABSSIG: fieldGen("ABSSIG", "ASigma", { units: "MM", path: "!abs(fSigmaObsVal)!" }), // standard deviation abs
-    CALC: fieldGen("CALC", "Calculated", { units: "M", path: "!distances/0/fValue!+!distancesResiduals/0/fValue" }), // calculated
+    CALC: fieldGen("CALC", "Calculated", { units: "M", path: "!distances/0/fValue!+!distancesResiduals/0/fValue!" }), // calculated
     RES: fieldGen("RES", "Residual", { units: "MM", path: "distancesResiduals/0/fValue" }), // residual
     ABSRES: fieldGen("ABSRES", "AResidual", { units: "MM", path: "!abs(distancesResiduals/0/fValue)!" }), // residual abs
     RESSIG: fieldGen("RESSIG", "Res./Sig.", { units: "-", path: "!distancesResiduals/0/fValue!/!fSigmaObsVal!" }), // RES/SIGMA
