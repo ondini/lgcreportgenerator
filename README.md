@@ -2,7 +2,7 @@
 
 ### Description
 
-Javascript source code for LGC Report generator, using React.js. The input is JSON file.
+Javascript source code for LGC Report generator, using React.js. The input is JSON file. Demo can be found [here](https://ondini.github.io/lgcreportgenerator/).
 
 ### Usage instructions
 
